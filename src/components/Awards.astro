@@ -1,0 +1,31 @@
+---
+import ExperienceItem from "./AwardsItem.astro"
+const EXPERIENCE = [
+  {
+    date: "Junio 2024",
+    title: "IT Essentials: PC Hardware and Software",
+    company: "Cisco Networking Academy program",
+    description:
+      "Certificado en IT Essentials: PC Hardware and Software.",
+    link: "https://upslpedu-my.sharepoint.com/:b:/g/personal/182217_upslp_edu_mx/EQPy5qrcoC1NrrMelCKKNDoBJcgYO4Olq7vuF6JIJrhCpw?e=HVpn7t",
+  },
+  {
+    date: "Enero 2025",
+    title: "Partner: NDG Linux Essentials",
+    company: "Cisco Networking Academy program",
+    description:
+      "Certificado en Partner: NDG Linux Essentials.",
+    link: "https://upslpedu-my.sharepoint.com/:b:/g/personal/182217_upslp_edu_mx/EevafqLRCJhKsNwgwRVr8e0BCDmVsf7fNG1tqJ9hstW3rw?e=nDyZ7d",  
+  },
+]
+---
+
+<ol class="relative mt-16">
+  {
+    EXPERIENCE.map((experience) => (
+      <li class="">
+        <ExperienceItem {...experience} />
+      </li>
+    ))
+  }
+</ol>

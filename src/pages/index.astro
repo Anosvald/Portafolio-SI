@@ -1,0 +1,61 @@
+---
+import Layout from "../layouts/layout.astro"
+
+import AboutMe from "../components/AboutMe.astro"
+import Briefcase from "../components/Icons/Briefcase.astro"
+import Certificate from "../components/Icons/Certificate.astro"
+import CodeIcon from "../components/Icons/Code.astro"
+import Experience from "../components/Experience.astro"
+import ProfileCheck from "../components/Icons/ProfileCheck.astro"
+import Projects from "../components/Projects.astro"
+import SectionContainer from "../components/SectionContainer.astro"
+import Hero from "../components/Hero.astro"
+import TitleSection from "../components/TitleSection.astro"
+import Awards from "../components/awards.astro"
+---
+
+<Layout
+  title="Porfolio de Osvaldo - Desarrollador y Programador Web"
+  description="Contrata a midudev para crear tu aplicación web o móvil. Desarrollador Web y Creador de Contenido. Especializado en crear aplicaciones únicas."
+>
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-36">
+      <Hero>
+        </slot>
+      </Hero>
+    </SectionContainer>
+    <div class="space-y-24">
+    <SectionContainer id="experiencia">
+      <TitleSection>
+        <Briefcase class="size-8" />
+        Experiencia laboral
+      </TitleSection>
+      <Experience />
+    </SectionContainer>
+
+    <SectionContainer id="awards">
+      <TitleSection>
+        <Certificate class="size-7" />
+        Certificados
+      </TitleSection>
+      <Awards />
+    </SectionContainer>
+
+    <SectionContainer id="proyectos">
+      <TitleSection>
+        <CodeIcon class="size-7" />
+        Proyectos
+      </TitleSection>
+      <Projects />
+    </SectionContainer>
+
+    <SectionContainer id="sobre-mi">
+      <TitleSection>
+        <ProfileCheck class="size-8" />
+        Sobre mí
+      </TitleSection>
+      <AboutMe />
+    </SectionContainer>
+  </div>
+  </main>
+</Layout>

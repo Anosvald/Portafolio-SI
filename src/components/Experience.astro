@@ -1,0 +1,30 @@
+---
+import ExperienceItem from "./ExperienceItem.astro"
+const EXPERIENCE = [
+  {
+    date: "Actualmente...",
+    title: "Estudiante",
+    company: "Universidad Politécnica de San Luis Potosí",
+    description:
+      "Soy estudiante de Ingeniería en Tecnologías de la Información, especializado en el desarrollo de sitios web, aplicaciones y base de datos. Mi formación se centra en la creación de soluciones digitales innovadoras y eficientes, combinando un sólido conocimiento técnico con una marcada orientación hacia la optimización de procesos.",
+    //link: "https://twitch.tv/midudev",
+  },
+  {
+    date: "Julio 2024",
+    title: "Maestro de Educación Primaria – Curso de Verano",
+    company: "Cdisruptive",
+    description:
+      "Impartí clases de educación primaria en un curso intensivo de verano, diseñando e implementando actividades pedagógicas innovadoras que fomentaron el aprendizaje activo y colaborativo. Logré potenciar la participación de los estudiantes y mejorar sus habilidades académicas mediante metodologías adaptativas y centradas en el alumno.",
+  },
+]
+---
+
+<ol class="relative mt-16">
+  {
+    EXPERIENCE.map((experience) => (
+      <li class="">
+        <ExperienceItem {...experience} />
+      </li>
+    ))
+  }
+</ol>
