@@ -1,0 +1,203 @@
+---
+// Importamos el Layout
+import Layout from "../../layouts/Layout.astro"
+
+// Importamos los componentes
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// --- DATOS DE LA TAREA ---
+const INFO_TAREA = {
+  titulo: "Actividad 03: Interpretación y traducción de políticas en iptables",
+  fecha: "03 de Febrero, 2026",
+  descripcion: "Traducción de políticas de seguridad a reglas técnicas de Iptables para la gestión de tráfico perimetral, analizando el flujo de paquetes a través de tablas y cadenas del kernel de Linux.",
+  pdf: "/pdfs/182217-act03.pdf",
+  imagen_demo: "/projects/Imagen2Tarea3.png" 
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+      
+      {/* --- ENCABEZADO DE LA TAREA --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+      
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* --- CONTENIDO PRINCIPAL (RÚBRICA) --- */}
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-10">
+        
+        {/* PUNTO 1. Introducción Contextual */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">1. Introducción Contextual al Tema</h3>
+            <p class="mb-3 text-justify">
+            La seguridad perimetral en sistemas Linux recae históricamente en <strong>Netfilter</strong>, el framework del kernel encargado de interceptar y manipular paquetes de red. Para interactuar con este framework, los administradores de sistemas utilizan <strong>iptables</strong>, una potente herramienta de espacio de usuario que permite configurar conjuntos de reglas para el filtrado, la traducción de direcciones (NAT) y la modificación de paquetes.
+            </p>
+            <p class="text-justify">
+            Comprender la anatomía de iptables no se limita a memorizar comandos, sino a entender cómo transita la información a través del sistema operativo. En esta actividad se analizó la arquitectura general de Iptables, identificando cómo el kernel procesa cada paquete de datos a través de una jerarquía estricta compuesta por Tablas (Tables), Cadenas (Chains) y Reglas de Acción (Rules/Targets), logrando traducir políticas de seguridad abstractas en comandos técnicos ejecutables.
+            </p>
+        </div>
+
+        {/* PUNTO 2. Desarrollo Técnico */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">2. Desarrollo Técnico de la Actividad</h3>
+            
+            <h4 class="text-xl font-medium mb-2 text-gray-900 dark:text-white">A. Flujo del Paquete y Relación de Tablas</h4>
+            <p class="mb-4 text-justify">
+            El ciclo de vida de un paquete dentro de Netfilter sigue un orden riguroso. Al ingresar a la interfaz de red del sistema, el paquete pasa primero por la cadena <code>PREROUTING</code>. A partir de ahí, el motor de enrutamiento decide su destino: si es para el propio servidor, pasa a la cadena <code>INPUT</code>; si debe ser reenviado a otra red, atraviesa <code>FORWARD</code>. Finalmente, antes de abandonar la máquina, todos los paquetes se procesan en la cadena <code>POSTROUTING</code>.
+            </p>
+            <p class="mb-2 text-justify">Para gestionar este flujo, Netfilter clasifica las operaciones en cuatro tablas principales:</p>
+            
+            <div class="overflow-x-auto mb-6">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-800 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Tabla (Table)</th>
+                            <th scope="col" class="px-6 py-3">Propósito Principal</th>
+                            <th scope="col" class="px-6 py-3">Ejemplo de Uso Práctico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                            <td class="px-6 py-4 font-bold text-blue-500">FILTER</td>
+                            <td class="px-6 py-4">Filtrado de paquetes (Aceptar, Denegar o Rechazar tráfico). Es la tabla por defecto.</td>
+                            <td class="px-6 py-4">Cerrar el puerto 22 (SSH) para IPs desconocidas.</td>
+                        </tr>
+                        <tr class="bg-gray-50 border-b dark:bg-gray-800 dark:border-gray-700">
+                            <td class="px-6 py-4 font-bold text-blue-500">NAT</td>
+                            <td class="px-6 py-4">Traducción de direcciones de red (Network Address Translation).</td>
+                            <td class="px-6 py-4">Redirección de puertos (ej. tráfico del puerto 80 al 8080).</td>
+                        </tr>
+                        <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                            <td class="px-6 py-4 font-bold text-blue-500">MANGLE</td>
+                            <td class="px-6 py-4">Modificación especializada de las cabeceras de los paquetes.</td>
+                            <td class="px-6 py-4">Cambiar el valor del TTL (Time To Live) o marcar paquetes.</td>
+                        </tr>
+                        <tr class="bg-gray-50 dark:bg-gray-800">
+                            <td class="px-6 py-4 font-bold text-blue-500">RAW</td>
+                            <td class="px-6 py-4">Configuración de exenciones del sistema de seguimiento de conexiones.</td>
+                            <td class="px-6 py-4">Aplicar el target <code>NOTRACK</code> para evadir el rastreo de estado.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4 class="text-xl font-medium mb-2 text-gray-900 dark:text-white">B. Anatomía y Traducción de Políticas de Seguridad</h4>
+            <p class="mb-4 text-justify">A continuación, se detalla la traducción de políticas humanas a directivas técnicas del firewall:</p>
+
+            <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+                <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span class="ml-2 text-xs text-gray-400 font-mono">root@kali:~# bash</span>
+                </div>
+                <div class="p-4 overflow-x-auto text-sm">
+                    <pre class="font-mono leading-relaxed">
+<span class="text-gray-500"># 1. Habilitación de tráfico web estándar (HTTP y HTTPS)</span>
+<span class="text-blue-400">iptables</span> -A INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT
+
+<span class="text-gray-500"># 2. Análisis de Regla Compleja (Servidor Web Seguro y Admin Remota)</span>
+<span class="text-blue-400">iptables</span> -A INPUT -i eth0 -p tcp -m multiport --dports 22,80,443 \
+-m state --state NEW,ESTABLISHED -j ACCEPT
+<span class="text-yellow-300"># => Permite ver páginas web y administrar por SSH mediante la interfaz eth0,</span>
+<span class="text-yellow-300">#    exclusivamente para conexiones nuevas o ya establecidas.</span>
+
+<span class="text-gray-500"># 3. Restricción de Administración: Permitir SSH solo desde una IP específica</span>
+<span class="text-blue-400">iptables</span> -A INPUT -p tcp -s 192.168.1.50 --dport 22 -j ACCEPT
+
+<span class="text-gray-500"># 4. Endurecimiento: Permitir tráfico HTTP/HTTPS SOLO si la conexión es legítima</span>
+<span class="text-blue-400">iptables</span> -A INPUT -p tcp -m multiport --dports 80,443 \
+-m state --state ESTABLISHED,RELATED -j ACCEPT
+
+<span class="text-gray-500"># 5. Política Restrictiva Global (Zero Trust Perimeter)</span>
+<span class="text-blue-400">iptables</span> -P INPUT DROP
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        {/* PUNTO 3. Material Multimedia */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-4 text-blue-500/80">3. Material Multimedia</h3>
+            
+            <figure class="relative transition-all duration-300 hover:scale-[1.01] bg-white dark:bg-gray-900 p-2 rounded-xl mt-4">
+                <img 
+                    class="w-full rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 object-contain" 
+                    src={INFO_TAREA.imagen_demo} 
+                    alt="Diagrama del flujo de paquetes en las cadenas INPUT, FORWARD y OUTPUT" 
+                />
+            </figure>
+        </div>
+
+        {/* PUNTO 4. Reflexión Técnica */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">4. Reflexión Técnica y Escenarios Reales</h3>
+            <p class="mb-3 text-justify">
+            Dominar la sintaxis y el comportamiento de iptables no es solo un requerimiento académico, sino una habilidad crítica de respuesta a incidentes para cualquier administrador de servidores Linux o analista de ciberseguridad. En la gestión de firewalls, el orden lógico en que se declaran las reglas es vital, ya que Netfilter evalúa de arriba hacia abajo; un error en la precedencia puede bloquear tráfico legítimo o abrir brechas críticas.
+            </p>
+            <p class="text-justify">
+            En escenarios reales de contingencia, como la mitigación activa de ataques de Denegación de Servicio (DoS) o intentos de fuerza bruta, la capacidad de traducir una amenaza en una regla <code>DROP</code> aplicada directamente a la tabla <code>RAW</code> o <code>FILTER</code> en cuestión de segundos puede ser la única diferencia entre mantener la disponibilidad operativa de un servicio o sufrir una caída sistémica total. Esta práctica fortaleció significativamente mi comprensión de la seguridad perimetral a nivel de sistema operativo.
+            </p>
+        </div>
+
+        {/* PUNTO 5. Referencias Técnicas */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-4 text-blue-500/80">5. Referencias Técnicas</h3>
+            <ul class="list-disc list-inside space-y-3 text-sm text-gray-700 dark:text-gray-300 marker:text-blue-500 break-words">
+                <li>Netfilter Project. (2024). Iptables Documentation.</li>
+                <li>Linux Foundation. (2023). Networking Administration Guide.</li>
+                <li>Man pages de Linux: <code>iptables(8)</code>.</li>
+            </ul>
+        </div>
+
+      </div>
+
+      {/* PUNTO 6. ZONA DE DESCARGA (Botón PDF) */}
+      <div class="mt-16 pt-10 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        
+        <div class="text-center mb-2">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200">6. Respaldo Académico Formal</h3>
+            <p class="text-sm text-gray-500 max-w-lg mt-1">
+            Presiona el siguiente botón para exportar la versión formal del documento en PDF correspondiente a esta actividad. Este PDF funciona como respaldo del artículo aquí publicado.
+            </p>
+        </div>
+
+        <a 
+          href={INFO_TAREA.pdf} 
+          download={`Actividad03-Iptables.pdf`} 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95"
+        >
+          <Link class="size-5" />
+          Exportar a PDF
+        </a>
+
+        <a 
+          href="/#tareas" 
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>

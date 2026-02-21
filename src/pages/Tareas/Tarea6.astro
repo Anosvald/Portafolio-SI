@@ -1,0 +1,209 @@
+---
+// Importamos el Layout
+import Layout from "../../layouts/Layout.astro"
+
+// Importamos los componentes
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// --- DATOS DE LA TAREA ---
+const INFO_TAREA = {
+  titulo: "Actividad 06: Implementación de IPSec VPN (Site-to-Site)",
+  fecha: "15 de Febrero, 2026",
+  descripcion: "Configuración integral de un túnel VPN Site-to-Site mediante el protocolo IPSec en Cisco Packet Tracer para garantizar confidencialidad, integridad y autenticación de datos.",
+  pdf: "/pdfs/182217-Act06.pdf",
+  imagen_demo: "/projects/Imagen2Tarea6.png" 
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+      
+      {/* --- ENCABEZADO DE LA TAREA --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+      
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* --- CONTENIDO PRINCIPAL (RÚBRICA) --- */}
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-10">
+        
+        {/* PUNTO 1. Introducción Contextual */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">1. Introducción y Topología de Red</h3>
+            <p class="mb-3 text-justify">
+            Un túnel Site-to-Site IPSec VPN actúa como un puente seguro entre distintas sedes corporativas, utilizando protocolos robustos para proteger el intercambio de datos a través de infraestructuras públicas como Internet. Su propósito esencial es establecer un canal privado y cifrado entre dos routers frontera, garantizando que la información viaje protegida de extremo a extremo.
+            </p>
+            <p class="text-justify">
+            Esta operatividad se fundamenta en tres pilares de seguridad: <strong>Confidencialidad</strong> (evitar lecturas no autorizadas mediante cifrado), <strong>Integridad</strong> (asegurar que el dato no sea alterado en tránsito) y <strong>Autenticación</strong> (verificar la identidad de los extremos). La topología emulada consta de un Sitio Local (R1 protegiendo la red 192.168.1.0/24), un Sitio Remoto (R3 protegiendo la red 192.168.3.0/24) y un Router ISP intermedio que únicamente simula el transporte de paquetes públicos.
+            </p>
+        </div>
+
+        {/* PUNTO 2. Desarrollo Técnico (EXTENSO) */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">2. Desarrollo Técnico: Configuración Integral IPSec</h3>
+            <p class="mb-4 text-justify">
+            La implementación de esta tecnología requirió configurar meticulosamente tanto la infraestructura base de enrutamiento como los parámetros criptográficos del túnel. El proceso se dividió en las siguientes fases críticas:
+            </p>
+
+            <h4 class="text-xl font-medium mb-2 text-gray-900 dark:text-white">A. Infraestructura Base y Licenciamiento</h4>
+            <p class="mb-3 text-justify">
+            Previo a cualquier configuración criptográfica, se estableció la conectividad básica. Se asignaron IPs públicas en las interfaces WAN de R1 (209.165.100.1) y R3 (209.165.200.1), y se configuró una ruta estática por defecto (<code>ip route 0.0.0.0 0.0.0.0</code>) apuntando hacia el ISP. 
+            </p>
+            <p class="mb-5 text-justify">
+            Un paso crítico en hardware Cisco (serie 1900) fue la activación del módulo de seguridad. Mediante el comando <code>license boot module c1900 technology-package securityk9</code>, se instruyó al sistema operativo para cargar los algoritmos criptográficos (AES, 3DES, SHA) necesarios para IPSec. Tras guardar la configuración (<code>copy run start</code>), fue obligatorio realizar un reinicio físico (<code>reload</code>) del router para que la licencia tomara efecto.
+            </p>
+
+            <h4 class="text-xl font-medium mb-2 text-gray-900 dark:text-white">B. Fase 1: IKEv1 / ISAKMP (Túnel de Gestión)</h4>
+            <p class="mb-3 text-justify">
+            El protocolo ISAKMP establece un marco de confianza inicial antes de enviar datos de usuario. Creamos la política de seguridad (<code>policy 10</code>) donde se definió <strong>AES-256</strong> como algoritmo de cifrado para este canal de control. La validación de identidades se configuró mediante una llave precompartida (<code>authentication pre-share</code>) utilizando el valor "secretkey", mientras que la regeneración de claves seguras se apoyó en el algoritmo de Diffie-Hellman <strong>Grupo 5</strong>.
+            </p>
+
+            <h4 class="text-xl font-medium mb-2 text-gray-900 dark:text-white">C. Fase 2: IPSec y Tráfico Interesante</h4>
+            <p class="mb-3 text-justify">
+            Para definir exactamente qué datos debían ser cifrados y cuáles no, se configuró una Lista de Control de Acceso (ACL 100). Esta lista intercepta exclusivamente el tráfico que fluye desde la red local (192.168.1.0/24) hacia la red remota (192.168.3.0/24), permitiendo que la navegación normal a Internet no pase por el túnel.
+            </p>
+            <p class="mb-5 text-justify">
+            Posteriormente, se definió el conjunto de transformación (Transform-Set). Esta configuración dicta cómo se protegerán los datos reales. Se optó por el protocolo <strong>ESP (Encapsulating Security Payload)</strong> usando <strong>AES-256</strong> para la confidencialidad y <strong>SHA-HMAC</strong> para garantizar que los paquetes no fueran alterados.
+            </p>
+
+            <h4 class="text-xl font-medium mb-2 text-gray-900 dark:text-white">D. Crypto Map y Activación</h4>
+            <p class="mb-4 text-justify">
+            Todos los elementos anteriores se unificaron dentro de un Crypto Map. Se especificó la IP pública del "peer" (extremo remoto), se habilitó PFS (Perfect Forward Secrecy) para evitar que la vulneración de una llave afecte sesiones pasadas, se estableció un tiempo de vida de 86,400 segundos (24 horas) para las asociaciones de seguridad, y se aplicó este mapa a la interfaz WAN (G0/0) del router.
+            </p>
+
+            <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700 mt-4 mb-8">
+                <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span class="ml-2 text-xs text-gray-400 font-mono">cisco-ios — config_VPN_R1</span>
+                </div>
+                <div class="p-4 overflow-x-auto text-sm">
+                    <pre class="font-mono leading-relaxed">
+<span class="text-gray-500">! --- 1. Activación de Licencia Security ---</span>
+R1(config)# license boot module c1900 technology-package securityk9
+R1(config)# exit
+R1# copy running-config startup-config
+R1# reload
+
+<span class="text-gray-500">! --- 2. Configuración Fase 1 (ISAKMP) ---</span>
+R1(config)# crypto isakmp policy 10
+R1(config-isakmp)# encryption aes 256
+R1(config-isakmp)# authentication pre-share
+R1(config-isakmp)# group 5
+R1(config)# crypto isakmp key secretkey address 209.165.200.1
+
+<span class="text-gray-500">! --- 3. Tráfico Interesante y Transform-Set (Fase 2) ---</span>
+R1(config)# access-list 100 permit ip 192.168.1.0 0.0.0.255 192.168.3.0 0.0.0.255
+R1(config)# crypto ipsec transform-set R1-R3 esp-aes 256 esp-sha-hmac
+
+<span class="text-gray-500">! --- 4. Unificación en el Crypto Map ---</span>
+R1(config)# crypto map IPSEC-MAP 10 ipsec-isakmp
+R1(config-crypto-map)# set peer 209.165.200.1
+R1(config-crypto-map)# set pfs group5
+R1(config-crypto-map)# set security-association lifetime seconds 86400
+R1(config-crypto-map)# set transform-set R1-R3
+R1(config-crypto-map)# match address 100
+
+<span class="text-gray-500">! --- 5. Activación en Interfaz WAN ---</span>
+R1(config)# interface g0/0
+R1(config-if)# crypto map IPSEC-MAP
+                    </pre>
+                </div>
+            </div>
+
+            <h4 class="text-xl font-medium mb-2 text-gray-900 dark:text-white">E. Verificación de Topología y Túnel Activo</h4>
+            <p class="mb-4 text-justify">
+            Tras concluir la configuración, la VPN permanece en un estado latente. Para "despertar" el túnel en la topología, se generó tráfico de interés ejecutando un Ping desde la PC-A (Red Local) hacia la PC-C (Red Remota). Una vez iniciado el tráfico, los comandos de validación demostraron el éxito de la negociación criptográfica:
+            </p>
+            <ul class="list-disc list-inside space-y-2 text-justify text-gray-700 dark:text-gray-300">
+                <li><code>show crypto isakmp sa</code>: Mostró el estado <strong>QM_IDLE / ACTIVE</strong>, confirmando que ambos routers se autenticaron correctamente y el canal ISAKMP estaba operativo.</li>
+                <li><code>show crypto ipsec sa</code>: Permitió observar el incremento de los contadores <em>"pkts encaps"</em> (paquetes encapsulados) y <em>"pkts encrypt"</em> (paquetes cifrados), garantizando que los pings viajaban ocultos por el túnel y no en texto plano. Con esto se comprobó la operatividad de la topología Site-to-Site.</li>
+            </ul>
+        </div>
+
+        {/* PUNTO 3. Material Multimedia (IMAGEN SOLA) */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-4 text-blue-500/80">3. Material Multimedia</h3>
+            
+            <div class="relative transition-all duration-300 hover:scale-[1.01] bg-white dark:bg-gray-900 p-2 rounded-xl mt-4">
+                <img 
+                    class="w-full rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 object-contain" 
+                    src={INFO_TAREA.imagen_demo} 
+                    alt="Topología VPN IPSec en Packet Tracer" 
+                />
+            </div>
+        </div>
+
+        {/* PUNTO 4. Reflexión Técnica */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">4. Reflexión Técnica y Escenarios Reales</h3>
+            <p class="mb-3 text-justify">
+            La implementación de una VPN IPSec Site-to-Site es una de las habilidades de ingeniería de redes más demandadas en el mundo empresarial. En un escenario real corporativo, alquilar líneas dedicadas y privadas para conectar sucursales en diferentes estados o países resulta extremadamente costoso. IPSec resuelve este problema permitiendo utilizar el Internet público, inseguro por naturaleza, para crear un conducto completamente hermético y privado a un bajo costo.
+            </p>
+            <p class="text-justify">
+            Esta práctica subraya la importancia del detalle técnico. Un simple desajuste en el algoritmo de cifrado (Fase 1), una llave precompartida escrita erróneamente, o una Lista de Acceso (ACL) mal definida ocasionará que la VPN fracase de forma silenciosa. Además, el uso del protocolo Perfect Forward Secrecy (PFS) integrado en esta actividad representa un estándar de seguridad moderno, mitigando el impacto de posibles robos de llaves criptográficas a futuro.
+            </p>
+        </div>
+
+        {/* PUNTO 5. Referencias Técnicas */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-4 text-blue-500/80">5. Referencias Técnicas</h3>
+            <ul class="list-disc list-inside space-y-3 text-sm text-gray-700 dark:text-gray-300 marker:text-blue-500 break-words">
+                <li>
+                    Cisco. (s.f.). Guía de configuración de software de los routers de las series Cisco 850 y Cisco 870 - Configuración de un túnel VPN IPSec con un cortafuegos adaptativo. Recuperado el 16 de febrero de 2026. 
+                    <a href="https://www.cisco.com/en/US/docs/routers/access/800/850/software/configuration/guide/vpngre.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">Enlace oficial a Cisco Documentation</a>
+                </li>
+            </ul>
+        </div>
+
+      </div>
+
+      {/* PUNTO 6. ZONA DE DESCARGA (Botón PDF) */}
+      <div class="mt-16 pt-10 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        
+        <div class="text-center mb-2">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200">6. Respaldo Académico Formal</h3>
+            <p class="text-sm text-gray-500 max-w-lg mt-1">
+            Presiona el siguiente botón para exportar la versión formal del documento en PDF correspondiente a esta práctica.
+            </p>
+        </div>
+
+        <a 
+          href={INFO_TAREA.pdf} 
+          download={`Actividad06-IPSec-VPN.pdf`} 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95"
+        >
+          <Link class="size-5" />
+          Exportar a PDF
+        </a>
+
+        <a 
+          href="/#tareas" 
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>

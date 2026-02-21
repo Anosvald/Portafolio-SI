@@ -1,0 +1,229 @@
+---
+// Importamos el Layout
+import Layout from "../../layouts/Layout.astro"
+
+// Importamos los componentes
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// --- DATOS DE LA TAREA ---
+const INFO_TAREA = {
+  titulo: "Actividad 05: Análisis comparativo de metodologías de ciberseguridad",
+  fecha: "13 de Febrero, 2026",
+  descripcion: "Estudio técnico, desglosado y comparativo de los marcos de trabajo líderes en ciberseguridad ofensiva y auditoría, analizando sus fases, enfoques y aplicabilidad profesional.",
+  pdf: "/pdfs/182217-Act05.pdf",
+  imagen_demo: "/projects/Imagen2Tarea5.png" 
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+      
+      {/* --- ENCABEZADO DE LA TAREA --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+      
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* --- CONTENIDO PRINCIPAL (RÚBRICA) --- */}
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-10">
+        
+        {/* PUNTO 1. Introducción Contextual */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">1. Introducción y Contexto del Pentesting</h3>
+            <p class="mb-3 text-justify">
+            En el ámbito profesional de la ciberseguridad, ejecutar escaneos automatizados de vulnerabilidades y entregar un reporte generado por una herramienta no constituye un verdadero <em>Penetration Test</em> (Prueba de Penetración). Para que una auditoría tenga rigor técnico, validez comercial y cobertura exhaustiva, debe regirse por metodologías estandarizadas a nivel global.
+            </p>
+            <p class="text-justify">
+            Esta actividad se centra en realizar un análisis comparativo y cartografiar los marcos de referencia más importantes de la industria: OWASP WSTG, MITRE ATT&CK, NIST SP 800-115, OSSTMM, PTES e ISSAF. Comprender la filosofía, las fases de ejecución y la orientación (ofensiva, defensiva o de cumplimiento) de cada uno de estos estándares es la habilidad primordial de un auditor de seguridad para alinear las expectativas del cliente con la realidad de la ejecución técnica.
+            </p>
+        </div>
+
+        {/* PUNTO 2. Desarrollo Técnico (EXTENSO) */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-4 text-blue-500/80">2. Desarrollo Técnico: Anatomía de los Marcos de Trabajo</h3>
+            <p class="mb-5 text-justify">
+            A continuación, se desglosa el análisis técnico de las seis metodologías estudiadas, detallando sus fases de implementación, enfoque operativo y escenario ideal de uso.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                {/* OWASP */}
+                <div class="bg-gray-50 dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <h4 class="text-lg font-bold text-blue-600 dark:text-blue-400 mb-2">OWASP WSTG (Web Security Testing Guide)</h4>
+                    <p class="text-sm text-justify mb-3">
+                    Es el marco de trabajo más exhaustivo diseñado exclusivamente para la evaluación y auditoría defensiva de aplicaciones web. No se centra en la infraestructura de red, sino en la capa de aplicación.
+                    </p>
+                    <ul class="text-sm list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+                        <li><strong>Fases (12 dominios):</strong> Recopilación de información, pruebas de configuración, identidad, autenticación, autorización, gestión de sesiones, validación de entradas, manejo de errores, criptografía débil, lógica de negocio, lado del cliente y APIs.</li>
+                        <li><strong>Certificaciones Afines:</strong> eWPT, eWPTX.</li>
+                    </ul>
+                </div>
+
+                {/* PTES */}
+                <div class="bg-gray-50 dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <h4 class="text-lg font-bold text-blue-600 dark:text-blue-400 mb-2">PTES (Penetration Testing Execution Standard)</h4>
+                    <p class="text-sm text-justify mb-3">
+                    Desarrollado por la comunidad profesional para estandarizar la calidad de los servicios de pentesting a nivel comercial. Diferencia un análisis profesional (con reglas claras) de un simple escaneo automatizado.
+                    </p>
+                    <ul class="text-sm list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+                        <li><strong>Fases (7 pasos):</strong> Pre-compromiso (Reglas ROE), Inteligencia, Modelado de amenazas, Análisis de vulnerabilidades, Explotación, Post-explotación y Generación de Informes.</li>
+                        <li><strong>Certificaciones Afines:</strong> OSCP, OSWE, CPENT, GPEN, LPT.</li>
+                    </ul>
+                </div>
+
+                {/* NIST */}
+                <div class="bg-gray-50 dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <h4 class="text-lg font-bold text-blue-600 dark:text-blue-400 mb-2">NIST SP 800-115</h4>
+                    <p class="text-sm text-justify mb-3">
+                    Estándar del gobierno de EE. UU. (Instituto Nacional de Estándares y Tecnología). Actúa como la guía técnica suprema para la ejecución de pruebas, análisis de vulnerabilidades y cumplimiento regulatorio (como FISMA o HIPAA).
+                    </p>
+                    <ul class="text-sm list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+                        <li><strong>Fases (4 pasos):</strong> Planificación, Descubrimiento, Ataque/Ejecución y Reporte.</li>
+                        <li><strong>Certificaciones Afines:</strong> Referencia teórica obligatoria para CISSP, CISA, CEH, PenTest+ y CySA+.</li>
+                    </ul>
+                </div>
+
+                {/* OSSTMM */}
+                <div class="bg-gray-50 dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <h4 class="text-lg font-bold text-blue-600 dark:text-blue-400 mb-2">OSSTMM 3.0</h4>
+                    <p class="text-sm text-justify mb-3">
+                    Creado por ISECOM (Pete Herzog), este marco se desmarca del resto al proporcionar una metodología estrictamente <strong>científica y cuantificable</strong>. Mide la seguridad operativa basada en hechos comprobables, no en supuestos.
+                    </p>
+                    <ul class="text-sm list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+                        <li><strong>Canales de evaluación:</strong> Seguridad Humana, Física, Inalámbrica, Telecomunicaciones y Redes de Datos.</li>
+                        <li><strong>Certificaciones Afines:</strong> OPST, OPSA, OPSE, OWSE.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h4 class="text-xl font-medium mb-4 text-gray-900 dark:text-white">Tabla Comparativa Estratégica</h4>
+            <div class="overflow-x-auto mb-8 shadow-xl rounded-lg">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-800 dark:text-gray-300">
+                        <tr>
+                            <th scope="col" class="px-6 py-4">Metodología</th>
+                            <th scope="col" class="px-6 py-4">Orientación</th>
+                            <th scope="col" class="px-6 py-4">Organismo Creador</th>
+                            <th scope="col" class="px-6 py-4">Escenario Principal de Uso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <td class="px-6 py-4 font-bold text-blue-500">MITRE ATT&CK</td>
+                            <td class="px-6 py-4">Ofensiva y Defensiva</td>
+                            <td class="px-6 py-4">MITRE Corporation</td>
+                            <td class="px-6 py-4">Threat Hunting, Emulación de Adversarios (Red Teaming) y Respuesta a Incidentes analizando TTPs reales.</td>
+                        </tr>
+                        <tr class="bg-gray-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <td class="px-6 py-4 font-bold text-blue-500">ISSAF</td>
+                            <td class="px-6 py-4">Ofensiva / Evaluación</td>
+                            <td class="px-6 py-4">OISSG</td>
+                            <td class="px-6 py-4">Auditorías técnicas exhaustivas y muy granulares. Incluye fases extremas como "Borrado de huellas".</td>
+                        </tr>
+                        <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <td class="px-6 py-4 font-bold text-blue-500">PTES</td>
+                            <td class="px-6 py-4">Ofensiva Comercial</td>
+                            <td class="px-6 py-4">Comunidad de Expertos</td>
+                            <td class="px-6 py-4">Estandarizar servicios de pentesting para el área comercial y delimitar claramente las Reglas de Compromiso (ROE).</td>
+                        </tr>
+                        <tr class="bg-gray-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <td class="px-6 py-4 font-bold text-blue-500">OWASP WSTG</td>
+                            <td class="px-6 py-4">Evaluación Defensiva</td>
+                            <td class="px-6 py-4">OWASP Foundation</td>
+                            <td class="px-6 py-4">Identificación y contención de vulnerabilidades en arquitecturas, APIs y aplicaciones web modernas.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        {/* PUNTO 3. Material Multimedia */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-4 text-blue-500/80">3. Material Multimedia</h3>
+                        <figure class="relative transition-all duration-300 hover:scale-[1.01] bg-white dark:bg-gray-900 p-2 rounded-xl mt-4">
+                <img 
+                    class="w-full rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 object-contain" 
+                    src={INFO_TAREA.imagen_demo} 
+                    alt="Cuadro comparativo de marcos de ciberseguridad y pentesting" 
+                />
+            </figure>
+        </div>
+
+        {/* PUNTO 4. Reflexión Técnica */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">4. Reflexión Técnica y Escenarios Reales</h3>
+            <p class="mb-3 text-justify">
+            La asimilación de estas metodologías transforma a un ejecutor de comandos en un consultor de seguridad profesional. En el mundo real empresarial, un cliente no paga por saber "cuántos puertos tiene abiertos", sino por entender su nivel de riesgo real de negocio. Si el objetivo es asegurar una plataforma de comercio electrónico, el marco <strong>OWASP WSTG</strong> dictará el rumbo de las pruebas sobre la lógica de compra y pasarelas de pago.
+            </p>
+            <p class="text-justify">
+            Por otro lado, si una institución financiera necesita validar la resiliencia de su red corporativa frente a grupos cibercriminales modernos, se aplicará <strong>PTES</strong> para la ejecución de la intrusión, mientras que los equipos de defensa estructurarán su respuesta basándose en las tácticas y técnicas mapeadas por <strong>MITRE ATT&CK</strong>. Conocer las fronteras y fortalezas de cada estándar garantiza que la auditoría sea legal, ética, estructurada y, sobre todo, reproducible.
+            </p>
+        </div>
+
+        {/* PUNTO 5. Referencias Técnicas */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-4 text-blue-500/80">5. Referencias Técnicas</h3>
+            <ul class="list-disc list-inside space-y-3 text-sm text-gray-700 dark:text-gray-300 marker:text-blue-500 break-words">
+                <li>MITRE Corporation. (2025). MITRE ATT&CK® v14: Design and Philosophy. <a href="https://attack.mitre.org/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://attack.mitre.org/</a></li>
+                <li>Cybersecurity & Infrastructure Security Agency (CISA). (2023). Best Practices for MITRE ATT&CK® Mapping. U.S. Department of Homeland Security. <a href="https://www.cisa.gov/news-events/news/best-practices-mitre-attckr-mapping" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.cisa.gov/news-events/news/best-practices-mitre-attckr-mapping</a></li>
+                <li>OWASP Foundation. (2024). Web Security Testing Guide (WSTG) v4.2. <a href="https://owasp.org/www-project-web-security-testing-guide/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://owasp.org/www-project-web-security-testing-guide/</a></li>
+                <li>Scarfone, K., Souppaya, M., Cody, A., & Orebaugh, A. (2008). Technical Guide to Information Security Testing and Assessment (NIST Special Publication 800-115). National Institute of Standards and Technology. <a href="https://doi.org/10.6028/NIST.SP.800-115" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://doi.org/10.6028/NIST.SP.800-115</a></li>
+                <li>National Institute of Standards and Technology. (2024). NIST Cybersecurity Framework (CSF) 2.0. U.S. Department of Commerce. <a href="https://www.nist.gov/cyberframework" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.nist.gov/cyberframework</a></li>
+                <li>Herzog, P. (2010). OSSTMM 3: The Open Source Security Testing Methodology Manual. Institute for Security and Open Methodologies (ISECOM). <a href="https://www.isecom.org/OSSTMM.3.pdf" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.isecom.org/OSSTMM.3.pdf</a></li>
+                <li>ISECOM. (2021). Security Metrics and Operational Security Analysis. Institute for Security and Open Methodologies. <a href="https://www.lsecom.org/research.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.lsecom.org/research.html</a></li>
+                <li>PTES Team. (2014). The Penetration Testing Execution Standard. <a href="http://www.pentest-standard.org/index.php/Main_Page" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">http://www.pentest-standard.org/index.php/Main_Page</a></li>
+                <li>SANS Institute. (2023). A Guide to the Penetration Testing Execution Standard (PTES). SANS Reading Room. <a href="https://www.sans.org/white-papers/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.sans.org/white-papers/</a></li>
+                <li>Cisco Networking Academy. (2024). Seguridad Informática - Hacker Ético. Cisco Systems, Inc. <a href="https://www.netacad.com/es/courses/ethical-hacker?courseLang=es-XL" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.netacad.com/es/courses/ethical-hacker</a></li>
+            </ul>
+        </div>
+
+      </div>
+
+      {/* PUNTO 6. ZONA DE DESCARGA (Botón PDF) */}
+      <div class="mt-16 pt-10 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        
+        <div class="text-center mb-2">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200">6. Respaldo Académico Formal</h3>
+            <p class="text-sm text-gray-500 max-w-lg mt-1">
+            Presiona el siguiente botón para exportar la versión formal del documento en PDF correspondiente a esta investigación.
+            </p>
+        </div>
+
+        <a 
+          href={INFO_TAREA.pdf} 
+          download={`Actividad05-Metodologias-Pentesting.pdf`} 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95"
+        >
+          <Link class="size-5" />
+          Exportar a PDF
+        </a>
+
+        <a 
+          href="/#tareas" 
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>

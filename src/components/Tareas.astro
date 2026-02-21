@@ -1,0 +1,166 @@
+---
+import GitHub from "./Icons/GitHub.astro"
+import NextJS from "./Icons/NextJS.astro"
+import Tailwind from "./Icons/Tailwind.astro"
+import Estilooos from "./Icons/Estilooos.astro"
+import Link from "./Icons/Link.astro"
+import LinkButton from "./LinkButton.astro"
+import Java from "./Icons/Java.astro"
+import Htmmml from "./Icons/Htmmml.astro" 
+import Jjjsss from "./Icons/Jjjsss.astro" 
+import Cc from "./Icons/Cc.astro"       
+import Bell from "./Icons/Bell.astro"  
+
+const TAGS = {
+  JAVA: {
+    name: "Java",
+    class: "bg-black text-white",
+    icon: Java,
+  },
+  HTMMML: {
+    name: "HTML",
+    class: "bg-[#003159] text-white",
+    icon: Htmmml,
+  },
+  Estilooos: {
+    name: "CSS",
+    class: "bg-black text-white",
+    icon: Estilooos,
+  },
+  Jjjsss: {
+    name: "js",
+    class: "bg-black text-white",
+    icon: Jjjsss,
+  },
+  Cc: {
+    name: "Lenguaje C",
+    class: "bg-[#003159] text-white",
+    icon: Cc,
+  },
+  BELL: {
+    name: "Tarea",
+    class: "bg-[#003159] text-white",
+    icon: Bell,
+  },
+}
+
+const PROJECTS = [
+  /*
+  {
+    "title": "Tarea 1: Análisis de Vulnerabilidades",
+    "description": "Tarea completa sobre escaneo de puertos con Nmap y análisis de resultados.",
+    // Asegúrate de que esta ruta coincida con tu carpeta y archivo (todo minúsculas)
+    "link": "/Tareas/plantilla", 
+    "github": "", // Si no hay repo de github para la tarea, lo puedes dejar vacío
+    "image": "/projects/Artistas.png", // Cambia esto por la imagen que quieras para la tarea
+    "tags": [TAGS.HTMMML, TAGS.Estilooos] // Pon los tags que quieras
+  },
+  */
+  {
+    "title": "ACTIVIDAD 01 -Análisis en grupo de un ciberataque real y su impacto empresarial",
+    "description": "Análisis detallado del impacto del malware NotPetya y las operaciones del grupo de hacking Sandworm. El estudio se centró en las repercusiones técnicas y operativas sufridas por la empresa naviera Maersk, examinando las vulnerabilidades explotadas y las lecciones aprendidas por dicho ataque.",
+    "link": "/Tareas/Tarea1", 
+    "github": "", 
+    "image": "/projects/Imagen1Tarea1.png", 
+    "tags": [TAGS.BELL]
+  },
+  {
+    "title": "ACTIVIDAD 02 - Análisis de servicios de seguridad (X.800 y RFC 4949)",
+    "description": "Evaluación de incidentes de seguridad informática mediante la aplicación de los estándares ITU-T X.800 y la terminología técnica del RFC 4949. Se identificaron servicios comprometidos (autenticación, integridad, control de acceso) y se propusieron medidas de mitigación técnica para escenarios de acceso no autorizado y persistencia.",
+    "link": "/Tareas/Tarea2", 
+    "github": "", 
+    "image": "/projects/Imagen1Tarea2.png", 
+    "tags": [TAGS.BELL]
+  },
+  {
+    "title": "ACTIVIDAD 03 - Interpretación y traducción de políticas de filtrado en iptables",
+    "description": "Diseño e implementación de reglas de firewall utilizando Iptables para la gestión de tráfico de red.",
+    "link": "/Tareas/Tarea3", 
+    "github": "", 
+    "image": "/projects/Imagen1Tarea3.png", 
+    "tags": [TAGS.BELL]
+  },
+  {
+    "title": "ACTIVIDAD 04 - Mecanismos de defensa en red",
+    "description": "Traducción de requerimientos de seguridad lógica a sintaxis técnica de Iptables. Se configuraron permisos de entrada y salida para servicios críticos, asegurando la comunicación entre la red local, servidores específicos e internet bajo un esquema de seguridad perimetral.",
+    "link": "/Tareas/Tarea4", 
+    "github": "", 
+    "image": "/projects/Imagen1Tarea4.png", 
+    "tags": [TAGS.BELL]
+  },
+  {
+    "title": "ACTIVIDAD 05 - Cartografiando el pentesting: análisis comparativo de metodologías de seguridad informática",
+    "description": "Estudio comparativo de los marcos de referencia líderes en ciberseguridad, incluyendo MITRE ATT&CK, OWASP WSTG, NIST SP 800-115, OSSTMM, PTES e ISSAF. Se evaluaron sus fases, objetivos y enfoques (ataque/defensa) para determinar la metodología más adecuada según el contexto de evaluación técnica.",
+    "link": "/Tareas/Tarea5", 
+    "github": "", 
+    "image": "/projects/Imagen1Tarea5.png", 
+    "tags": [TAGS.BELL]
+  },
+  {
+    "title": "ACTIVIDAD 06 - Implementación de IPSec VPN",
+    "description": "Configuración práctica de una Red Privada Virtual (VPN) utilizando el protocolo IPSec en un entorno simulado. El ejercicio se enfocó en asegurar la confidencialidad e integridad de los datos en tránsito entre sitios remotos, aplicando túneles cifrados y autenticación sobre dispositivos de red Cisco.",
+    "link": "/Tareas/Tarea6", 
+    "github": "", 
+    "image": "/projects/Imagen1Tarea6.png", 
+    "tags": [TAGS.BELL]
+  },
+]
+---
+
+<div class="flex flex-col gap-y-16">
+  {
+    PROJECTS.map(({ image, title, description, tags, link, github }) => (
+    <article class="flex flex-col space-x-0 space-y-8 group md:flex-row md:space-x-8 md:space-y-0">
+  <div class="w-full md:w-1/2">
+    <div class="relative flex flex-col items-center col-span-6 row-span-5 gap-8 transition duration-500 ease-in-out transform shadow-xl overflow-clip rounded-xl sm:rounded-xl md:group-hover:-translate-y-1 md:group-hover:shadow-2xl lg:border lg:border-gray-800 lg:hover:border-gray-700 lg:hover:bg-gray-800/50">
+      <img class="object-cover object-top w-full h-56 transition duration-500 sm:h-full md:scale-110 md:group-hover:scale-105" loading="lazy" src={image} />
+    </div>
+  </div>
+
+  <div class="w-full md:w-1/2 md:max-w-lg">
+    <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
+      {title}
+    </h3>
+    <div class="flex flex-wrap mt-2">
+      <ul class="flex flex-row mb-2 gap-x-2">
+          {tags.map((tag) => (
+            <li>
+              <span
+                class={`flex gap-x-2 rounded-full text-xs ${tag.class} py-1 px-2 `}
+              >
+                <tag.icon class="size-4" />
+                {tag.name}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+      <div class="mt-2 text-gray-700 dark:text-gray-400">{description}</div>
+      <footer class="flex items-end justify-start mt-4 gap-x-4">
+          
+          {/* Botón de GitHub (Se mantiene igual, abre pestaña nueva) */}
+          {github && (
+            <LinkButton href={github}>
+              <GitHub class="size-6" />
+              Code
+            </LinkButton>
+          )}
+
+          {/* Botón de Ver Tarea (MODIFICADO) */}
+          {/* Usamos una etiqueta 'a' normal en lugar de LinkButton para que NO abra pestaña nueva */}
+          {link && (
+            <a 
+              href={link}
+              class="inline-flex items-center justify-center gap-2 px-3 py-2 space-x-2 text-base text-white transition bg-gray-800 border border-gray-600 focus-visible:ring-yellow-500/80 text-md hover:bg-gray-900 hover:border-gray-900 group max-w-fit rounded-xl hover:text-white focus:outline-none focus-visible:outline-none focus-visible:ring focus-visible:ring-white focus-visible:ring-offset-2 active:bg-black"
+            >
+              <Link class="size-4" />
+              Ver Tarea
+            </a>
+          )}
+        </footer>
+    </div>
+  </div>
+</article>
+    ))
+  }
+</div>

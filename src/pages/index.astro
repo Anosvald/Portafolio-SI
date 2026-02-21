@@ -17,6 +17,8 @@ import Awards from "../components/Awards.astro"
 import Bulb from "../components/Icons/Bulb.astro"
 import Contacto from '../components/Contacto.astro'
 import Create from '../components/Create.astro'
+import Tareas from "../components/Tareas.astro"
+import School from "../components/Icons/Tareas.astro"
 ---
 
 <Layout
@@ -73,6 +75,14 @@ import Create from '../components/Create.astro'
         Proyectos
       </TitleSection>
       <Projects />
+    </SectionContainer>
+
+    <SectionContainer id="tareas">
+      <TitleSection>
+        <School class="size-7" />
+        Tareas
+      </TitleSection>
+      <Tareas />
     </SectionContainer>
 
     <SectionContainer id="create">

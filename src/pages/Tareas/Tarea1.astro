@@ -1,0 +1,214 @@
+---
+// Importamos el Layout
+import Layout from "../../layouts/Layout.astro"
+
+// Importamos los componentes
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// --- DATOS DE LA TAREA ---
+const INFO_TAREA = {
+  titulo: "Actividad 01: Análisis de un ciberataque real (NotPetya - Maersk)",
+  fecha: "30 de Enero, 2026",
+  descripcion: "Análisis exhaustivo del ciberataque NotPetya y su impacto global en la infraestructura de Maersk, evaluando vulnerabilidades técnicas, fallas estratégicas y pérdidas económicas.",
+  pdf: "/pdfs/act01-Equipo5.pdf", 
+  imagen_demo: "/projects/Imagen2Tarea1.png" 
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+      
+      {/* --- ENCABEZADO --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+      
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* --- CONTENIDO PRINCIPAL (RÚBRICA) --- */}
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-10">
+        
+        {/* PUNTO 1. Introducción Contextual */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">1. Introducción Contextual al Tema</h3>
+            <p class="mb-3 text-justify">
+            En junio de 2017, el mundo presenció uno de los incidentes de ciberseguridad más devastadores de la historia moderna: NotPetya. Aunque inicialmente fue catalogado como un ransomware tradicional que exigía un pago en Bitcoin, análisis forenses posteriores revelaron su verdadera naturaleza. Se trataba de un malware tipo <em>Wiper</em>, una herramienta diseñada exclusivamente para el sabotaje y la destrucción irreversible de la información.
+            </p>
+            <p class="mb-3 text-justify">
+            El ataque fue atribuido al grupo de inteligencia militar rusa conocido como Sandworm. Los atacantes utilizaron la infraestructura ucraniana como zona cero, comprometiendo los servidores de actualización de Linkos Group, creadores del software contable M.E.Doc. Dado que este programa era de uso obligatorio para la declaración de impuestos en Ucrania, la infección se distribuyó de forma masiva y automática.
+            </p>
+            <p class="text-justify">
+            El daño colateral más significativo lo sufrió A.P. Møller-Mærsk (Maersk), el gigante global de transporte marítimo. La propagación fue tan agresiva que logró paralizar 76 terminales portuarias a nivel mundial, afectando 800 centros de datos, más de 45,000 computadoras portátiles y 4,000 servidores, obligando a la multinacional a operar su logística con papel y bolígrafo durante semanas.
+            </p>
+        </div>
+
+        {/* PUNTO 2. Desarrollo Técnico */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">2. Desarrollo Técnico de la Actividad</h3>
+            <p class="mb-4 text-justify">
+            El colapso de la red global de Maersk no se derivó de un solo vector, sino de una cadena de deficiencias estructurales que el malware explotó con precisión quirúrgica. Como se ilustra en el diagrama de la siguiente sección (Punto 3), el ataque se infiltró saltando las defensas perimetrales convencionales, demostrando la letalidad de comprometer a un proveedor de confianza.
+            </p>
+            
+            <h4 class="text-xl font-medium mb-2 text-gray-900 dark:text-white">Fallas Críticas y Explotación:</h4>
+            <ul class="list-disc list-inside space-y-2 mb-6 text-justify">
+                <li><strong>El Caballo de Troya (Cadena de Suministro):</strong> Al instalar la actualización maliciosa de M.E.Doc con privilegios administrativos en una oficina regional en Odessa, el malware ingresó a la red interna de Maersk eludiendo firewalls y filtros externos.</li>
+                <li><strong>Propagación vía EternalBlue:</strong> NotPetya utilizó el exploit filtrado de la NSA (CVE-2017-010) para atacar el protocolo SMBv1. Aunque Microsoft había liberado el parche MS17-010 meses atrás, la vasta y compleja red de la naviera no estaba completamente actualizada, permitiendo una infección automatizada de máquina a máquina.</li>
+                <li><strong>Secuestro de Identidad (MimiKatz):</strong> En los equipos que sí estaban parchados, el malware utilizó herramientas de post-explotación para leer la memoria RAM (proceso LSASS) y extraer credenciales de administrador local. Dado que la empresa poseía un único bosque de Active Directory a nivel mundial sin segmentación lógica, los atacantes obtuvieron control total de la infraestructura corporativa instantáneamente.</li>
+                <li><strong>Ejecución del Wiper:</strong> Tras asegurar el control, el código malicioso sobrescribía el Master Boot Record (MBR) y cifraba la Master File Table (MFT). Para engañar al empleado, forzaba un reinicio mostrando una falsa pantalla de escaneo de disco (<em>chkdsk</em>), mientras en el fondo destruía el arranque del sistema operativo.</li>
+            </ul>
+
+            <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700 mt-6">
+                <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span class="ml-2 text-xs text-gray-400 font-mono">evaluación-forense — MITRE y CIA</span>
+                </div>
+                <div class="p-4 overflow-x-auto text-sm">
+                    <pre class="font-mono leading-relaxed">
+<span class="text-blue-400"># Mapeo Táctico de Amenazas (MITRE ATT&CK)</span>
+<span class="text-green-400">[T1195.002]</span> Acceso Inicial: Supply Chain Compromise (Software M.E.Doc)
+<span class="text-green-400">[T1072]</span>     Ejecución: Software Deployment Tools
+<span class="text-green-400">[T1021.002]</span> Movimiento Lateral: SMB/Windows Admin Shares
+<span class="text-green-400">[T1485]</span>     Impacto: Data Destruction (Wiper)
+
+<span class="text-blue-400"># Evaluación del Impacto bajo el Modelo CIA</span>
+<span class="text-yellow-300">[CONFIDENCIALIDAD] -> Nivel: BAJO</span>
+- Ausencia de infraestructura de Comando y Control (C2). 
+- El malware no exfiltró datos corporativos; su objetivo era el sabotaje.
+
+<span class="text-red-400">[INTEGRIDAD]       -> Nivel: CRÍTICO</span>
+- Sobrescritura total del MBR y cifrado irrecuperable de la MFT.
+- Alteración severa en más de 49,000 terminales y servidores.
+
+<span class="text-red-500">[DISPONIBILIDAD]   -> Nivel: CATASTRÓFICO</span>
+- Caída total del Active Directory global y sistemas ERP.
+- Interrupción masiva de la cadena de suministro marítima y aduanera.
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        {/* PUNTO 3. Material Multimedia (IMAGEN SOLA) */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-4 text-blue-500/80">3. Material Multimedia</h3>
+            
+            <div class="relative transition-all duration-300 hover:scale-[1.01] bg-white dark:bg-gray-900 p-2 rounded-xl mt-4">
+                <img 
+                    class="w-full rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 object-contain" 
+                    src={INFO_TAREA.imagen_demo} 
+                    alt="Esquema y topología del ciberataque NotPetya en Maersk" 
+                />
+            </div>
+        </div>
+
+        {/* PUNTO 4. Reflexión Técnica */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">4. Reflexión Técnica y Normativa</h3>
+            <p class="mb-3 text-justify">
+            El caso Maersk resalta crudamente cómo la priorización de la eficiencia operativa por encima de la resiliencia digital puede poner en jaque la existencia de una corporación. Las pérdidas declaradas por la compañía rondaron los <strong>300 millones de USD (más de 5,400 millones de pesos mexicanos)</strong>, repartidos entre lucros cesantes operativos, daños reputacionales y un esfuerzo técnico titánico que requirió reinstalar decenas de miles de equipos desde cero con ayuda de Microsoft.
+            </p>
+            <p class="mb-3 text-justify">
+            Desde la perspectiva del cumplimiento normativo, la organización reprobó principios básicos de seguridad. Faltó adherencia a controles del <strong>NIST CSF (PR.IP-12 y PR.AC-4)</strong> para la gestión ágil de parches y la aplicación estricta del menor privilegio. Además, el diseño de red violó el estándar <strong>ISO 27001 (A.13.1.1)</strong> al carecer de segmentación lógica; aislar la oficina de Ucrania habría salvado las terminales en Estados Unidos y Europa.
+            </p>
+            <p class="text-justify">
+            Quizás la mayor lección recae en la recuperación de desastres (ISO A.17.1.2). Maersk se salvó de la pérdida total de su identidad corporativa únicamente porque un controlador de dominio en Ghana estaba desconectado de la red por un apagón eléctrico fortuito. Esto demuestra que mantener <em>backups offline</em> inmutables y probados no es un lujo técnico, sino el último salvavidas cuando las defensas perimetrales y los planes de contingencia fracasan ante amenazas destructivas avanzadas.
+            </p>
+        </div>
+
+        {/* PUNTO 5. Referencias Técnicas */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-4 text-blue-500/80">5. Referencias Técnicas</h3>
+            <ul class="list-disc list-inside space-y-3 text-sm text-gray-700 dark:text-gray-300 marker:text-blue-500 break-words">
+                <li>
+                    CISA (Cybersecurity & Infrastructure Security Agency). (2017, 1 de julio). Petya Ransomware (Alert TA17-181A). 
+                    <a href="https://www.cisa.gov/news-events/alerts/2017/07/01/petya-ransomware" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.cisa.gov/news-events/alerts/2017/07/01/petya-ransomware</a>
+                </li>
+                <li>
+                    ENISA (European Union Agency for Cybersecurity). (2017). Analysis of the NotPetya/ExPetr cyber-attack: Lessons for the EU. 
+                    <a href="https://www.enisa.europa.eu/publications/enisa-threat-landscape-report-2017" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.enisa.europa.eu/publications/enisa-threat-landscape-report-2017</a>
+                </li>
+                <li>
+                    MITRE ATT&CK. (2023). NotPetya (S0368) - Software Profile. 
+                    <a href="https://attack.mitre.org/software/S0368/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://attack.mitre.org/software/S0368/</a>
+                </li>
+                <li>
+                    CrowdStrike. (2017, 29 de junio). NotPetya technical analysis: A triple threat. 
+                    <a href="https://www.crowdstrike.com/blog/petrwrap-ransomware-technical-analysis-triple-threat-file-encryption-mft-encryption-credential-theft/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">Enlace a CrowdStrike</a>
+                </li>
+                <li>
+                    Kaspersky Lab. (2017, 27 de junio). Schrödinger's Pet(ya). Securelist - Kaspersky. 
+                    <a href="https://securelist.com/schrodingers-petya/78870/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://securelist.com/schrodingers-petya/78870/</a>
+                </li>
+                <li>
+                    A.P. Møller - Mærsk. (2018). Annual Report 2017. 
+                    <a href="https://investor.maersk.com/static-files/d533735a-5df7-423c-8611-d4a2c3bf31b0" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">Enlace al Reporte Anual</a>
+                </li>
+                <li>
+                    Greenberg, A. (2018, 22 de agosto). The Untold Story of NotPetya, the Most Devastating Cyberattack in History. Wired. 
+                    <a href="https://www.wired.com/story/notpetya-cyberattack-ukraine-russia-code-crashed-the-world/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">Enlace a Wired</a>
+                </li>
+                <li>
+                    The Hacker News. (2017, 27 de junio). NotPetya: Everything you need to know about the global attack. 
+                    <a href="https://thehackernews.com/2017/06/petya-ransomware-attack.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">Enlace a The Hacker News</a>
+                </li>
+                <li>
+                    O'Donnell, A. (2024, 18 de junio). The breach cost how much? How CISOs can talk effectively about the toll of a cyber incident. CSO Online. 
+                    <a href="https://www.csoonline.com/article/3844334/the-breach-cost-how-much-how-cisos-can-talk-effectively-about-the-toll-of-a-cyber-incident.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">Enlace a CSO Online</a>
+                </li>
+                <li>
+                    Executive Summary. (s/f). A Columbia university case study. Columbia.edu. Recuperado el 31 de enero de 2026. 
+                    <a href="https://www.sipa.columbia.edu/sites/default/files/2022-11/NotPetya%20Final.pdf" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">Enlace al PDF</a>
+                </li>
+            </ul>
+        </div>
+
+      </div>
+
+      {/* PUNTO 6. ZONA DE DESCARGA (Botón PDF) */}
+      <div class="mt-16 pt-10 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        
+        <div class="text-center mb-2">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200">6. Respaldo Académico Formal</h3>
+            <p class="text-sm text-gray-500 max-w-lg mt-1">
+            Presiona el siguiente botón para exportar la versión formal del documento en PDF correspondiente a esta investigación.
+            </p>
+        </div>
+
+        <a 
+          href={INFO_TAREA.pdf} 
+          download={`Actividad01-NotPetya-Maersk.pdf`} 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95"
+        >
+          <Link class="size-5" />
+          Exportar a PDF
+        </a>
+
+        <a 
+          href="/#tareas" 
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>

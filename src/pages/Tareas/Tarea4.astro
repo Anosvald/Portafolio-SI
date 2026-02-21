@@ -1,0 +1,182 @@
+---
+// Importamos el Layout
+import Layout from "../../layouts/Layout.astro"
+
+// Importamos los componentes
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// --- DATOS DE LA TAREA ---
+const INFO_TAREA = {
+  titulo: "Actividad 04: Mecanismos de defensa en red (Firewall)",
+  fecha: "04 de Febrero, 2026",
+  descripcion: "Diseño e implementación de reglas de firewall con iptables para la protección de una topología de red empresarial, aplicando políticas restrictivas y gestión de estados de conexión.",
+  pdf: "/pdfs/182217-Act04.pdf",
+  imagen_demo: "/projects/Imagen2Tarea4.png" 
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+      
+      {/* --- ENCABEZADO DE LA TAREA --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+      
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* --- CONTENIDO PRINCIPAL (RÚBRICA) --- */}
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-10">
+        
+        {/* PUNTO 1. Introducción Contextual */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">1. Introducción y Topología de Red</h3>
+            <p class="mb-3 text-justify">
+            La implementación de mecanismos de defensa en red a nivel perimetral es la primera línea de contención contra accesos no autorizados. En esta actividad, se abordó el diseño lógico de un <strong>Firewall</strong> basado en <code>iptables</code> para proteger una infraestructura empresarial específica.
+            </p>
+            <p class="text-justify">
+            La topología a asegurar divide el entorno en dos zonas principales: una red externa (Internet representada por <code>0.0.0.0</code>) y una red local segmentada en <code>192.1.2.0/24</code>. Dentro de esta red local, operan servicios críticos que deben ser expuestos de manera controlada: un <strong>Servidor de Correo</strong> alojado en la IP <code>192.1.2.10</code> y un <strong>Servidor Web</strong> en la IP <code>192.1.2.11</code>. El objetivo fundamental fue aplicar una filosofía de seguridad de "denegación por defecto" (Zero Trust inicial) y abrir únicamente los puertos y estados de conexión estrictamente necesarios para la operatividad del negocio.
+            </p>
+        </div>
+
+        {/* PUNTO 2. Desarrollo Técnico (EXTENSO) */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">2. Desarrollo Técnico: Implementación de Reglas de Firewall</h3>
+            <p class="mb-4 text-justify">
+            Para cumplir con las requisiciones operativas de la topología, se tradujeron las políticas de seguridad a comandos técnicos de <code>iptables</code>. El análisis del desarrollo técnico se divide en tres fases estratégicas:
+            </p>
+
+            <h4 class="text-xl font-medium mb-2 text-gray-900 dark:text-white">Fase 1: Postura Base y Gestión de Estado</h4>
+            <ul class="list-disc list-inside space-y-2 mb-6 text-justify">
+                <li><strong>Política Restrictiva (Default Drop):</strong> En lugar de permitir todo el tráfico y bloquear las amenazas conocidas (enfoque de lista negra), se configuró el firewall para descartar (<code>DROP</code>) absolutamente todo el tráfico entrante (<code>INPUT</code>), saliente (<code>OUTPUT</code>) y de reenvío (<code>FORWARD</code>). Esto garantiza que cualquier paquete que no coincida explícitamente con una regla de aceptación posterior sea destruido.</li>
+                <li><strong>Tráfico de Conexiones Establecidas:</strong> Para evitar crear reglas bidireccionales redundantes, se habilitó el módulo de estado (<code>-m state</code>). La regla permite globalmente el tráfico cuyos paquetes formen parte de una conexión previamente iniciada y validada (<code>ESTABLISHED</code>) o relacionada a una existente (<code>RELATED</code>).</li>
+            </ul>
+
+            <h4 class="text-xl font-medium mb-2 text-gray-900 dark:text-white">Fase 2: Protección de Servicios de Correo e Infraestructura</h4>
+            <ul class="list-disc list-inside space-y-2 mb-6 text-justify">
+                <li><strong>Tráfico DNS / Administración (TCP):</strong> Se autorizó el tráfico originado desde la red local (<code>-s 192.1.2.0/24</code>) hacia cualquier destino en Internet (<code>-d 0.0.0.0/0</code>) enfocado en la resolución de nombres y administración. La regla evalúa el protocolo TCP e inspecciona que el estado de la conexión sea nuevo (<code>NEW</code>).</li>
+                <li><strong>Flujo del Servidor de Correo (SMTP):</strong> El servidor de correo (<code>192.1.2.10</code>) requiere comunicación bidireccional específica en el puerto 25. Se crearon dos reglas distintas: la primera autoriza paquetes TCP entrantes desde cualquier punto de Internet dirigidos a la IP del servidor en el puerto 25. La segunda regla hace lo inverso, permitiendo que el servidor despache correos (tráfico saliente) hacia cualquier servidor externo en el mismo puerto.</li>
+            </ul>
+
+            <h4 class="text-xl font-medium mb-2 text-gray-900 dark:text-white">Fase 3: Exposición del Servidor Web</h4>
+            <ul class="list-disc list-inside space-y-2 mb-6 text-justify">
+                <li><strong>Conexiones HTTP Entrantes y Salientes:</strong> Para el servidor web (<code>192.1.2.11</code>), se habilitó el puerto TCP 80. Se permite explícitamente que los clientes en Internet alcancen este servicio para iniciar nuevas peticiones web (<code>--state NEW</code>). Paralelamente, se añadió una regla complementaria para asegurar que los equipos internos de la red local también puedan generar tráfico HTTP hacia el exterior.</li>
+            </ul>
+
+            <p class="mb-4 text-justify font-medium text-gray-700 dark:text-gray-300">
+            A continuación, se presenta la tabla de comandos técnicos definitivos aplicados en el Firewall:
+            </p>
+
+            <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700 mt-4">
+                <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span class="ml-2 text-xs text-gray-400 font-mono">firewall-admin — bash</span>
+                </div>
+                <div class="p-4 overflow-x-auto text-sm">
+                    <pre class="font-mono leading-relaxed">
+<span class="text-blue-400"># 1. Establecer una política restrictiva global</span>
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT DROP
+
+<span class="text-blue-400"># 2. Permitir el tráfico de conexiones ya establecidas</span>
+iptables -A INPUT -m state --state ESTABLISHED, RELATED -j ACCEPT
+
+<span class="text-blue-400"># 3. Aceptar tráfico DNS/Administrativo saliente de la red local</span>
+iptables -A INPUT -p tcp -s 192.1.2.0/24 -d 0.0.0.0/0 \
+--dport 22 -m state --state NEW -j ACCEPT
+
+<span class="text-blue-400"># 4. Aceptar correo entrante proveniente de Internet al servidor SMTP</span>
+iptables -A INPUT -p tcp -s 0.0.0.0/0 -d 192.1.2.10 \
+--dport 25 -m state --state NEW -j ACCEPT
+
+<span class="text-blue-400"># 5. Permitir correo saliente a Internet desde el servidor SMTP</span>
+iptables -A INPUT -p tcp -s 192.1.2.10 -d 0.0.0.0/0 \
+--dport 25 -m state --state NEW -j ACCEPT
+
+<span class="text-blue-400"># 6. Aceptar conexiones HTTP desde Internet a nuestro servidor web</span>
+iptables -A INPUT -p tcp -s 0.0.0.0/0 -d 192.1.2.11 \
+--dport 80 -m state --state NEW -j ACCEPT
+
+<span class="text-blue-400"># 7. Permitir tráfico HTTP desde la red local a Internet</span>
+iptables -A INPUT -p tcp -s 192.1.2.0/24 -d 0.0.0.0/0 \
+--dport 80 -m state --state NEW -j ACCEPT
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        {/* PUNTO 3. Material Multimedia */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-4 text-blue-500/80">3. Material Multimedia</h3>
+                        <figure class="relative transition-all duration-300 hover:scale-[1.01] bg-white dark:bg-gray-900 p-2 rounded-xl mt-4">
+                <img 
+                    class="w-full rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 object-contain" 
+                    src={INFO_TAREA.imagen_demo} 
+                    alt="Topología de red con Firewall, Servidor Web y Servidor de Correo" 
+                />
+            </figure>
+        </div>
+
+        {/* PUNTO 4. Reflexión Técnica */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">4. Reflexión Técnica y Aplicación Real</h3>
+            <p class="mb-3 text-justify">
+            La creación de estas reglas pone de manifiesto la importancia de la precisión en la sintaxis de los firewalls. Trabajar bajo una política de "Default Drop" garantiza que el administrador tiene control absoluto sobre cada paquete que cruza la red. Al obligar al firewall a verificar que el estado de la conexión sea <code>NEW</code> para las solicitudes entrantes, y <code>ESTABLISHED</code> para las respuestas, se previene activamente el secuestro de sesiones (Hijacking) y la inyección de paquetes manipulados.
+            </p>
+            <p class="text-justify">
+            En un escenario corporativo real, asignar reglas estrictas especificando las direcciones IP de origen y destino (como la protección exclusiva a <code>192.1.2.10</code> para el correo) evita que un atacante que haya vulnerado una máquina de recursos humanos pueda saltar hacia el servidor de bases de datos o de correo, ya que el firewall simplemente descartará ese tráfico lateral no autorizado.
+            </p>
+        </div>
+
+      </div>
+
+      {/* PUNTO 5. ZONA DE DESCARGA (Botón PDF) */}
+      <div class="mt-16 pt-10 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        
+        <div class="text-center mb-2">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200">5. Respaldo Académico Formal</h3>
+            <p class="text-sm text-gray-500 max-w-lg mt-1">
+            Presiona el siguiente botón para exportar la versión formal del documento en PDF correspondiente a esta actividad.
+            </p>
+        </div>
+
+        <a 
+          href={INFO_TAREA.pdf} 
+          download={`Actividad04-Defensa-Red.pdf`} 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95"
+        >
+          <Link class="size-5" />
+          Exportar a PDF
+        </a>
+
+        <a 
+          href="/#tareas" 
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>

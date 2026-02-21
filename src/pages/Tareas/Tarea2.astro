@@ -1,0 +1,177 @@
+---
+// Importamos el Layout
+import Layout from "../../layouts/Layout.astro"
+
+// Importamos los componentes
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// --- DATOS DE LA TAREA ---
+const INFO_TAREA = {
+  titulo: "Actividad 02: Análisis de servicios de seguridad (X.800 y RFC 4949)",
+  fecha: "27 de Enero, 2026",
+  descripcion: "Análisis técnico de 10 escenarios de incidentes mediante la aplicación de la arquitectura de seguridad UIT-T X.800 y el uso preciso de la terminología del RFC 4949.",
+  pdf: "/pdfs/182217-act02.pdf", 
+  imagen_demo: "/projects/Imagen1Tarea2.png" 
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+      
+      {/* --- ENCABEZADO DE LA TAREA --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+      
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* --- CONTENIDO PRINCIPAL (RÚBRICA) --- */}
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-10">
+        
+        {/* PUNTO 1. Introducción Contextual */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">1. Introducción y Contexto Técnico</h3>
+            <p class="mb-3 text-justify">
+            Proteger la información en infraestructuras corporativas modernas va más allá de instalar software de defensa; exige aplicar metodologías robustas que estandaricen las estrategias. Para este fin, los estándares internacionales son el pilar fundamental de cualquier analista de ciberseguridad.
+            </p>
+            <p class="text-justify">
+            Por una parte, el estándar <strong>UIT-T X.800</strong> define la arquitectura de seguridad orientada a redes y sistemas abiertos, categorizando los servicios vitales en: Autenticación, Control de Acceso, Confidencialidad, Integridad y No Repudio. De forma complementaria, el documento <strong>RFC 4949</strong> funciona como el vocabulario técnico oficial de la IETF, entregando definiciones exactas para clasificar amenazas y vulnerabilidades. Emplear ambos marcos asegura que el reporte de un ciberataque sea preciso a nivel de ingeniería y válido en contextos legales.
+            </p>
+        </div>
+
+        {/* PUNTO 2. Desarrollo Técnico */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">2. Desarrollo Técnico: Análisis de Escenarios</h3>
+            <p class="mb-4 text-justify">
+            En el desarrollo de esta práctica, se examinaron 10 situaciones de riesgo e intrusión informática, evaluando qué servicios de la arquitectura X.800 fueron comprometidos y catalogando las tácticas de los atacantes usando el glosario del RFC 4949. A continuación se desglosan los hallazgos técnicos:
+            </p>
+
+            <h4 class="text-xl font-medium mb-2 text-gray-900 dark:text-white">A. Ataques Multi-fase, Ransomware y Destrucción de Datos</h4>
+            <ul class="list-disc list-inside space-y-2 mb-6 text-justify">
+                <li><strong>Secuestro y Exfiltración (Escenario 1 y 10):</strong> En ataques avanzados de varias fases (<em>Multi-stage attack</em>), los cibercriminales provocan primero una filtración de información (<em>Data Breach</em>) antes de ejecutar el secuestro de los equipos (<em>Availability Attack</em>). En situaciones extremas (<em>Destructive Attack</em>), emplean herramientas tipo <em>Wiper</em> para borrar toda la infraestructura tras robar los datos. Esto aniquila por completo la Integridad, la Disponibilidad y la Confidencialidad.</li>
+                <li><strong>Ataque a los Respaldos (Escenario 5):</strong> Los operadores de ransomware suelen buscar privilegios para eliminar las copias de seguridad (<em>Data destruction</em>) previo al cifrado principal. Esta táctica anula la Integridad y Disponibilidad. La contramedida esencial es implementar respaldos inmutables en ubicaciones aisladas o en la nube (regla 3-2-1).</li>
+            </ul>
+
+            <h4 class="text-xl font-medium mb-2 text-gray-900 dark:text-white">B. Fugas de Datos, Amenazas Internas y Errores Operativos</h4>
+            <ul class="list-disc list-inside space-y-2 mb-6 text-justify">
+                <li><strong>Fallas en la Nube (Escenario 2):</strong> Exponer repositorios de bases de datos por errores humanos de configuración (<em>Misconfiguration</em> y <em>Exposure</em>) desencadena fugas de información masivas (<em>Data Leak</em>), comprometiendo directamente la Confidencialidad y el Control de Acceso sin requerir exploits sofisticados.</li>
+                <li><strong>Riesgos Internos (Escenario 6):</strong> Los trabajadores que poseen accesos válidos pero extraen información cometen una violación del privilegio mínimo (<em>Least Privilege Violation</em>) y actúan como una amenaza desde adentro (<em>Insider Threat</em>). Esto causa extracciones no autorizadas (<em>Exfiltration</em>), rompiendo la Confidencialidad X.800.</li>
+                <li><strong>Errores de Operación (Escenario 8):</strong> Las interrupciones de servicios globales originadas por actualizaciones mal programadas (<em>Operational Failure</em> o <em>Denial of Service Inadvertent</em>) anulan el servicio de Disponibilidad. Su mitigación depende enteramente de políticas de control de cambios y validación en entornos de pruebas.</li>
+            </ul>
+
+            <h4 class="text-xl font-medium mb-2 text-gray-900 dark:text-white">C. Ingeniería Social, Cadena de Suministro y Evasión Forense</h4>
+            <ul class="list-disc list-inside space-y-2 mb-6 text-justify">
+                <li><strong>Cadena de Suministro (Escenario 3):</strong> Lograr infiltrar a un desarrollador de software (<em>Supply Chain Attack</em>) quiebra la relación de confianza establecida (<em>Trust Relationship</em>). Inyectar código dañino (<em>Malicious Code</em>) a través de canales oficiales vulnera de raíz la Integridad de los sistemas destino.</li>
+                <li><strong>Engaños y Suplantación (Escenario 4 y 9):</strong> Las campañas fraudulentas tipo Phishing provocan el robo de contraseñas (<em>Credential Compromise</em>). Aunque la contraseña robada funcione técnicamente en el sistema, representa un fallo de validación de identidad (<em>Authentication failure</em>). Falsificar dominios se conoce como <em>Masquerade</em> y <em>Spoofing</em>, destrozando el servicio de Autenticación.</li>
+                <li><strong>Evasión Forense (Escenario 7):</strong> Manipular o borrar bitácoras del sistema afecta el historial de auditoría (<em>Audit Trail</em>) y la integridad de las evidencias (<em>Evidentiary Integrity</em>). Según el estándar X.800, esto destruye el servicio de No Repudio, impidiendo culpar o rastrear de manera legal las acciones del intruso.</li>
+            </ul>
+
+            <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700 mt-8">
+                <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+                    <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-blue-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-gray-500"></div>
+                    <span class="ml-2 text-xs text-gray-400 font-mono">mapeo-servicios — X.800</span>
+                </div>
+                <div class="p-4 overflow-x-auto text-sm">
+                    <pre class="font-mono leading-relaxed">
+<span class="text-blue-400"># Resumen de Servicios de Seguridad (UIT-T X.800) Vulnerados</span>
+
+<span class="text-green-400">[1] Autenticación:</span> Comprometida por Phishing, Masquerade y Spoofing.
+<span class="text-green-400">[2] Control de Acceso:</span> Burlado por Misconfigurations, Insider Threats y escalada.
+<span class="text-green-400">[3] Confidencialidad:</span> Rota por Data Breach, Exfiltration y Data Leaks.
+<span class="text-green-400">[4] Integridad:</span> Alterada por Malicious Code, Wipers y manipulación de Logs.
+<span class="text-green-400">[5] No Repudio:</span> Anulado al borrar el Audit Trail (Evidentiary Integrity).
+<span class="text-green-400">[6] Disponibilidad:</span> Destruida por Availability Attacks, Ransomware y Operational Failures.
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        {/* PUNTO 3. Material Multimedia */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-4 text-blue-500/80">3. Material Multimedia</h3>
+            <figure class="relative transition-all duration-300 hover:scale-[1.01] bg-white dark:bg-gray-900 p-2 rounded-xl mt-4">
+                <img 
+                    class="w-full rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 object-contain" 
+                    src={INFO_TAREA.imagen_demo} 
+                    alt="Tabla de análisis de servicios de seguridad X.800 y RFC 4949" 
+                />
+            </figure>
+        </div>
+
+        {/* PUNTO 4. Reflexión Técnica */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">4. Reflexión Técnica y Escenarios Reales</h3>
+            <p class="mb-3 text-justify">
+            La evaluación de estas situaciones expone una realidad importante de la industria: referirse coloquialmente a un incidente como un "hackeo" carece de validez al momento de realizar peritajes o auditorías de cumplimiento. Clasificar las amenazas empleando el glosario del RFC 4949 y la arquitectura X.800 permite cambiar la perspectiva y aplicar defensas estratégicas en lugar de soluciones temporales.
+            </p>
+            <p class="text-justify">
+            Saber diferenciar, por ejemplo, entre una exposición accidental por mala configuración y un robo interno de datos por un trabajador descontento, dictamina si la empresa necesita invertir en auditorías de nube o en endurecer sus políticas de mínimo privilegio. Este enfoque metodológico protege de forma integral los cimientos de la seguridad informática: Confidencialidad, Integridad y Disponibilidad.
+            </p>
+        </div>
+
+        {/* PUNTO 5. Referencias Técnicas */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-4 text-blue-500/80">5. Referencias Técnicas</h3>
+            <ul class="list-disc list-inside space-y-3 text-sm text-gray-700 dark:text-gray-300 marker:text-blue-500 break-words">
+                <li>
+                    Unión Internacional de Telecomunicaciones. (1991). Recomendación UIT-T X.800: Arquitectura de seguridad para la Interconexión de Sistemas Abiertos para aplicaciones de las CCITT. 
+                    <a href="https://www.itu.int/rec/t-rec-x.800-199103-i/es" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.itu.int/rec/t-rec-x.800-199103-i/es</a>
+                </li>
+                <li>
+                    Shirey, R. (2007). Internet Security Glossary, Version 2 (RFC No. 4949). Internet Engineering Task Force. 
+                    <a href="https://datatracker.ietf.org/doc/html/rfc4949" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://datatracker.ietf.org/doc/html/rfc4949</a>
+                </li>
+            </ul>
+        </div>
+
+      </div>
+
+      {/* PUNTO 6. ZONA DE DESCARGA (Botón PDF) */}
+      <div class="mt-16 pt-10 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        
+        <div class="text-center mb-2">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200">6. Respaldo Académico Formal</h3>
+            <p class="text-sm text-gray-500 max-w-lg mt-1">
+            Presiona el siguiente botón para exportar la versión formal del documento en PDF correspondiente a esta actividad. Este PDF funciona como respaldo del artículo aquí publicado.
+            </p>
+        </div>
+
+        <a 
+          href={INFO_TAREA.pdf} 
+          download={`Actividad02-Analisis-X800.pdf`} 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95"
+        >
+          <Link class="size-5" />
+          Exportar a PDF
+        </a>
+
+        <a 
+          href="/#tareas" 
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>
