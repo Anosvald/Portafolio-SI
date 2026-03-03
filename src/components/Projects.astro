@@ -8,7 +8,11 @@ import LinkButton from "./LinkButton.astro"
 import Java from "./Icons/Java.astro"
 import Htmmml from "./Icons/Htmmml.astro" 
 import Jjjsss from "./Icons/Jjjsss.astro" 
-import Cc from "./Icons/Cc.astro"         
+import Cc from "./Icons/Cc.astro" 
+// --- NUEVOS ÍCONOS DE SEGURIDAD ---
+import Security from "./Icons/Security.astro"
+import Security1 from "./Icons/Security1.astro"
+import Security2 from "./Icons/Security2.astro"
 
 const TAGS = {
   JAVA: {
@@ -36,19 +40,35 @@ const TAGS = {
     class: "bg-[#003159] text-white",
     icon: Cc,
   },
+  // --- NUEVAS ETIQUETAS PARA CIBERSEGURIDAD ---
+  PENTESTING: {
+    name: "Pentesting",
+    class: "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300",
+    icon: Security, 
+  },
+  KALI: {
+    name: "Kali Linux",
+    class: "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300",
+    icon: Security1, 
+  },
+  SEGURIDAD: {
+    name: "SSRF / SAST",
+    class: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300",
+    icon: Security2, 
+  }
 }
+
 const PROJECTS = [
   {
-    "title": "Proyecto en espera :D",
-    "description": "Proyecto en espera para la materia de ciberseguridad",
-    "link": "https://anosvald.github.io/Music.github.io/",
-    "github": "https://github.com/Anosvald/Music.github.io.git",
-    "image": "/projects/Artistas.png",
-    "tags": [TAGS.Estilooos, TAGS.HTMMML]
+    "title": "Proyecto 01: Pentesting - Máquina SNAKEOIL",
+    "description": "Auditoría de seguridad ofensiva completa (De Caja Negra a Caja Blanca). Exploración de red, explotación de inyección de comandos vía SSRF, análisis de código estático (SAST) y escalada de privilegios a usuario root.",
+    "link": "/Proyectos/Proyecto1",
+    "github": "", 
+    "image": "/projects/Proyecto1.png", 
+    "tags": [TAGS.PENTESTING, TAGS.KALI]
   },
   
   /*
-
   {
     "title": "Plataforma Web para Exploración de Artistas Globales",
     "description": "Desarrollo de una plataforma interactiva para visualizar artistas de renombre mundial. Permite a los usuarios explorar información detallada de diversos cantantes y bandas. Construida desde cero con html y CSS.",
@@ -102,9 +122,7 @@ const PROJECTS = [
     "image": "/projects/PuntoVenta_Java.png",
     "tags": [TAGS.JAVA]
   },
-
   */
-
 ]
 ---
 
@@ -138,19 +156,25 @@ const PROJECTS = [
 
       <div class="mt-2 text-gray-700 dark:text-gray-400">{description}</div>
       <footer class="flex items-end justify-start mt-4 gap-x-4">
+          
           {github && (
             <LinkButton href={github}>
               <GitHub class="size-6" />
               Code
-              
             </LinkButton>
           )}
+          
+          {/* --- AQUÍ REEMPLAZAMOS EL LINKBUTTON POR UNA ETIQUETA A --- */}
           {link && (
-            <LinkButton href={link}>
+            <a 
+              href={link}
+              class="bg-white/5 border dark:border-white/10 border-gray-300 rounded-full inline-flex justify-center items-center gap-x-2 py-1 px-2 md:py-2 md:px-4 text-xs md:text-base transition hover:scale-110 hover:bg-white/10 text-gray-800 dark:text-white"
+            >
               <Link class="size-4" />
               Preview
-            </LinkButton>
+            </a>
           )}
+
         </footer>
     </div>
   </div>

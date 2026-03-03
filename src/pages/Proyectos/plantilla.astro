@@ -1,0 +1,128 @@
+---
+// Importamos el Layout
+import Layout from "../../layouts/Layout.astro"
+
+// Importamos los componentes
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// --- DATOS DE LA TAREA ---
+const INFO_TAREA = {
+  titulo: "Tarea 1: Análisis de Vulnerabilidades",
+  fecha: "14 de Febrero, 2026",
+  descripcion: "Esta práctica consiste en realizar un escaneo de puertos y detección de servicios utilizando herramientas como Nmap en un entorno controlado.",
+  // AQUÍ ES DONDE SE PONE EL NOMBRE REAL DE TU ARCHIVO
+  // (Asegúrate que el archivo 'NotPetya.pdf' esté dentro de la carpeta 'public/pdfs')
+  pdf: "/pdfs/NotPetya.pdf",
+  imagen_demo: "/projects/Artistas.png" // Imagen de ejemplo
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+      
+      {/* --- ENCABEZADO DE LA TAREA --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+      
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* --- CONTENIDO PRINCIPAL --- */}
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-8">
+        
+        {/* 1. Introducción */}
+        <div>
+            <h3 class="text-xl font-semibold mb-3 text-blue-500/80">Introducción</h3>
+            <p>
+            {INFO_TAREA.descripcion} En esta actividad exploramos las fases iniciales de una auditoría de seguridad, centrándonos en el reconocimiento activo.
+            </p>
+        </div>
+
+        {/* 2. Sección de Código (Terminal Box) */}
+        <div>
+            <h3 class="text-xl font-semibold mb-3 text-blue-500/80">Comandos Utilizados</h3>
+            <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">Se utilizó el siguiente script para el escaneo inicial:</p>
+            
+            <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+                {/* Barra superior estilo terminal */}
+                <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span class="ml-2 text-xs text-gray-400 font-mono">terminal — bash</span>
+                </div>
+                {/* Código */}
+                <div class="p-4 overflow-x-auto">
+                    <pre class="font-mono text-sm leading-relaxed">
+<span class="text-green-400">user@kali:~$</span> sudo nmap -sS -p- --min-rate 5000 192.168.1.15
+<span class="text-gray-400">Starting Nmap 7.94 at 2026-02-14 10:00 CST</span>
+Nmap scan report for 192.168.1.15
+Host is up (0.00013s latency).
+Not shown: 65533 closed tcp ports (reset)
+PORT   STATE SERVICE
+<span class="text-yellow-300">22/tcp open  ssh</span>
+<span class="text-yellow-300">80/tcp open  http</span>
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        {/* 3. Evidencias (Imágenes) */}
+        <div>
+            <h3 class="text-xl font-semibold mb-4 text-blue-500/80">Evidencia Visual</h3>
+            <figure class="relative transition-all duration-300 hover:scale-[1.01]">
+                <img 
+                    class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-800" 
+                    src={INFO_TAREA.imagen_demo} 
+                    alt="Captura de pantalla de la tarea" 
+                />
+                <figcaption class="mt-2 text-center text-sm text-gray-500 italic">
+                    Figura 1: Resultado del análisis en la máquina objetivo.
+                </figcaption>
+            </figure>
+        </div>
+
+      </div>
+
+      {/* --- ZONA DE DESCARGA Y NAVEGACIÓN (AL FINAL) --- */}
+      <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        
+        {/* Botón PDF - DESCARGA DIRECTA */}
+        <a 
+          href={INFO_TAREA.pdf} 
+          download={`Reporte-${INFO_TAREA.titulo}.pdf`} 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30"
+        >
+          <Link class="size-5" />
+          Descargar PDF de la Tarea
+        </a>
+
+        {/* Link para volver */}
+        <a 
+          href="/#tareas" 
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>

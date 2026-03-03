@@ -1,0 +1,164 @@
+---
+// Importamos el Layout
+import Layout from "../../layouts/Layout.astro"
+
+// Importamos los componentes
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// --- DATOS DE LA TAREA ---
+const INFO_TAREA = {
+  titulo: "Tarea 7: Análisis del Caso OxyMonster (Dream Market)",
+  fecha: "01 de Marzo, 2026",
+  descripcion: "Cuestionario analítico sobre la investigación, captura y modus operandi de Gal Vallerius (OxyMonster), administrador del mercado de la Dark Web 'Dream Market'.",
+  pdf: "/pdfs/182217-Act07.pdf",
+  imagen_demo: "/projects/Imagen1Tarea7.png"
+}
+
+// --- PREGUNTAS Y RESPUESTAS DEL CUESTIONARIO ---
+const CUESTIONARIO = [
+  {
+    pregunta: "¿Qué policía inició las investigaciones?",
+    respuesta: "La investigación fue liderada principalmente por la **DEA** (Administración de Control de Drogas de EE. UU.) desde su oficina en Miami, trabajando en conjunto con el FBI, el Servicio de Inspección Postal (USPIS), el IRS, Aduanas (HSI) y autoridades internacionales en Europa y Países Bajos."
+  },
+  {
+    pregunta: "¿Cómo se llamaba la operación para cerrar el mercado principal?",
+    respuesta: "Las operaciones clave de la época fueron la **Operación Bayoneta** (Operation Bayonet), un esfuerzo multinacional que logró infiltrar y cerrar de forma simultánea los enormes mercados de AlphaBay y Hansa. Estas operaciones generaron migraciones masivas hacia Dream Market."
+  },
+  {
+    pregunta: "¿Cuál es el principal mercado malicioso que existía?",
+    respuesta: "En el apogeo de esta investigación, los mayores mercados de la DarkNet eran **AlphaBay**, **Hansa** y **Dream Market**. Tras la caída de los dos primeros, Dream Market (donde operaba OxyMonster) se convirtió indiscutiblemente en el mercado negro más grande de Internet."
+  },
+  {
+    pregunta: "¿Cómo conseguían tener reputación en Dream Market?",
+    respuesta: "Mediante un sistema de **reseñas y calificaciones** públicas. Tras cada compra, los usuarios calificaban al vendedor (del 1 al 5) y dejaban comentarios sobre la calidad del producto y el sigilo del envío. Además, la reputación se medía por el número de transacciones exitosas completadas a través del sistema Escrow."
+  },
+  {
+    pregunta: "¿Cuál es la principal droga en venta en ese momento?",
+    respuesta: "El mercado estaba inundado de narcóticos opioides recetados. El propio OxyMonster se especializaba y tomaba su nombre de la venta masiva de **Oxicodona** (OxyContin), además de comercializar Ritalin, fentanilo, cocaína y metanfetaminas."
+  },
+  {
+    pregunta: "¿En qué consiste el sistema escrow?",
+    respuesta: "Es un sistema de **depósito en garantía**. Para evitar estafas (scams), el mercado retiene el pago en criptomonedas del comprador en una billetera neutral. Los fondos solo se liberan y transfieren al vendedor cuando el comprador confirma que ha recibido su paquete correctamente."
+  },
+  {
+    pregunta: "¿En qué consiste el proceso 'The Mixer'?",
+    respuesta: "Un Bitcoin Mixer o 'Tumbler' (mezclador) es un servicio que combina las criptomonedas de múltiples usuarios en cientos de transacciones pequeñas y aleatorias. Su objetivo es **ofuscar el rastro del dinero en la blockchain**, rompiendo el vínculo entre el remitente y el receptor para lavar el dinero de las ventas ilícitas."
+  },
+  {
+    pregunta: "¿Desde cuándo inició sus actividades Oxy?",
+    respuesta: "Se tiene registro de que OxyMonster comenzó a operar como vendedor activo en Dream Market alrededor de **mayo de 2013**."
+  },
+  {
+    pregunta: "¿Cuánto tiempo tardó en obtener el rol de administrador OxyMonster?",
+    respuesta: "Tardó aproximadamente **dos años**. Empezó como un simple vendedor, pero gracias a su excelente reputación y constancia, la gerencia de Dream Market lo ascendió a moderador y finalmente a administrador (Senior Mod/Admin) alrededor de **mayo de 2015**."
+  },
+  {
+    pregunta: "¿Cuál fue el error de Oxy para lograr su detención?",
+    respuesta: "Su mayor error por exceso de confianza fue **viajar a los Estados Unidos**. Vallerius viajó desde Europa hacia el aeropuerto de Atlanta con la intención de competir en el 'Campeonato Mundial de Barbas y Bigotes' en Texas, llevando consigo su computadora personal con todas las evidencias."
+  },
+  {
+    pregunta: "¿Cuál era el nombre real de Oxy?",
+    respuesta: "**Gal Vallerius**, un ciudadano franco-israelí de 36 años, conocido físicamente por su llamativa y larga barba roja."
+  },
+  {
+    pregunta: "¿Cómo los agentes del orden lograron vincular a Oxy para conseguir la orden de arresto?",
+    respuesta: "Utilizaron dos métodos brillantes: Primero, **análisis de blockchain**, rastreando Bitcoin desde el 'tarro de propinas' (Tip Jar) del perfil de OxyMonster directamente hasta carteras controladas por Vallerius en LocalBitcoins. Segundo, **estilometría** (análisis lingüístico), descubriendo que OxyMonster y Vallerius usaban la misma sintaxis en foros públicos y en Instagram, como el uso constante de la palabra 'cheers', dobles comillas, y traducciones literales de modismos franceses."
+  },
+  {
+    pregunta: "¿Cuál fue la prueba definitiva para vincular a Oxy con los delitos de conspiración?",
+    respuesta: "**El análisis forense de su laptop en el aeropuerto.** Al ser detenido en Atlanta, los agentes confiscaron su computadora. Al revisarla, encontraron el navegador Tor abierto con la sesión de administrador de Dream Market iniciada, la llave de cifrado PGP correspondiente a OxyMonster y aproximadamente 500.000 dólares en Bitcoin."
+  }
+];
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+      
+      {/* --- ENCABEZADO DE LA TAREA --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+      
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* --- CONTENIDO PRINCIPAL (CUESTIONARIO) --- */}
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-8">
+        
+        {/* Introducción */}
+        <div>
+            <h3 class="text-xl font-semibold mb-3 text-blue-500/80">Descripción de la Actividad</h3>
+            <p class="text-justify">
+            {INFO_TAREA.descripcion} A continuación, se presentan las respuestas detalladas al cuestionario sobre el operativo que llevó a su captura.
+            </p>
+        </div>
+
+        {/* --- Evidencia Visual (Imagen) --- */}
+        <div class="mt-8 mb-8">
+            <figure class="relative transition-all duration-300 hover:scale-[1.01]">
+                <img 
+                    class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-800" 
+                    src={INFO_TAREA.imagen_demo} 
+                    alt="Análisis del caso OxyMonster" 
+                />
+            </figure>
+        </div>
+
+        {/* Mapeo del Cuestionario */}
+        <div class="space-y-6 mt-8">
+          {CUESTIONARIO.map((item, index) => (
+            <div class="bg-gray-50 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700/60 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+              <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-3 flex gap-2 items-start">
+                <span class="text-blue-500">Q{index + 1}.</span> 
+                {item.pregunta}
+              </h4>
+              <p class="text-gray-700 dark:text-gray-300 leading-relaxed pl-7">
+                <Fragment set:html={item.respuesta.replace(/\*\*(.*?)\*\*/g, '<strong class="text-blue-600 dark:text-blue-400 font-semibold">$1</strong>')} />
+              </p>
+            </div>
+          ))}
+        </div>
+
+      </div>
+
+      {/* --- ZONA DE DESCARGA Y NAVEGACIÓN (AL FINAL) --- */}
+      <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        
+        {/* Botón PDF - DESCARGA DIRECTA */}
+        <a 
+          href={INFO_TAREA.pdf} 
+          download={`Reporte-${INFO_TAREA.titulo}.pdf`} 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30"
+        >
+          <Link class="size-5" />
+          Descargar PDF de la Tarea
+        </a>
+
+        {/* Link para volver */}
+        <a 
+          href="/#tareas" 
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>

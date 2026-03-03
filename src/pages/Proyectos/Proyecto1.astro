@@ -1,0 +1,213 @@
+---
+// Importamos el Layout
+import Layout from "../../layouts/Layout.astro"
+
+// Importamos los componentes
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// --- DATOS DEL PROYECTO ---
+const INFO_PROYECTO = {
+  titulo: "Proyecto 01: Pentesting Completo - Máquina SNAKEOIL",
+  fecha: "01 de Marzo, 2026",
+  descripcion: "Auditoría de seguridad ofensiva (De Caja Negra a Caja Blanca). Exploración de red, explotación de inyección de comandos vía SSRF, análisis de código estático (SAST) y escalada de privilegios en entorno Linux.",
+  // pdf: "/pdfs/PROYECTO.pdf", // <-- Comentado temporalmente
+  video_id: "Uf3Q8_RKokw" // ID extraído de tu enlace de YouTube
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_PROYECTO.titulo}`}
+  description={INFO_PROYECTO.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 */
+      height: 0;
+      overflow: hidden;
+      max-width: 100%;
+      border-radius: 0.75rem;
+    }
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+      
+      {/* --- ENCABEZADO DEL PROYECTO --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_PROYECTO.titulo}
+      </TitleSection>
+      
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Finalizado el: {INFO_PROYECTO.fecha}
+      </p>
+
+      {/* --- CONTENIDO PRINCIPAL --- */}
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-10">
+        
+        {/* Introducción */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">1. Resumen Ejecutivo del Proyecto</h3>
+            <p class="mb-3 text-justify">
+            Este proyecto documenta el compromiso total de un servidor de laboratorio denominado <strong>SNAKEOIL</strong>. El ejercicio comenzó bajo un enfoque estricto de "Caja Negra", donde el único dato conocido era la subred local. 
+            </p>
+            <p class="text-justify">
+            A través de una metodología progresiva (PTES), se logró descubrir la máquina, evadir trampas de reconocimiento (Rabbit Holes), explotar fallas lógicas en la API para forzar la ejecución de comandos (Command Injection), y finalmente realizar un análisis de código fuente que derivó en la obtención de credenciales maestras y la toma de control como superusuario (root).
+            </p>
+        </div>
+
+        {/* Fases 1 y 2 */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">2. Descubrimiento y Reconocimiento (Fase 1 y 2)</h3>
+            <p class="mb-3 text-justify">
+            Tras configurar el hipervisor en modo Adaptador Puente para asegurar visibilidad en la Capa 2, se utilizó <code>netdiscover</code> para interceptar tráfico ARP, localizando la IP víctima sin ser detectado por firewalls locales. Una prueba pasiva de conectividad (<code>ping</code>) reveló un TTL de 64, indicando que el objetivo operaba sobre Linux.
+            </p>
+            <p class="mb-4 text-justify">
+            El escaneo exhaustivo con Nmap (<code>-p- -sV -sC</code>) expuso los puertos 80 y 8080. Al descartar el puerto 80 por ser una trampa estática, el esfuerzo se centró en el puerto 8080. Se descubrió un blog desarrollado en Python (Flask) que utilizaba JSON Web Tokens (JWT) para la gestión de sesiones. Un escaneo de fuerza bruta de directorios con <code>gobuster</code> expuso los paneles críticos de la API interna (<code>/login</code>, <code>/registration</code>, <code>/run</code>, <code>/secret</code> y <code>/users</code>).
+            </p>
+
+            <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+                <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span class="ml-2 text-xs text-gray-400 font-mono">kali@pentest:~$ reconocimiento</span>
+                </div>
+                <div class="p-4 overflow-x-auto text-sm">
+                    <pre class="font-mono leading-relaxed">
+<span class="text-gray-500"># Descubrimiento silencioso de hosts vía ARP</span>
+<span class="text-blue-400">sudo</span> netdiscover -r 192.168.0.0/24
+
+<span class="text-gray-500"># Escaneo masivo de puertos y servicios</span>
+<span class="text-blue-400">sudo</span> nmap -p- -sV -sC -n -v 192.168.0.13
+
+<span class="text-gray-500"># Fuzzing de directorios para descubrir la API oculta</span>
+<span class="text-blue-400">gobuster</span> dir -u http://192.168.0.13:8080 -w /usr/share/wordlists/dirb/common.txt
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        {/* Fases 3 y 4 */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">3. Interacción con la API y Explotación Lógica (Fase 3 y 4)</h3>
+            <p class="mb-3 text-justify">
+            La interacción directa con los <em>endpoints</em> de la API reveló múltiples vulnerabilidades de control de acceso. El directorio <code>/users</code> filtró el hash PBKDF2 del administrador "patrick", el cual resultó inmune a ataques de diccionario offline con John The Ripper. 
+            </p>
+            <p class="mb-3 text-justify">
+            Para avanzar, se forjó una identidad maliciosa en <code>/registration</code>, obteniendo un JWT válido. Posteriormente, abusando de cómo Flask lee las sesiones, se inyectó este JWT como una Cookie en el <em>endpoint</em> fallido <code>/secret</code>, forzándolo a revelar la clave maestra requerida por el sistema: <code>commandexecutionissecret</code>.
+            </p>
+            
+            <h4 class="text-xl font-medium mb-2 text-gray-900 dark:text-white mt-6">La Batalla de la Inyección de Comandos</h4>
+            <p class="mb-4 text-justify">
+            El <em>endpoint</em> <code>/run</code> esperaba recibir una URL para procesarla internamente (comportamiento SSRF). El objetivo era inyectar comandos de Linux. Sin embargo, el servidor actuaba como un "agujero negro": ocultaba las salidas exitosas y solo mostraba errores. La solución definitiva fue una técnica avanzada de manipulación de descriptores: se silenció el proceso original (<code>-s</code>), se inyectó el comando malicioso redirigiendo su éxito al canal de errores (<code>1>&2</code>), y se forzó un colapso del script de Python (<code>exit 1</code>) para obligar al servidor a imprimir nuestra información robada asumiendo que era un fallo del sistema.
+            </p>
+
+            <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+                <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span class="ml-2 text-xs text-gray-400 font-mono">kali@pentest:~$ explotación-api</span>
+                </div>
+                <div class="p-4 overflow-x-auto text-sm">
+                    <pre class="font-mono leading-relaxed">
+<span class="text-gray-500"># 1. Extracción de la llave secreta forzando lectura desde Cookie</span>
+<span class="text-blue-400">curl</span> -X GET http://192.168.0.13:8080/secret -H "Cookie: access_token_cookie=[TOKEN]"
+
+<span class="text-gray-500"># 2. Inyección de Comandos exitosa (Listado de archivos)</span>
+<span class="text-blue-400">curl</span> -X POST http://192.168.0.13:8080/run -H "Authorization: Bearer [TOKEN]" \
+-H "Content-Type: application/json" \
+-d '{"{"}"url":"127.0.0.1 -s; ls -la 1>&2; exit 1", "secret_key":"commandexecutionissecret"{"}"}'
+
+<span class="text-gray-500"># 3. Puente a Fase 5: Lectura y extracción del código fuente completo</span>
+<span class="text-blue-400">curl</span> -X POST http://192.168.0.13:8080/run -H "Authorization: Bearer [TOKEN]" \
+-H "Content-Type: application/json" \
+-d '{"{"}"url":"127.0.0.1 -s; cat app.py 1>&2; exit 1", "secret_key":"commandexecutionissecret"{"}"}' | <span class="text-green-400">jq</span>
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        {/* Fases 5 y 6 */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">4. Análisis de Código (SAST) y Control Total (Fase 5 y 6)</h3>
+            <p class="mb-3 text-justify">
+            Gracias al último comando ejecutado, se volcó el archivo <code>app.py</code> hacia la terminal local, permitiendo auditar el código fuente del servidor (White Box). El análisis reveló por qué habían fallado los intentos de SQLi (el autor usó consultas parametrizadas) y descubrió una "lista negra" que bloqueaba comandos como <code>bash</code> o <code>nc</code> para prevenir Reverse Shells.
+            </p>
+            <p class="mb-3 text-justify">
+            El hallazgo más crítico fue el origen de la vulnerabilidad en la función <code>Popen(..., shell=True)</code>, agravado por la presencia de credenciales maestras escritas en texto claro (<em>Hardcoded Credentials</em>): <code>'NOreasonable DOUBTthis PASSWORDISGOOD'</code>.
+            </p>
+            <p class="text-justify">
+            Se reutilizó esta contraseña maestra para establecer una conexión directa vía SSH como el usuario "patrick". En la fase final de post-explotación, se comprobó que el usuario pertenecía al grupo de administradores, logrando elevar privilegios a <code>root</code> con un simple <code>sudo su</code> y capturando exitosamente las banderas <strong>local.txt</strong> y <strong>proof.txt</strong>.
+            </p>
+        </div>
+
+        {/* --- VIDEO DE YOUTUBE --- */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-4 text-blue-500/80">5. Material Multimedia: Demostración Práctica</h3>
+            <p class="mb-4 text-justify text-gray-700 dark:text-gray-300">
+            A continuación, se presenta el recorrido visual completo del ataque, desde la enumeración inicial en la terminal de Kali Linux hasta la obtención de la terminal como usuario root en la máquina víctima.
+            </p>
+            
+            {/* Contenedor Iframe YouTube Responsivo */}
+            <div class="video-container shadow-2xl border border-gray-200 dark:border-gray-800">
+                <iframe 
+                    src={`https://www.youtube.com/embed/${INFO_PROYECTO.video_id}`} 
+                    title="Pentesting SNAKEOIL"
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+      </div>
+
+      {/* --- ZONA DE DESCARGA Y NAVEGACIÓN --- */}
+      <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        
+        {/* SECCIÓN DEL PDF COMENTADA 
+        <div class="text-center mb-2">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200">Respaldo Técnico Formal (Writeup)</h3>
+            <p class="text-sm text-gray-500 max-w-lg mt-1">
+            Descarga el reporte completo en formato PDF, el cual documenta la cronología exacta, los hallazgos y el análisis forense del compromiso del servidor.
+            </p>
+        </div>
+
+        <a 
+          href={INFO_PROYECTO.pdf} 
+          download={`Writeup-SNAKEOIL.pdf`} 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30"
+        >
+          <Link class="size-5" />
+          Descargar Writeup (PDF)
+        </a>
+        */}
+
+        <a 
+          href="/#proyectos" 
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de proyectos
+        </a>
+
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>
