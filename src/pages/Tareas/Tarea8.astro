@@ -323,6 +323,53 @@ const LABS = [
     imagen: "/projects/lab18.png"
   }
 ];
+
+// --- GRUPOS DEL ROADMAP ---
+const ROADMAP_GRUPOS = [
+  { label: "In-band", color: "green",  ids: [1, 2] },
+  { label: "UNION",   color: "blue",   ids: [3, 4, 5, 6, 7, 8, 9, 10] },
+  { label: "Blind",   color: "yellow", ids: [11, 12, 13, 14, 15] },
+  { label: "OOB",     color: "purple", ids: [16, 17] },
+  { label: "WAF",     color: "red",    ids: [18] },
+];
+
+// --- TODA LA LÓGICA DEL ROADMAP SE PROCESA AQUÍ EN EL FRONTMATTER ---
+// Mapas de color (objetos planos, sin TypeScript genéricos)
+const COLOR_DOT = {
+  green:  "bg-green-500",
+  blue:   "bg-blue-500",
+  yellow: "bg-yellow-400",
+  purple: "bg-purple-500",
+  red:    "bg-red-500",
+};
+
+const COLOR_LABEL = {
+  green:  "text-green-400 bg-green-900/20",
+  blue:   "text-blue-400 bg-blue-900/20",
+  yellow: "text-yellow-400 bg-yellow-900/20",
+  purple: "text-purple-400 bg-purple-900/20",
+  red:    "text-red-400 bg-red-900/20",
+};
+
+// Pre-procesamos cada lab con todos los valores que necesita el template
+const LABS_CON_GRUPO = LABS.map((lab, i) => {
+  const group = ROADMAP_GRUPOS.find(g => g.ids.includes(lab.id)) ?? ROADMAP_GRUPOS[0];
+const dotColor   = COLOR_DOT[group.color as keyof typeof COLOR_DOT]   ?? "bg-blue-500";
+ const labelColor = COLOR_LABEL[group.color as keyof typeof COLOR_LABEL] ?? "";
+  const nombreCorto = lab.nombre.length > 48
+    ? lab.nombre.substring(0, 46) + "…"
+    : lab.nombre;
+
+  return {
+    ...lab,
+    isLast:       i === LABS.length - 1,
+    isGroupStart: group.ids[0] === lab.id,
+    groupLabel:   group.label,
+    dotColor,
+    labelColor,
+    nombreCorto,
+  };
+});
 ---
 
 <Layout
@@ -333,181 +380,366 @@ const LABS = [
     :global(header) {
       display: none !important;
     }
+
+    /* ── ROADMAP SIDEBAR ── */
+    #roadmap-sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 1.5rem;
+      height: calc(100vh - 3rem);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #3b82f6 transparent;
+      padding-bottom: 2rem;
+    }
+    #roadmap-sidebar::-webkit-scrollbar       { width: 4px; }
+    #roadmap-sidebar::-webkit-scrollbar-track { background: transparent; }
+    #roadmap-sidebar::-webkit-scrollbar-thumb { background: #3b82f630; border-radius: 4px; }
+
+    .roadmap-item { cursor: pointer; transition: all 0.2s ease; }
+    .roadmap-item:hover .roadmap-dot      { transform: scale(1.35); }
+    .roadmap-item.active .roadmap-dot     { box-shadow: 0 0 0 3px rgba(59,130,246,0.35); }
+    .roadmap-item.active .roadmap-label   { color: #60a5fa; font-weight: 700; }
+
+    .roadmap-connector {
+      width: 2px;
+      flex-shrink: 0;
+      margin: 0 auto;
+      transition: background 0.3s;
+    }
+
+    @media (max-width: 1023px) {
+      #roadmap-sidebar { display: none; }
+    }
   </style>
 
   <main class="px-4">
-    <SectionContainer class="py-16 md:py-20">
-      
-      {/* --- ENCABEZADO --- */}
-      <TitleSection>
-        <CodeIcon class="size-8" />
-        {INFO_TAREA.titulo}
-      </TitleSection>
-      
-      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
-        📅 Entregado el: {INFO_TAREA.fecha}
-      </p>
 
-      {/* --- CONTENIDO PRINCIPAL --- */}
-      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-12">
-        
-        {/* --- MARCO TEÓRICO --- */}
-        <div>
-            <h3 class="text-3xl font-bold mb-4 text-blue-500/90 border-b border-blue-500/20 pb-2">1. Marco Teórico y Fundamentación</h3>
+    <!-- Wrapper flex: sidebar izquierdo + contenido principal -->
+    <div class="flex gap-6 items-start max-w-[1400px] mx-auto">
+
+      <!-- ══════════════════════════════════════
+           ROADMAP SIDEBAR IZQUIERDO
+      ══════════════════════════════════════ -->
+      <aside id="roadmap-sidebar" class="hidden lg:block">
+
+        <!-- Título y contador -->
+        <div class="mb-4 px-1">
+          <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1">
+            Progress
+          </p>
+          <div class="h-[2px] w-full bg-gradient-to-r from-blue-500 to-transparent rounded-full"></div>
+          <p class="text-xs text-blue-400 font-mono mt-1">
+            <span id="roadmap-count">0</span> / 18 labs
+          </p>
+        </div>
+
+        <!-- Leyenda de colores -->
+        <div class="flex flex-wrap gap-1 mb-4 px-1">
+          <span class="text-[9px] px-2 py-0.5 rounded-full bg-green-900/30  text-green-400  border border-green-800/40  font-semibold">In-band</span>
+          <span class="text-[9px] px-2 py-0.5 rounded-full bg-blue-900/30   text-blue-400   border border-blue-800/40   font-semibold">UNION</span>
+          <span class="text-[9px] px-2 py-0.5 rounded-full bg-yellow-900/30 text-yellow-400 border border-yellow-800/40 font-semibold">Blind</span>
+          <span class="text-[9px] px-2 py-0.5 rounded-full bg-purple-900/30 text-purple-400 border border-purple-800/40 font-semibold">OOB</span>
+          <span class="text-[9px] px-2 py-0.5 rounded-full bg-red-900/30    text-red-400    border border-red-800/40    font-semibold">WAF</span>
+        </div>
+
+        <!-- Timeline: usa LABS_CON_GRUPO (todo pre-calculado) -->
+        <div class="relative pl-2" id="roadmap-timeline">
+          {LABS_CON_GRUPO.map((lab) => (
+            <div>
+              <!-- Etiqueta de grupo (solo al inicio de cada grupo) -->
+              {lab.isGroupStart && (
+                <div class="flex items-center gap-2 mb-1 mt-2">
+                  <span class={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-sm ${lab.labelColor}`}>
+                    {lab.groupLabel}
+                  </span>
+                </div>
+              )}
+
+              <!-- Item del roadmap -->
+              <div
+                class="roadmap-item flex items-start gap-2 group mb-0"
+                data-lab-id={lab.id}
+                onclick={`scrollToLab(${lab.id})`}
+              >
+                <!-- Columna: dot + línea conectora -->
+                <div class="flex flex-col items-center" style="width:18px; flex-shrink:0;">
+                  <div
+                    class={`roadmap-dot w-[18px] h-[18px] rounded-full flex items-center justify-center text-[9px] font-bold text-white flex-shrink-0 transition-all duration-200 border-2 border-transparent bg-opacity-80 ${lab.dotColor}`}
+                    style="margin-top:2px;"
+                  >
+                    {lab.id}
+                  </div>
+                  {!lab.isLast && (
+                    <div class={`roadmap-connector h-8 opacity-20 ${lab.dotColor}`}></div>
+                  )}
+                </div>
+
+                <!-- Nombre corto del laboratorio -->
+                <div class="roadmap-label text-[11px] text-gray-500 dark:text-gray-400 leading-snug pt-0.5 pr-1 pb-5 group-hover:text-gray-300 transition-colors line-clamp-2">
+                  {lab.nombreCorto}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Barra de progreso -->
+        <div class="mt-4 px-1">
+          <div class="h-1.5 w-full bg-gray-800 rounded-full overflow-hidden">
+            <div
+              id="roadmap-progress-bar"
+              class="h-full bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full transition-all duration-500"
+              style="width: 0%"
+            ></div>
+          </div>
+        </div>
+
+      </aside>
+      <!-- ══ FIN SIDEBAR ══ -->
+
+
+      <!-- ══════════════════════════════════════
+           CONTENIDO PRINCIPAL — IGUAL QUE ANTES
+      ══════════════════════════════════════ -->
+      <div class="flex-1 min-w-0">
+        <SectionContainer class="py-16 md:py-20">
+          
+          <!-- ENCABEZADO -->
+          <TitleSection>
+            <CodeIcon class="size-8" />
+            {INFO_TAREA.titulo}
+          </TitleSection>
+          
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+            📅 Entregado el: {INFO_TAREA.fecha}
+          </p>
+
+          <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-12">
             
-            <h4 class="text-xl font-semibold mt-4 text-gray-900 dark:text-white">Fundamentos y ¿Qué es SQL Injection?</h4>
-            <p class="text-justify">
-            Las bases de datos relacionales estructuran la información en tablas (filas y columnas) y son gestionadas mediante SQL (Structured Query Language). Una vulnerabilidad de <strong>SQL Injection (SQLi)</strong> ocurre cuando una aplicación web inserta datos proporcionados por el usuario directamente en una consulta SQL sin la debida sanitización o parametrización. Esto permite a un atacante alterar la lógica de ejecución del backend, pudiendo leer, modificar o destruir información sensible.
-            </p>
+            <!-- MARCO TEÓRICO -->
+            <div>
+              <h3 class="text-3xl font-bold mb-4 text-blue-500/90 border-b border-blue-500/20 pb-2">1. Marco Teórico y Fundamentación</h3>
+              
+              <h4 class="text-xl font-semibold mt-4 text-gray-900 dark:text-white">Fundamentos y ¿Qué es SQL Injection?</h4>
+              <p class="text-justify">
+                Las bases de datos relacionales estructuran la información en tablas (filas y columnas) y son gestionadas mediante SQL (Structured Query Language). Una vulnerabilidad de <strong>SQL Injection (SQLi)</strong> ocurre cuando una aplicación web inserta datos proporcionados por el usuario directamente en una consulta SQL sin la debida sanitización o parametrización. Esto permite a un atacante alterar la lógica de ejecución del backend, pudiendo leer, modificar o destruir información sensible.
+              </p>
 
-            <h4 class="text-xl font-semibold mt-4 text-gray-900 dark:text-white">Clasificación de Ataques SQLi</h4>
-            <ul class="list-disc list-inside space-y-1 text-justify">
+              <h4 class="text-xl font-semibold mt-4 text-gray-900 dark:text-white">Clasificación de Ataques SQLi</h4>
+              <ul class="list-disc list-inside space-y-1 text-justify">
                 <li><strong>In-band (Clásico):</strong> El atacante utiliza el mismo canal de comunicación para lanzar el ataque y recolectar los resultados. Incluye técnicas <em>Error-based</em> y <em>UNION-based</em>.</li>
                 <li><strong>Blind (Ciego):</strong> La aplicación no devuelve datos de la base de datos en la pantalla. La extracción de información se realiza mediante inferencia, analizando respuestas condicionales (Boolean-based) o provocando pausas en el servidor (Time-based).</li>
                 <li><strong>Out-of-band (OOB):</strong> Se utiliza cuando la respuesta es asíncrona. El atacante obliga a la base de datos a generar una conexión de red externa (ej. DNS o HTTP) hacia un servidor que él controla para exfiltrar los datos.</li>
-            </ul>
+              </ul>
 
-            <h4 class="text-xl font-semibold mt-4 text-gray-900 dark:text-white">Impacto (Triada CIA) y Prevención (OWASP)</h4>
-            <p class="text-justify">
-            Catalogado habitualmente en el <strong>Top 3 del OWASP Top 10 (A03:2021-Injection)</strong>, el SQLi tiene un impacto catastrófico en la seguridad corporativa. Compromete la <em>Confidencialidad</em> al exponer contraseñas y datos personales; destruye la <em>Integridad</em> al permitir la modificación o eliminación de registros; y vulnera la <em>Disponibilidad</em> al permitir la denegación de servicio (DoS) o borrado de tablas. Su prevención principal radica en la implementación arquitectónica de <strong>Prepared Statements (Consultas Parametrizadas)</strong> y validación estricta de inputs (Whitelisting).
-            </p>
-        </div>
+              <h4 class="text-xl font-semibold mt-4 text-gray-900 dark:text-white">Impacto (Triada CIA) y Prevención (OWASP)</h4>
+              <p class="text-justify">
+                Catalogado habitualmente en el <strong>Top 3 del OWASP Top 10 (A03:2021-Injection)</strong>, el SQLi tiene un impacto catastrófico en la seguridad corporativa. Compromete la <em>Confidencialidad</em> al exponer contraseñas y datos personales; destruye la <em>Integridad</em> al permitir la modificación o eliminación de registros; y vulnera la <em>Disponibilidad</em> al permitir la denegación de servicio (DoS) o borrado de tablas. Su prevención principal radica en la implementación arquitectónica de <strong>Prepared Statements (Consultas Parametrizadas)</strong> y validación estricta de inputs (Whitelisting).
+              </p>
+            </div>
 
-        {/* --- DESARROLLO PRÁCTICO (MAPEADO DINÁMICO DE LABORATORIOS) --- */}
-        <div>
-            <h3 class="text-3xl font-bold mb-6 text-blue-500/90 border-b border-blue-500/20 pb-2">2. Desarrollo Técnico: Laboratorios PortSwigger</h3>
-            
-            <div class="space-y-16">
-              {LABS.map((lab, index) => (
-                <div class="bg-gray-50 dark:bg-[#0f111a] border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
-                  
-                  {/* Header del Laboratorio */}
-                  <div class="mb-6">
-                    <div class="flex flex-wrap items-center gap-3 mb-2">
+            <!-- DESARROLLO PRÁCTICO -->
+            <div>
+              <h3 class="text-3xl font-bold mb-6 text-blue-500/90 border-b border-blue-500/20 pb-2">2. Desarrollo Técnico: Laboratorios PortSwigger</h3>
+              
+              <div class="space-y-16">
+                {LABS.map((lab, index) => (
+                  <div id={`lab-${lab.id}`} class="bg-gray-50 dark:bg-[#0f111a] border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm scroll-mt-8">
+                    
+                    <!-- Header del Laboratorio -->
+                    <div class="mb-6">
+                      <div class="flex flex-wrap items-center gap-3 mb-2">
                         <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">LAB {index + 1}</span>
                         <span class={`text-xs font-bold px-3 py-1 rounded-full ${lab.nivel === 'Apprentice' ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-400' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-400'}`}>
-                            {lab.nivel}
+                          {lab.nivel}
                         </span>
                         <span class="bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300 text-xs font-bold px-3 py-1 rounded-full">
-                            {lab.tipo}
+                          {lab.tipo}
                         </span>
-                    </div>
-                    <h4 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                      </div>
+                      <h4 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-tight">
                         {lab.nombre}
-                    </h4>
-                  </div>
+                      </h4>
+                    </div>
 
-                  {/* Explicación Técnica y Objetivo */}
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <!-- Objetivo y Análisis -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                       <div>
-                          <h5 class="text-blue-500 font-semibold mb-2 flex items-center gap-2">
-                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                              Objetivo del Laboratorio
-                          </h5>
-                          <p class="text-sm text-gray-700 dark:text-gray-300 text-justify">{lab.objetivo}</p>
+                        <h5 class="text-blue-500 font-semibold mb-2 flex items-center gap-2">
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                          Objetivo del Laboratorio
+                        </h5>
+                        <p class="text-sm text-gray-700 dark:text-gray-300 text-justify">{lab.objetivo}</p>
                       </div>
                       <div>
-                          <h5 class="text-blue-500 font-semibold mb-2 flex items-center gap-2">
-                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
-                              Análisis de Vulnerabilidad
-                          </h5>
-                          <p class="text-sm text-gray-700 dark:text-gray-300 text-justify">{lab.explicacion}</p>
+                        <h5 class="text-blue-500 font-semibold mb-2 flex items-center gap-2">
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
+                          Análisis de Vulnerabilidad
+                        </h5>
+                        <p class="text-sm text-gray-700 dark:text-gray-300 text-justify">{lab.explicacion}</p>
                       </div>
-                  </div>
+                    </div>
 
-                  {/* Pasos y Terminal (Payload) */}
-                  <div class="mb-6">
+                    <!-- Pasos y Payload -->
+                    <div class="mb-6">
                       <h5 class="text-blue-500 font-semibold mb-3 flex items-center gap-2">
-                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                          Procedimiento Metodológico
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        Procedimiento Metodológico
                       </h5>
                       <ul class="list-decimal list-inside space-y-1 mb-4 text-sm text-gray-700 dark:text-gray-300">
-                          {lab.pasos.map(paso => (
-                              <li>{paso}</li>
-                          ))}
+                        {lab.pasos.map(paso => (
+                          <li>{paso}</li>
+                        ))}
                       </ul>
 
-                      {/* Caja de Terminal para Payload */}
+                      <!-- Terminal Payload -->
                       <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-md overflow-hidden border border-gray-700 mt-4">
-                          <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
-                              <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                              <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                              <span class="ml-2 text-xs text-gray-400 font-mono">Payload inyectado</span>
-                          </div>
-                          <div class="p-4 overflow-x-auto text-sm">
-                              <pre class="font-mono text-green-400 leading-relaxed whitespace-pre-wrap break-words">{lab.payload}</pre>
-                          </div>
+                        <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+                          <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                          <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                          <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                          <span class="ml-2 text-xs text-gray-400 font-mono">Payload inyectado</span>
+                        </div>
+                        <div class="p-4 overflow-x-auto text-sm">
+                          <pre class="font-mono text-green-400 leading-relaxed whitespace-pre-wrap break-words">{lab.payload}</pre>
+                        </div>
                       </div>
-                  </div>
+                    </div>
 
-                  {/* Evidencia Fotográfica */}
-                  <div class="mb-6">
+                    <!-- Evidencia -->
+                    <div class="mb-6">
                       <h5 class="text-blue-500 font-semibold mb-3 flex items-center gap-2">
-                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                          Evidencia Técnica (Burp Suite / Resolución)
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                        Evidencia Técnica (Burp Suite / Resolución)
                       </h5>
                       <figure class="relative transition-all duration-300 hover:scale-[1.01] bg-white dark:bg-[#1a1e29] p-2 rounded-xl">
-                          <img 
-                              class="w-full rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 object-contain" 
-                              src={lab.imagen} 
-                              alt={`Captura del ${lab.nombre}`} 
-                          />
+                        <img
+                          class="w-full rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 object-contain"
+                          src={lab.imagen}
+                          alt={`Captura del ${lab.nombre}`}
+                        />
                       </figure>
-                  </div>
+                    </div>
 
-                  {/* Mitigación */}
-                  <div class="bg-blue-50 dark:bg-blue-900/10 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                    <!-- Mitigación -->
+                    <div class="bg-blue-50 dark:bg-blue-900/10 border-l-4 border-blue-500 p-4 rounded-r-lg">
                       <h5 class="text-blue-600 dark:text-blue-400 font-bold mb-1 text-sm flex items-center gap-2">
-                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                          Estrategia de Mitigación Recomendada
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                        Estrategia de Mitigación Recomendada
                       </h5>
                       <p class="text-sm text-gray-700 dark:text-gray-300 text-justify">{lab.mitigacion}</p>
+                    </div>
+
                   </div>
-
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-        </div>
 
-        {/* --- CONCLUSIONES --- */}
-        <div>
-            <h3 class="text-3xl font-bold mb-4 text-blue-500/90 border-b border-blue-500/20 pb-2">3. Conclusiones</h3>
-            <p class="text-justify">
-            La resolución sistemática de estos 18 laboratorios demuestra que la inyección SQL ha evolucionado significativamente. Ya no se trata únicamente de eludir formularios de inicio de sesión clásicos. Como se comprobó en los laboratorios avanzados, los vectores de ataque modernos aprovechan características intrínsecas de los motores de bases de datos (como el análisis asíncrono XML en Oracle o las funciones de tiempo en PostgreSQL) para exfiltrar información, incluso a través de firewalls perimetrales (WAF) utilizando técnicas de ofuscación de entidades (Hackvertor). La defensa más efectiva sigue siendo arquitectónica: las Consultas Parametrizadas eliminan de raíz la posibilidad de que el input del usuario sea interpretado como código SQL ejecutable.
-            </p>
-        </div>
+            <!-- CONCLUSIONES -->
+            <div>
+              <h3 class="text-3xl font-bold mb-4 text-blue-500/90 border-b border-blue-500/20 pb-2">3. Conclusiones</h3>
+              <p class="text-justify">
+                La resolución sistemática de estos 18 laboratorios demuestra que la inyección SQL ha evolucionado significativamente. Ya no se trata únicamente de eludir formularios de inicio de sesión clásicos. Como se comprobó en los laboratorios avanzados, los vectores de ataque modernos aprovechan características intrínsecas de los motores de bases de datos (como el análisis asíncrono XML en Oracle o las funciones de tiempo en PostgreSQL) para exfiltrar información, incluso a través de firewalls perimetrales (WAF) utilizando técnicas de ofuscación de entidades (Hackvertor). La defensa más efectiva sigue siendo arquitectónica: las Consultas Parametrizadas eliminan de raíz la posibilidad de que el input del usuario sea interpretado como código SQL ejecutable.
+              </p>
+            </div>
 
+          </div>
+
+          <!-- ZONA DE DESCARGA -->
+          <div class="mt-16 pt-10 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+            
+            <div class="text-center mb-2">
+              <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200">Respaldo Académico y Documentación Formal</h3>
+              <p class="text-sm text-gray-500 max-w-lg mt-1">
+                Presiona el siguiente botón para exportar la versión formal del documento en PDF correspondiente a esta práctica, el cual incluye el marco teórico completo y las capturas de pantalla de la rúbrica.
+              </p>
+            </div>
+
+            <a
+              href={INFO_TAREA.pdf}
+              download="Act08-Equipo5.pdf"
+              class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95"
+            >
+              <Link class="size-5" />
+              Descargar PDF de la Tarea 8
+            </a>
+
+            <a
+              href="/#tareas"
+              class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+            >
+              ← Regresar a la lista de tareas
+            </a>
+
+          </div>
+
+        </SectionContainer>
       </div>
+      <!-- ══ FIN CONTENIDO PRINCIPAL ══ -->
 
-      {/* --- ZONA DE DESCARGA (Botón PDF) --- */}
-      <div class="mt-16 pt-10 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
-        
-        <div class="text-center mb-2">
-            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200">Respaldo Académico y Documentación Formal</h3>
-            <p class="text-sm text-gray-500 max-w-lg mt-1">
-            Presiona el siguiente botón para exportar la versión formal del documento en PDF correspondiente a esta práctica, el cual incluye el marco teórico completo y las capturas de pantalla de la rúbrica.
-            </p>
-        </div>
+    </div>
 
-        <a 
-          href={INFO_TAREA.pdf} 
-          download={`Act08-Equipo5.pdf`} 
-          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95"
-        >
-          <Link class="size-5" />
-          Descargar PDF de la Tarea 8
-        </a>
-
-        <a 
-          href="/#tareas" 
-          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
-        >
-          ← Regresar a la lista de tareas
-        </a>
-
-      </div>
-
-    </SectionContainer>
   </main>
+
+  <!-- ══════════════════════════════════════
+       SCRIPT: scroll suave + progreso
+  ══════════════════════════════════════ -->
+  <script>
+    // Scroll suave al lab cuando se hace clic en el roadmap
+    function scrollToLab(id: number) {
+      const el = document.getElementById("lab-" + id);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    (window as any).scrollToLab = scrollToLab;
+
+    const TOTAL = 18;
+    const seen = new Set<number>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const rawId = (entry.target as HTMLElement).id.replace("lab-", "");
+          const id = parseInt(rawId, 10);
+          if (!id) return;
+
+          // Marcar como visitado cuando sea suficientemente visible
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.15) {
+            seen.add(id);
+          }
+
+          // Resaltar el item activo en el roadmap
+          document.querySelectorAll<HTMLElement>(".roadmap-item").forEach(item => {
+            item.classList.remove("active");
+          });
+          if (entry.isIntersecting) {
+            const activeItem = document.querySelector<HTMLElement>(
+              `.roadmap-item[data-lab-id="${id}"]`
+            );
+            if (activeItem) {
+              activeItem.classList.add("active");
+              const sidebar = document.getElementById("roadmap-sidebar");
+              if (sidebar) {
+                sidebar.scrollTo({ top: activeItem.offsetTop - 120, behavior: "smooth" });
+              }
+            }
+          }
+
+          // Actualizar contador y barra de progreso
+          const countEl = document.getElementById("roadmap-count");
+          const barEl   = document.getElementById("roadmap-progress-bar");
+          if (countEl) countEl.textContent = String(seen.size);
+          if (barEl)   barEl.style.width   = (seen.size / TOTAL * 100) + "%";
+        });
+      },
+      { threshold: [0.15], rootMargin: "-10% 0px -10% 0px" }
+    );
+
+    // Observar cada card de laboratorio
+    document.querySelectorAll<HTMLElement>("[id^='lab-']").forEach(el => {
+      observer.observe(el);
+    });
+  </script>
+
 </Layout>
