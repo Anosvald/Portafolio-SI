@@ -14,6 +14,9 @@ import Security from "./Icons/Security.astro"
 import Security1 from "./Icons/Security1.astro"
 import Security2 from "./Icons/Security2.astro"
 
+// --- RECIBIMOS EL NÚMERO DE PARCIAL ---
+const { parcial = 1 } = Astro.props;
+
 const TAGS = {
   JAVA: {
     name: "Java",
@@ -52,7 +55,7 @@ const TAGS = {
     icon: Security1, 
   },
   SEGURIDAD: {
-    name: "SSRF / SAST",
+    name: "Seguridad / Análisis",
     class: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300",
     icon: Security2, 
   }
@@ -65,7 +68,17 @@ const PROJECTS = [
     "link": "/Proyectos/Proyecto1",
     "github": "", 
     "image": "/projects/Proyecto1.png", 
-    "tags": [TAGS.PENTESTING, TAGS.KALI]
+    "tags": [TAGS.PENTESTING, TAGS.KALI],
+    "parcial": 1 // <-- ASIGNADO AL PARCIAL 1
+  },
+  {
+    "title": "Proyecto 02: Investigación Comparativa de Plataformas HRM",
+    "description": "Análisis comparativo de ocho plataformas líderes en la gestión del riesgo humano (HRM) en ciberseguridad, evaluando dimensiones técnicas, métricas, metodologías y controles éticos.",
+    "link": "/Proyectos/Proyecto2",
+    "github": "", 
+    "image": "/projects/Proyecto2.png", 
+    "tags": [TAGS.SEGURIDAD],
+    "parcial": 2 // <-- ASIGNADO AL PARCIAL 2
   },
   
   /*
@@ -77,58 +90,17 @@ const PROJECTS = [
     "image": "/projects/Artistas.png",
     "tags": [TAGS.Estilooos, TAGS.HTMMML]
   },
-  {
-    "title": "Sistema de Gestión de Inventarios en Java",
-    "description": "Aplicación diseñada para el control y almacenamiento eficiente de inventarios en bases de datos. Permite registrar, actualizar y consultar productos de manera intuitiva. Desarrollada con Java y tecnologías asociadas.",
-    "github": "https://github.com/Anosvald/Inventario.git",
-    "image": "/projects/Java.png",
-    "tags": [TAGS.JAVA, TAGS.HTMMML]
-  },
-  {
-    "title": "Sitio web Freelancer",
-    "description": "Sitio web personal para mostrar servicios de programación y desarrollo. Permite explorar proyectos previos y contactar directamente. Desarrollado con HTML5 y CSS3, con diseño responsivo y moderno.",
-    "link": "https://freelancer-diego-osvaldo.netlify.app",
-    "github": "https://github.com/Anosvald/freelancer-diego-osvaldo.git",
-    "image": "/projects/freelancer.png",
-    "tags": [TAGS.Estilooos, TAGS.HTMMML]
-  },
-  {
-    "title": "FrontendStore",
-    "description": "Frontend-Store-Osvaldo es una tienda en línea de camisas con un diseño moderno y fácil de usar. Permite a los usuarios explorar, seleccionar y realizar compras de manera rápida y segura. Desarrollada con HTML5 y CSS3, con una interfaz atractiva y responsiva para una experiencia de compra fluida en todos los dispositivos.",
-    "link": "https://frontend-store-osvaldo.netlify.app",
-    "github": "https://github.com/Anosvald/frontend-store-osvaldo.git",
-    "image": "/projects/FrontendStore.png",
-    "tags": [TAGS.Estilooos, TAGS.HTMMML]
-  },
-  {
-    "title": "BlogCafe",
-    "description": "BlogCafe es un proyecto desarrollado con HTML5, CSS y JavaScript, diseñado para ofrecer una experiencia fluida y atractiva a los amantes del café. La plataforma está totalmente optimizada para dispositivos móviles, tabletas y escritorios, garantizando una navegación rápida y accesible en cualquier plataforma.",
-    "link": "https://blog-cafe-osvaldo.netlify.app",
-    "github": "https://github.com/Anosvald/blog-cafe-osvaldo.git",
-    "image": "/projects/cafe.png",
-    "tags": [TAGS.Estilooos, TAGS.HTMMML, TAGS.Jjjsss]
-  },
-  {
-    "title": "Juego en lenguaje C",
-    "description": "Juego del ahorcado en C con memoria dinámica, que genera archivos .xlsx para registrar partidas y estadísticas. Optimizado para eficiencia y escalabilidad.",
-    "github": "https://github.com/Anosvald/Juego-C.git",
-    "image": "/projects/cproyecto1.png",
-    "tags": [TAGS.Cc]
-  },
-  {
-    "title": "Sistema de Punto de Venta (POS) – Java Desktop",
-    "description": "Software de escritorio diseñado para optimizar la operación de ventas minoristas. Desarrollado con Java Swing/JavaFX, este POS ofrece una interfaz intuitiva y fluida para el registro de transacciones, gestión de productos y reportes de ventas diarios. Se destaca por su eficiencia en el procesamiento de datos y una curva de aprendizaje mínima para el usuario final.",
-    "github": "https://github.com/Anosvald/Punto-Venta.git",
-    "image": "/projects/PuntoVenta_Java.png",
-    "tags": [TAGS.JAVA]
-  },
+  ... (RESTO DE TUS PROYECTOS COMENTADOS) ...
   */
 ]
+
+// --- FILTRAMOS LOS PROYECTOS POR PARCIAL ---
+const FILTERED_PROJECTS = PROJECTS.filter(project => project.parcial === parcial);
 ---
 
 <div class="flex flex-col gap-y-16">
   {
-    PROJECTS.map(({ image, title, description, tags, link, github }) => (
+    FILTERED_PROJECTS.map(({ image, title, description, tags, link, github }) => (
     <article class="flex flex-col space-x-0 space-y-8 group md:flex-row md:space-x-8 md:space-y-0">
   <div class="w-full md:w-1/2">
     <div class="relative flex flex-col items-center col-span-6 row-span-5 gap-8 transition duration-500 ease-in-out transform shadow-xl overflow-clip rounded-xl sm:rounded-xl md:group-hover:-translate-y-1 md:group-hover:shadow-2xl lg:border lg:border-gray-800 lg:hover:border-gray-700 lg:hover:bg-gray-800/50">
@@ -164,7 +136,6 @@ const PROJECTS = [
             </LinkButton>
           )}
           
-          {/* --- AQUÍ REEMPLAZAMOS EL LINKBUTTON POR UNA ETIQUETA A --- */}
           {link && (
             <a 
               href={link}

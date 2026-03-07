@@ -3,17 +3,13 @@ import Layout from "../layouts/Layout.astro"
 
 import AboutMe from "../components/AboutMe.astro"
 import Information from "../components/Informacion.astro" 
-import Briefcase from "../components/Icons/Briefcase.astro"
-import Certificate from "../components/Icons/Certificate.astro"
 import CodeIcon from "../components/Icons/Code.astro"
 import CodeIcon1 from "../components/Icons/codee.astro"
-import Experience from "../components/Experience.astro"
 import ProfileCheck from "../components/Icons/ProfileCheck.astro"
 import Projects from "../components/Projects.astro"
 import SectionContainer from "../components/SectionContainer.astro"
 import Hero from "../components/Hero.astro"
 import TitleSection from "../components/TitleSection.astro"
-import Awards from "../components/Awards.astro" 
 import Bulb from "../components/Icons/Bulb.astro"
 import Contacto from '../components/Contacto.astro'
 import Create from '../components/Create.astro'
@@ -25,7 +21,64 @@ import School from "../components/Icons/Tareas.astro"
   title="Portafolio de Osvaldo"
   description="Portafolio profesional de Diego Osvaldo Hernández Fernández, estudiante de Ingeniería en TI enfocado en ciberseguridad, pentesting y respuesta a incidentes."
 >
-  <main class="px-4">
+
+  {/* ============================================================ */}
+  {/* CAPA DE FONDO: MATRIX RAIN CANVAS (z-index bajo, fijo) */}
+  {/* ============================================================ */}
+  <canvas
+    id="matrix-canvas"
+    class="fixed top-0 left-0 w-full h-full pointer-events-none"
+    style="z-index: 0; opacity: 0.04;"
+  ></canvas>
+
+  {/* ============================================================ */}
+  {/* OVERLAY SCANLINES estilo CRT                                 */}
+  {/* ============================================================ */}
+  <div
+    id="scanlines"
+    class="fixed top-0 left-0 w-full h-full pointer-events-none"
+    style="z-index: 1; opacity: 0.025;"
+  ></div>
+
+  {/* ============================================================ */}
+  {/* HUD CORNERS - decoración esquinas top                        */}
+  {/* ============================================================ */}
+  <div class="fixed top-4 left-4 pointer-events-none z-10 hidden md:block">
+    <div class="hud-corner-tl text-green-500/40 font-mono text-xs leading-tight">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="inline-block w-2 h-2 rounded-full bg-green-500/60 animate-pulse"></span>
+        <span>SYS:ONLINE</span>
+      </div>
+      <div class="text-green-500/25">0x4F56414C444F</div>
+    </div>
+  </div>
+
+  <div class="fixed top-4 right-4 pointer-events-none z-10 hidden md:block text-right">
+    <div class="text-green-500/40 font-mono text-xs leading-tight">
+      <div class="flex items-center justify-end gap-2 mb-1">
+        <span id="hud-time" class="tabular-nums">00:00:00</span>
+        <span class="inline-block w-2 h-2 rounded-full bg-blue-400/60 animate-pulse"></span>
+      </div>
+      <div class="text-green-500/25">IPv6::SECURED</div>
+    </div>
+  </div>
+
+  {/* ============================================================ */}
+  {/* BARRA DE ESTADO INFERIOR (HUD bottom)                        */}
+  {/* ============================================================ */}
+  <div class="fixed bottom-0 left-0 right-0 pointer-events-none z-10 hidden md:flex items-center justify-between px-6 py-1 border-t border-green-500/10 bg-black/20 backdrop-blur-sm">
+    <span class="font-mono text-xs text-green-500/30 flex items-center gap-2">
+      <span class="w-1.5 h-1.5 rounded-full bg-green-400/50 animate-pulse"></span>
+      PENTESTING · CIBERSEGURIDAD · RESPUESTA A INCIDENTES
+    </span>
+    <span id="hud-packets" class="font-mono text-xs text-green-500/25 tabular-nums">PKT: 000000</span>
+    <span class="font-mono text-xs text-green-500/30">ENCRIPTADO · AES-256-GCM</span>
+  </div>
+
+  {/* ============================================================ */}
+  {/* CONTENIDO PRINCIPAL                                          */}
+  {/* ============================================================ */}
+  <main class="px-4 relative" style="z-index: 2;">
     <SectionContainer class="py-16 md:py-36">
       <Hero>
         </slot>
@@ -34,169 +87,286 @@ import School from "../components/Icons/Tareas.astro"
     
     <div class="space-y-24">
 
+      {/* --- PRESENTACIÓN --- */}
       <SectionContainer id="information">
-        <TitleSection>
-          <Bulb class="size-7" />
-          Presentación del portafolio
-        </TitleSection>
-        <Information />
+        <div class="hacker-section-wrapper">
+          <TitleSection>
+            <Bulb class="size-7" />
+            <span class="glitch-title" data-text="Presentación del portafolio">Presentación del portafolio</span>
+          </TitleSection>
+          <Information />
+        </div>
       </SectionContainer>  
 
+      {/* --- SOBRE MÍ --- */}
       <SectionContainer id="sobre-mi">
-        <TitleSection>
-          <ProfileCheck class="size-8" />
-          Sobre mí
-        </TitleSection>
-        <AboutMe />
+        <div class="hacker-section-wrapper">
+          <TitleSection>
+            <ProfileCheck class="size-8" />
+            <span class="glitch-title" data-text="Sobre mí">Sobre mí</span>
+          </TitleSection>
+          <AboutMe />
+        </div>
       </SectionContainer>
 
-      {/* --- SECCIÓN DE PROYECTOS DESPLEGABLE --- */}
+      {/* ============================================================ */}
+      {/* SECCIÓN DE PROYECTOS                                         */}
+      {/* ============================================================ */}
       <SectionContainer id="proyectos">
-        <TitleSection>
-          <CodeIcon class="size-7" />
-          Proyectos
-        </TitleSection>
+        <div class="hacker-section-wrapper">
+          <TitleSection>
+            <CodeIcon class="size-7" />
+            <span class="glitch-title" data-text="Proyectos">Proyectos</span>
+          </TitleSection>
+        </div>
         
         <div class="flex flex-col gap-6 mt-8">
           
-          {/* PROYECTOS PARCIAL 1 (Abierto por defecto con la etiqueta 'open') */}
-          <details class="group border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-900/20" open>
+          {/* PROYECTOS PARCIAL 1 */}
+          <details class="group hacker-details border border-gray-200 dark:border-green-900/40 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-900/20" open>
             <summary class="flex items-center justify-between cursor-pointer p-6 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800/80 transition-colors list-none [&::-webkit-details-marker]:hidden">
-              <h3 class="text-2xl font-bold text-blue-500/90">Parcial 1</h3>
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-green-500/60 text-sm hidden sm:block">[01]</span>
+                <h3 class="text-2xl font-bold text-blue-500/90">Parcial 1</h3>
+                <span class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-400/70 font-mono text-xs">
+                  <span class="w-1.5 h-1.5 rounded-full bg-green-400/80 animate-pulse"></span>
+                  LOADED
+                </span>
+              </div>
               <span class="transition-transform duration-300 group-open:-rotate-180">
                 <svg class="size-6 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
               </span>
             </summary>
             <div class="p-6 md:p-8 pt-0 md:pt-0">
-              <Projects />
+              <Projects parcial={1} />
+              <div class="terminal-waiting mt-12">
+                <div class="terminal-scanline"></div>
+                <div class="terminal-top-bar">
+                  <span class="w-3 h-3 rounded-full bg-red-500/60"></span>
+                  <span class="w-3 h-3 rounded-full bg-yellow-500/60"></span>
+                  <span class="w-3 h-3 rounded-full bg-green-500/60"></span>
+                  <span class="font-mono text-xs text-gray-500 ml-2">bash — osvaldo@kali</span>
+                </div>
+                <CodeIcon class="size-8 text-gray-400 dark:text-green-500/50 mb-3" />
+                <p class="text-base text-gray-600 dark:text-green-400 font-mono text-center">
+                  root@osvaldo-pc:~# esperando_mas_proyectos<span class="terminal-cursor">_</span>
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-600 font-mono text-center mt-2 animate-pulse">[ ACCESO RESTRINGIDO - ESPERANDO INSTRUCCIONES ]</p>
+              </div>
             </div>
           </details>
 
           {/* PROYECTOS PARCIAL 2 */}
-          <details class="group border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-900/20">
+          <details class="group hacker-details border border-gray-200 dark:border-green-900/40 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-900/20" open>
             <summary class="flex items-center justify-between cursor-pointer p-6 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800/80 transition-colors list-none [&::-webkit-details-marker]:hidden">
-              <h3 class="text-2xl font-bold text-gray-500 dark:text-gray-400">Parcial 2</h3>
-              <span class="transition-transform duration-300 group-open:-rotate-180">
-                <svg class="size-6 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-              </span>
-            </summary>
-            <div class="p-6">
-              {/* DISEÑO CIBERSEGURIDAD EN ESPERA */}
-              <div class="flex flex-col items-center justify-center py-12 px-4 border border-dashed border-gray-300 dark:border-green-500/30 rounded-xl bg-gray-50 dark:bg-[#0d1117] relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-green-500/50 to-transparent"></div>
-                <CodeIcon class="size-10 text-gray-400 dark:text-green-500/50 mb-3" />
-                <p class="text-lg text-gray-600 dark:text-green-400 font-mono text-center">
-                  root@osvaldo-pc:~# esperando_proyectos...
-                </p>
-                <p class="text-sm text-gray-500 dark:text-gray-600 font-mono text-center mt-2 animate-pulse">
-                  [ ACCESO RESTRINGIDO - ESPERANDO INSTRUCCIONES ]
-                </p>
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-green-500/60 text-sm hidden sm:block">[02]</span>
+                <h3 class="text-2xl font-bold text-blue-500/90">Parcial 2</h3>
+                <span class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-400/70 font-mono text-xs">
+                  <span class="w-1.5 h-1.5 rounded-full bg-green-400/80 animate-pulse"></span>
+                  LOADED
+                </span>
               </div>
-            </div>
-          </details>
-
-          {/* PROYECTOS PARCIAL 3 */}
-          <details class="group border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-900/20">
-            <summary class="flex items-center justify-between cursor-pointer p-6 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800/80 transition-colors list-none [&::-webkit-details-marker]:hidden">
-              <h3 class="text-2xl font-bold text-gray-500 dark:text-gray-400">Parcial 3</h3>
-              <span class="transition-transform duration-300 group-open:-rotate-180">
-                <svg class="size-6 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-              </span>
-            </summary>
-            <div class="p-6">
-              <div class="flex flex-col items-center justify-center py-12 px-4 border border-dashed border-gray-300 dark:border-green-500/30 rounded-xl bg-gray-50 dark:bg-[#0d1117] relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-green-500/50 to-transparent"></div>
-                <CodeIcon class="size-10 text-gray-400 dark:text-green-500/50 mb-3" />
-                <p class="text-lg text-gray-600 dark:text-green-400 font-mono text-center">
-                  root@osvaldo-pc:~# esperando_proyectos...
-                </p>
-                <p class="text-sm text-gray-500 dark:text-gray-600 font-mono text-center mt-2 animate-pulse">
-                  [ ESTADO: BLOQUEADO HASTA NUEVO AVISO ]
-                </p>
-              </div>
-            </div>
-          </details>
-
-        </div>
-      </SectionContainer>
-
-      {/* --- SECCIÓN DE TAREAS DESPLEGABLE --- */}
-      <SectionContainer id="tareas">
-        <TitleSection>
-          <School class="size-7" />
-          Tareas y Actividades
-        </TitleSection>
-
-        <div class="flex flex-col gap-6 mt-8">
-          
-          {/* TAREAS PARCIAL 1 */}
-          <details class="group border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-900/20" open>
-            <summary class="flex items-center justify-between cursor-pointer p-6 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800/80 transition-colors list-none [&::-webkit-details-marker]:hidden">
-              <h3 class="text-2xl font-bold text-blue-500/90">Parcial 1</h3>
               <span class="transition-transform duration-300 group-open:-rotate-180">
                 <svg class="size-6 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
               </span>
             </summary>
             <div class="p-6 md:p-8 pt-0 md:pt-0">
-              <Tareas />
+              <Projects parcial={2} />
+              <div class="terminal-waiting mt-12">
+                <div class="terminal-scanline"></div>
+                <div class="terminal-top-bar">
+                  <span class="w-3 h-3 rounded-full bg-red-500/60"></span>
+                  <span class="w-3 h-3 rounded-full bg-yellow-500/60"></span>
+                  <span class="w-3 h-3 rounded-full bg-green-500/60"></span>
+                  <span class="font-mono text-xs text-gray-500 ml-2">bash — osvaldo@kali</span>
+                </div>
+                <CodeIcon class="size-8 text-gray-400 dark:text-green-500/50 mb-3" />
+                <p class="text-base text-gray-600 dark:text-green-400 font-mono text-center">
+                  root@osvaldo-pc:~# analizando_nuevos_objetivos<span class="terminal-cursor">_</span>
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-600 font-mono text-center mt-2 animate-pulse">[ SISTEMA EN ESPERA DE CARGA ÚTIL ]</p>
+              </div>
+            </div>
+          </details>
+
+          {/* PROYECTOS PARCIAL 3 — BLOQUEADO */}
+          <details class="group hacker-details hacker-details--locked border border-gray-200 dark:border-red-900/30 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-900/20">
+            <summary class="flex items-center justify-between cursor-pointer p-6 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800/80 transition-colors list-none [&::-webkit-details-marker]:hidden">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-red-500/40 text-sm hidden sm:block">[03]</span>
+                <h3 class="text-2xl font-bold text-gray-500 dark:text-gray-400">Parcial 3</h3>
+                <span class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400/70 font-mono text-xs">
+                  <span class="w-1.5 h-1.5 rounded-full bg-red-400/80"></span>
+                  LOCKED
+                </span>
+              </div>
+              <span class="transition-transform duration-300 group-open:-rotate-180">
+                <svg class="size-6 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+              </span>
+            </summary>
+            <div class="p-6">
+              <div class="terminal-waiting terminal-waiting--locked">
+                <div class="terminal-scanline"></div>
+                <div class="terminal-top-bar">
+                  <span class="w-3 h-3 rounded-full bg-red-500/60"></span>
+                  <span class="w-3 h-3 rounded-full bg-yellow-500/60 opacity-30"></span>
+                  <span class="w-3 h-3 rounded-full bg-green-500/60 opacity-30"></span>
+                  <span class="font-mono text-xs text-red-500/40 ml-2">ACCESS DENIED — root@kali</span>
+                </div>
+                <div class="lock-icon mb-3">
+                  <svg class="size-10 text-red-500/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <p class="text-lg text-red-400/60 font-mono text-center">
+                  root@osvaldo-pc:~# esperando_proyectos<span class="terminal-cursor terminal-cursor--red">_</span>
+                </p>
+                <p class="text-sm text-red-500/30 font-mono text-center mt-2 animate-pulse">[ ESTADO: BLOQUEADO HASTA NUEVO AVISO ]</p>
+                <div class="mt-4 font-mono text-xs text-red-500/20 text-center">
+                  ERR_ACCESS_DENIED :: 0xDEADBEEF :: MÓDULO NO DISPONIBLE
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </SectionContainer>
+
+      {/* ============================================================ */}
+      {/* SECCIÓN DE TAREAS                                            */}
+      {/* ============================================================ */}
+      <SectionContainer id="tareas">
+        <div class="hacker-section-wrapper">
+          <TitleSection>
+            <School class="size-7" />
+            <span class="glitch-title" data-text="Tareas y Actividades">Tareas y Actividades</span>
+          </TitleSection>
+        </div>
+
+        <div class="flex flex-col gap-6 mt-8">
+          
+          {/* TAREAS PARCIAL 1 */}
+          <details class="group hacker-details border border-gray-200 dark:border-green-900/40 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-900/20" open>
+            <summary class="flex items-center justify-between cursor-pointer p-6 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800/80 transition-colors list-none [&::-webkit-details-marker]:hidden">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-green-500/60 text-sm hidden sm:block">[01]</span>
+                <h3 class="text-2xl font-bold text-blue-500/90">Parcial 1</h3>
+                <span class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-400/70 font-mono text-xs">
+                  <span class="w-1.5 h-1.5 rounded-full bg-green-400/80 animate-pulse"></span>
+                  LOADED
+                </span>
+              </div>
+              <span class="transition-transform duration-300 group-open:-rotate-180">
+                <svg class="size-6 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+              </span>
+            </summary>
+            <div class="p-6 md:p-8 pt-0 md:pt-0">
+              <Tareas parcial={1} />
+              <div class="terminal-waiting mt-12">
+                <div class="terminal-scanline"></div>
+                <div class="terminal-top-bar">
+                  <span class="w-3 h-3 rounded-full bg-red-500/60"></span>
+                  <span class="w-3 h-3 rounded-full bg-yellow-500/60"></span>
+                  <span class="w-3 h-3 rounded-full bg-green-500/60"></span>
+                  <span class="font-mono text-xs text-gray-500 ml-2">bash — osvaldo@kali</span>
+                </div>
+                <CodeIcon class="size-8 text-gray-400 dark:text-green-500/50 mb-3" />
+                <p class="text-base text-gray-600 dark:text-green-400 font-mono text-center">
+                  &gt;_ Escaneando nuevas vulnerabilidades<span class="terminal-cursor">_</span>
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-600 font-mono text-center mt-2 animate-pulse">[ LAS TAREAS SE DESENCRIPTARÁN PRONTO ]</p>
+              </div>
             </div>
           </details>
 
           {/* TAREAS PARCIAL 2 */}
-          <details class="group border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-900/20">
+          <details class="group hacker-details border border-gray-200 dark:border-green-900/40 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-900/20" open>
             <summary class="flex items-center justify-between cursor-pointer p-6 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800/80 transition-colors list-none [&::-webkit-details-marker]:hidden">
-              <h3 class="text-2xl font-bold text-gray-500 dark:text-gray-400">Parcial 2</h3>
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-green-500/60 text-sm hidden sm:block">[02]</span>
+                <h3 class="text-2xl font-bold text-blue-500/90">Parcial 2</h3>
+                <span class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-400/70 font-mono text-xs">
+                  <span class="w-1.5 h-1.5 rounded-full bg-green-400/80 animate-pulse"></span>
+                  LOADED
+                </span>
+              </div>
+              <span class="transition-transform duration-300 group-open:-rotate-180">
+                <svg class="size-6 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+              </span>
+            </summary>
+            <div class="p-6 md:p-8 pt-0 md:pt-0">
+              <Tareas parcial={2} />
+              <div class="terminal-waiting mt-12">
+                <div class="terminal-scanline"></div>
+                <div class="terminal-top-bar">
+                  <span class="w-3 h-3 rounded-full bg-red-500/60"></span>
+                  <span class="w-3 h-3 rounded-full bg-yellow-500/60"></span>
+                  <span class="w-3 h-3 rounded-full bg-green-500/60"></span>
+                  <span class="font-mono text-xs text-gray-500 ml-2">bash — osvaldo@kali</span>
+                </div>
+                <CodeIcon class="size-8 text-gray-400 dark:text-green-500/50 mb-3" />
+                <p class="text-base text-gray-600 dark:text-green-400 font-mono text-center">
+                  &gt;_ Escaneando nuevas vulnerabilidades<span class="terminal-cursor">_</span>
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-600 font-mono text-center mt-2 animate-pulse">[ LAS TAREAS SE DESENCRIPTARÁN PRONTO ]</p>
+              </div>
+            </div>
+          </details>
+
+          {/* TAREAS PARCIAL 3 — BLOQUEADO */}
+          <details class="group hacker-details hacker-details--locked border border-gray-200 dark:border-red-900/30 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-900/20">
+            <summary class="flex items-center justify-between cursor-pointer p-6 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800/80 transition-colors list-none [&::-webkit-details-marker]:hidden">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-red-500/40 text-sm hidden sm:block">[03]</span>
+                <h3 class="text-2xl font-bold text-gray-500 dark:text-gray-400">Parcial 3</h3>
+                <span class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400/70 font-mono text-xs">
+                  <span class="w-1.5 h-1.5 rounded-full bg-red-400/80"></span>
+                  LOCKED
+                </span>
+              </div>
               <span class="transition-transform duration-300 group-open:-rotate-180">
                 <svg class="size-6 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
               </span>
             </summary>
             <div class="p-6">
-              <div class="flex flex-col items-center justify-center py-12 px-4 border border-dashed border-gray-300 dark:border-green-500/30 rounded-xl bg-gray-50 dark:bg-[#0d1117] relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-green-500/50 to-transparent"></div>
-                <CodeIcon class="size-10 text-gray-400 dark:text-green-500/50 mb-3" />
-                <p class="text-lg text-gray-600 dark:text-green-400 font-mono text-center">
-                  >_ Escaneando nuevas vulnerabilidades...
+              <div class="terminal-waiting terminal-waiting--locked">
+                <div class="terminal-scanline"></div>
+                <div class="terminal-top-bar">
+                  <span class="w-3 h-3 rounded-full bg-red-500/60"></span>
+                  <span class="w-3 h-3 rounded-full bg-yellow-500/60 opacity-30"></span>
+                  <span class="w-3 h-3 rounded-full bg-green-500/60 opacity-30"></span>
+                  <span class="font-mono text-xs text-red-500/40 ml-2">ACCESS DENIED — root@kali</span>
+                </div>
+                <div class="lock-icon mb-3">
+                  <svg class="size-10 text-red-500/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <p class="text-lg text-red-400/60 font-mono text-center">
+                  &gt;_ Sistema inactivo<span class="terminal-cursor terminal-cursor--red">_</span>
                 </p>
-                <p class="text-sm text-gray-500 dark:text-gray-600 font-mono text-center mt-2 animate-pulse">
-                  [ LAS TAREAS SE DESENCRIPTARÁN PRONTO ]
-                </p>
+                <p class="text-sm text-red-500/30 font-mono text-center mt-2 animate-pulse">[ ESPERANDO CARGA ÚTIL DEL PROFESOR ]</p>
+                <div class="mt-4 font-mono text-xs text-red-500/20 text-center">
+                  ERR_MODULE_NOT_FOUND :: 0xC0DE_NULL :: SEGFAULT
+                </div>
               </div>
             </div>
           </details>
-
-          {/* TAREAS PARCIAL 3 */}
-          <details class="group border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-900/20">
-            <summary class="flex items-center justify-between cursor-pointer p-6 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800/80 transition-colors list-none [&::-webkit-details-marker]:hidden">
-              <h3 class="text-2xl font-bold text-gray-500 dark:text-gray-400">Parcial 3</h3>
-              <span class="transition-transform duration-300 group-open:-rotate-180">
-                <svg class="size-6 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-              </span>
-            </summary>
-            <div class="p-6">
-              <div class="flex flex-col items-center justify-center py-12 px-4 border border-dashed border-gray-300 dark:border-green-500/30 rounded-xl bg-gray-50 dark:bg-[#0d1117] relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-green-500/50 to-transparent"></div>
-                <CodeIcon class="size-10 text-gray-400 dark:text-green-500/50 mb-3" />
-                <p class="text-lg text-gray-600 dark:text-green-400 font-mono text-center">
-                  >_ Sistema inactivo...
-                </p>
-                <p class="text-sm text-gray-500 dark:text-gray-600 font-mono text-center mt-2 animate-pulse">
-                  [ ESPERANDO CARGA ÚTIL DEL PROFESOR ]
-                </p>
-              </div>
-            </div>
-          </details>
-
         </div>
       </SectionContainer>
 
+      {/* --- INFO TÉCNICA --- */}
       <SectionContainer id="create">
-        <TitleSection>
-          <CodeIcon1 class="size-7" />
-          Información técnica básica
-        </TitleSection>
-        <Create />
+        <div class="hacker-section-wrapper">
+          <TitleSection>
+            <CodeIcon1 class="size-7" />
+            <span class="glitch-title" data-text="Información técnica básica">Información técnica básica</span>
+          </TitleSection>
+          <Create />
+        </div>
       </SectionContainer>
 
+      {/* --- CONTACTO --- */}
       <SectionContainer id="contacto">
         <Contacto />
       </SectionContainer>
@@ -204,3 +374,282 @@ import School from "../components/Icons/Tareas.astro"
     </div>
   </main>
 </Layout>
+
+{/* ================================================================ */}
+{/* ESTILOS GLOBALES HACKER                                          */}
+{/* ================================================================ */}
+<style is:global>
+  /* ---- MATRIX CANVAS ---- */
+  #matrix-canvas {
+    image-rendering: pixelated;
+  }
+
+  /* ---- SCANLINES CRT ---- */
+  #scanlines {
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 255, 65, 0.03) 2px,
+      rgba(0, 255, 65, 0.03) 4px
+    );
+    pointer-events: none;
+  }
+
+  /* ---- GLITCH EN TÍTULOS ---- */
+  .glitch-title {
+    position: relative;
+    display: inline-block;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .glitch-title:hover::before,
+    .glitch-title:hover::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .glitch-title:hover::before {
+      color: #00ff41;
+      animation: glitch-1 0.3s infinite linear;
+      clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+      opacity: 0.7;
+    }
+
+    .glitch-title:hover::after {
+      color: #ff003c;
+      animation: glitch-2 0.3s infinite linear;
+      clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes glitch-1 {
+    0%   { transform: translate(0); }
+    20%  { transform: translate(-2px, 1px); }
+    40%  { transform: translate(2px, -1px); }
+    60%  { transform: translate(-1px, 2px); }
+    80%  { transform: translate(1px, -2px); }
+    100% { transform: translate(0); }
+  }
+
+  @keyframes glitch-2 {
+    0%   { transform: translate(0); }
+    20%  { transform: translate(2px, -1px); }
+    40%  { transform: translate(-2px, 1px); }
+    60%  { transform: translate(1px, -2px); }
+    80%  { transform: translate(-1px, 2px); }
+    100% { transform: translate(0); }
+  }
+
+  /* ---- CURSOR PARPADEANTE ---- */
+  .terminal-cursor {
+    display: inline-block;
+    animation: blink 1s step-end infinite;
+    color: #00ff41;
+    font-weight: bold;
+  }
+
+  .terminal-cursor--red {
+    color: #ff003c;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  /* ---- TERMINAL MEJORADA ---- */
+  .terminal-waiting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1rem 2rem;
+    border: 1px dashed rgba(0, 255, 65, 0.25);
+    border-radius: 0.75rem;
+    background-color: #0d1117;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dark .terminal-waiting {
+    border-color: rgba(0, 255, 65, 0.2);
+  }
+
+  .terminal-waiting--locked {
+    border-color: rgba(255, 0, 60, 0.2) !important;
+    background-color: #100808 !important;
+  }
+
+  /* Línea superior neón */
+  .terminal-waiting::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.6), transparent);
+  }
+
+  .terminal-waiting--locked::before {
+    background: linear-gradient(90deg, transparent, rgba(255, 0, 60, 0.5), transparent) !important;
+  }
+
+  /* Scan line animado que cruza la terminal */
+  .terminal-scanline {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(transparent, rgba(0, 255, 65, 0.04), transparent);
+    animation: scan 4s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes scan {
+    0%   { top: -10%; }
+    100% { top: 110%; }
+  }
+
+  /* Barra superior de terminal (dots rojo/amarillo/verde) */
+  .terminal-top-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(0, 255, 65, 0.08);
+    margin-bottom: 1rem;
+  }
+
+  /* Ajuste de padding interno por la top-bar */
+  .terminal-waiting > *:not(.terminal-top-bar):not(.terminal-scanline) {
+    margin-top: 0.5rem;
+  }
+
+  /* ---- HACKER DETAILS — borde con glow sutil ---- */
+  .dark .hacker-details {
+    transition: box-shadow 0.3s ease;
+  }
+
+  .dark .hacker-details:hover {
+    box-shadow: 0 0 20px -4px rgba(0, 255, 65, 0.08), 0 0 0 1px rgba(0, 255, 65, 0.1);
+  }
+
+  .dark .hacker-details--locked:hover {
+    box-shadow: 0 0 20px -4px rgba(255, 0, 60, 0.08), 0 0 0 1px rgba(255, 0, 60, 0.1);
+  }
+
+  /* ---- ICONO CANDADO — animación shake ---- */
+  .lock-icon {
+    animation: lock-shake 5s ease-in-out infinite;
+  }
+
+  @keyframes lock-shake {
+    0%, 90%, 100% { transform: rotate(0deg); }
+    92%            { transform: rotate(-5deg); }
+    94%            { transform: rotate(5deg); }
+    96%            { transform: rotate(-3deg); }
+    98%            { transform: rotate(3deg); }
+  }
+</style>
+
+{/* ================================================================ */}
+{/* SCRIPTS: MATRIX RAIN + HUD CLOCK + PACKETS COUNTER              */}
+{/* ================================================================ */}
+<script>
+  /* ---- MATRIX RAIN ---- */
+  (function initMatrix() {
+    const canvas = document.getElementById('matrix-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>{}[]|/\\#@$%^&*~'.split('');
+    const fontSize = 14;
+    let columns: number[] = [];
+    let drops: number[] = [];
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+      columns = Array(Math.floor(canvas.width / fontSize)).fill(0);
+      drops   = columns.map(() => Math.random() * -canvas.height);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+
+    function draw() {
+      if (!ctx) return;
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.font = `${fontSize}px monospace`;
+
+      drops.forEach((y, i) => {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        const x    = i * fontSize;
+
+        // Carácter principal: blanco/verde brillante
+        const ratio = y / canvas.height;
+        if (ratio > 0.8) {
+          ctx.fillStyle = '#ffffff';
+        } else {
+          ctx.fillStyle = `rgba(0, 255, 65, ${0.3 + ratio * 0.5})`;
+        }
+
+        if (y > 0) ctx.fillText(char, x, y);
+
+        drops[i] += fontSize;
+        if (drops[i] > canvas.height + fontSize * 5) {
+          drops[i] = Math.random() * -canvas.height * 0.5;
+        }
+      });
+    }
+
+    setInterval(draw, 50);
+  })();
+
+  /* ---- HUD RELOJ ---- */
+  (function initClock() {
+    const el = document.getElementById('hud-time');
+    if (!el) return;
+
+  function tick() {
+    if (!el) return;   // ← guard: si es null, no hace nada
+    const now = new Date();
+    const h   = String(now.getHours()).padStart(2, '0');
+    const m   = String(now.getMinutes()).padStart(2, '0');
+    const s   = String(now.getSeconds()).padStart(2, '0');
+    el.textContent = `${h}:${m}:${s}`;
+  }
+
+    tick();
+    setInterval(tick, 1000);
+  })();
+
+  /* ---- HUD PACKETS COUNTER (fake, estético) ---- */
+  (function initPackets() {
+    const el = document.getElementById('hud-packets');
+    if (!el) return;
+
+    let count = Math.floor(Math.random() * 99999);
+
+    setInterval(() => {
+      count += Math.floor(Math.random() * 50) + 1;
+      el.textContent = `PKT: ${String(count).padStart(6, '0')}`;
+    }, 200);
+  })();
+</script>

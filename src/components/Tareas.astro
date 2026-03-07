@@ -11,6 +11,9 @@ import Jjjsss from "./Icons/Jjjsss.astro"
 import Cc from "./Icons/Cc.astro"       
 import Bell from "./Icons/Bell.astro"  
 
+// --- RECIBIMOS EL NÚMERO DE PARCIAL ---
+const { parcial = 1 } = Astro.props;
+
 const TAGS = {
   JAVA: {
     name: "Java",
@@ -45,24 +48,14 @@ const TAGS = {
 }
 
 const PROJECTS = [
-  /*
-  {
-    "title": "Tarea 1: Análisis de Vulnerabilidades",
-    "description": "Tarea completa sobre escaneo de puertos con Nmap y análisis de resultados.",
-    // Asegúrate de que esta ruta coincida con tu carpeta y archivo (todo minúsculas)
-    "link": "/Tareas/plantilla", 
-    "github": "", // Si no hay repo de github para la tarea, lo puedes dejar vacío
-    "image": "/projects/Artistas.png", // Cambia esto por la imagen que quieras para la tarea
-    "tags": [TAGS.HTMMML, TAGS.Estilooos] // Pon los tags que quieras
-  },
-  */
   {
     "title": "ACTIVIDAD 01 - Análisis en grupo de un ciberataque real y su impacto empresarial",
     "description": "Análisis detallado del impacto del malware NotPetya y las operaciones del grupo de hacking Sandworm. El estudio se centró en las repercusiones técnicas y operativas sufridas por la empresa naviera Maersk, examinando las vulnerabilidades explotadas y las lecciones aprendidas por dicho ataque.",
     "link": "/Tareas/Tarea1", 
     "github": "", 
     "image": "/projects/Imagen1Tarea1.png", 
-    "tags": [TAGS.BELL]
+    "tags": [TAGS.BELL],
+    "parcial": 1 // <-- ASIGNADO AL PARCIAL 1
   },
   {
     "title": "ACTIVIDAD 02 - Análisis de servicios de seguridad (X.800 y RFC 4949)",
@@ -70,7 +63,8 @@ const PROJECTS = [
     "link": "/Tareas/Tarea2", 
     "github": "", 
     "image": "/projects/Imagen1Tarea2.png", 
-    "tags": [TAGS.BELL]
+    "tags": [TAGS.BELL],
+    "parcial": 1 // <-- ASIGNADO AL PARCIAL 1
   },
   {
     "title": "ACTIVIDAD 03 - Interpretación y traducción de políticas de filtrado en iptables",
@@ -78,7 +72,8 @@ const PROJECTS = [
     "link": "/Tareas/Tarea3", 
     "github": "", 
     "image": "/projects/Imagen1Tarea3.png", 
-    "tags": [TAGS.BELL]
+    "tags": [TAGS.BELL],
+    "parcial": 1 // <-- ASIGNADO AL PARCIAL 1
   },
   {
     "title": "ACTIVIDAD 04 - Mecanismos de defensa en red",
@@ -86,7 +81,8 @@ const PROJECTS = [
     "link": "/Tareas/Tarea4", 
     "github": "", 
     "image": "/projects/Imagen1Tarea4.png", 
-    "tags": [TAGS.BELL]
+    "tags": [TAGS.BELL],
+    "parcial": 1 // <-- ASIGNADO AL PARCIAL 1
   },
   {
     "title": "ACTIVIDAD 05 - Cartografiando el pentesting: análisis comparativo de metodologías de seguridad informática",
@@ -94,7 +90,8 @@ const PROJECTS = [
     "link": "/Tareas/Tarea5", 
     "github": "", 
     "image": "/projects/Imagen1Tarea5.png", 
-    "tags": [TAGS.BELL]
+    "tags": [TAGS.BELL],
+    "parcial": 1 // <-- ASIGNADO AL PARCIAL 1
   },
   {
     "title": "ACTIVIDAD 06 - Implementación de IPSec VPN",
@@ -102,7 +99,8 @@ const PROJECTS = [
     "link": "/Tareas/Tarea6", 
     "github": "", 
     "image": "/projects/Imagen1Tarea6.png", 
-    "tags": [TAGS.BELL]
+    "tags": [TAGS.BELL],
+    "parcial": 1 // <-- ASIGNADO AL PARCIAL 1
   },
   {
     "title": "ACTIVIDAD 07 - Análisis del Caso OxyMonster (Dream Market)",
@@ -110,14 +108,27 @@ const PROJECTS = [
     "link": "/Tareas/Tarea7", 
     "github": "", 
     "image": "/projects/Imagen1Tarea7.png", 
-    "tags": [TAGS.BELL]
+    "tags": [TAGS.BELL],
+    "parcial": 1 // <-- ASIGNADO AL PARCIAL 1
+  },
+  {
+    "title": "ACTIVIDAD 08 - Road to Hall of Fame (SQL Injection)",
+    "description": "Desarrollo de un portafolio técnico-profesional documentando la explotación sistemática de vulnerabilidades de SQL Injection en los laboratorios oficiales de PortSwigger, aplicando Burp Suite como herramienta principal.",
+    "link": "/Tareas/Tarea8", 
+    "github": "", 
+    "image": "/projects/Imagen1Tarea8.png", 
+    "tags": [TAGS.BELL],
+    "parcial": 2 // <-- ASIGNADO AL PARCIAL 2
   }
 ]
+
+// --- FILTRAMOS LAS TAREAS POR PARCIAL ---
+const FILTERED_TAREAS = PROJECTS.filter(tarea => tarea.parcial === parcial);
 ---
 
 <div class="flex flex-col gap-y-16">
   {
-    PROJECTS.map(({ image, title, description, tags, link, github }) => (
+    FILTERED_TAREAS.map(({ image, title, description, tags, link, github }) => (
     <article class="flex flex-col space-x-0 space-y-8 group md:flex-row md:space-x-8 md:space-y-0">
   <div class="w-full md:w-1/2">
     <div class="relative flex flex-col items-center col-span-6 row-span-5 gap-8 transition duration-500 ease-in-out transform shadow-xl overflow-clip rounded-xl sm:rounded-xl md:group-hover:-translate-y-1 md:group-hover:shadow-2xl lg:border lg:border-gray-800 lg:hover:border-gray-700 lg:hover:bg-gray-800/50">

