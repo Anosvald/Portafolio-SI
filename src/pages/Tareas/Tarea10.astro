@@ -1,0 +1,555 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// ── Íconos de secciones principales
+import Shield from "../../components/Icons/Shield.astro"
+import Bolt from "../../components/Icons/Bolt.astro"
+import Security from "../../components/Icons/Security.astro"
+import Books from "../../components/Icons/Books.astro"
+import Tareas from "../../components/Icons/Tareas.astro"
+
+// ── Íconos de tipos de ataque
+import Virus from "../../components/Icons/Virus.astro"
+import Pishing from "../../components/Icons/Pishing.astro"
+import Bomb from "../../components/Icons/Bomb.astro"
+import Spy from "../../components/Icons/Spy.astro"
+import Injection from "../../components/Icons/Injection.astro"
+import Key from "../../components/Icons/Key.astro"
+
+// ── Íconos Cyber Kill Chain
+import Search from "../../components/Icons/Search.astro"
+import Tool from "../../components/Icons/Tool.astro"
+import Mail from "../../components/Icons/Mail.astro"
+import Settings from "../../components/Icons/Settings.astro"
+import Wifi from "../../components/Icons/Wifi.astro"
+import Goal from "../../components/Icons/Goal.astro"
+
+// ── Íconos Ingeniería Social
+import Phone from "../../components/Icons/Phone.astro"
+import Save from "../../components/Icons/Save.astro"
+import Door from "../../components/Icons/Door.astro"
+import ProfileCheck from "../../components/Icons/ProfileCheck.astro"
+
+// ── Íconos Mitigación
+import Restart from "../../components/Icons/Restart.astro"
+import Certificate from "../../components/Icons/Certificate.astro"
+import Sun from "../../components/Icons/Sun.astro"
+
+const INFO_TAREA = {
+  titulo: "Actividad 10: Ataques, Conceptos y Técnicas",
+  fecha: "09 de Marzo, 2026",
+  descripcion: "Resumen del Módulo 2 de Cisco Networking Academy — Introducción a la Ciberseguridad. Análisis de los principales tipos de ataque, malware, ingeniería social, la Cyber Kill Chain y estrategias de mitigación.",
+  pdf: "/pdfs/Actividad10-Equipo5.pdf",
+  imagen: "/projects/Imagen1Tarea10.png"
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+
+      {/* --- ENCABEZADO --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* Banner THREAT LEVEL */}
+      <div class="mb-10 flex items-center gap-3 px-4 py-3 rounded-lg bg-red-900/20 border border-red-500/30">
+        <Bolt class="size-5 text-red-400 shrink-0" />
+        <p class="text-red-300 text-sm font-medium">
+          Las amenazas cibernéticas evolucionan constantemente — el conocimiento es la primera línea de defensa
+        </p>
+        <span class="ml-auto text-xs font-mono text-red-500/60 hidden sm:block">THREAT_LEVEL: CRITICAL</span>
+      </div>
+
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-12">
+
+        {/* ── CONCEPTO CLAVE ── */}
+        <div>
+          <p class="text-xs font-mono text-gray-500 mb-1">// CONCEPTO CLAVE — MÓDULO 2</p>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">¿Qué es un Ciberataque?</h3>
+          <p>
+            Un <strong>ciberataque</strong> es cualquier intento deliberado de acceder, dañar, robar o destruir
+            información de sistemas o redes sin autorización. Los atacantes pueden ser individuos, grupos organizados
+            o incluso Estados-nación. Comprender sus técnicas y motivaciones es esencial para construir defensas efectivas.
+          </p>
+          <p class="mt-3">
+            Los ataques modernos combinan múltiples vectores y explotan tanto vulnerabilidades técnicas como el factor
+            humano — la concienciación es tan importante como la tecnología.
+          </p>
+        </div>
+
+        {/* ── PRINCIPALES TIPOS DE ATAQUE ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Security class="size-6 text-red-400" />
+            Principales Tipos de Ataque
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+            <div class="p-4 rounded-lg border border-red-500/30 bg-gray-900/40 hover:border-red-500/60 hover:scale-[1.02] transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Virus class="size-6 text-red-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Malware</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Software malicioso diseñado para infiltrar y dañar sistemas. Incluye virus, gusanos, troyanos, ransomware y spyware.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-yellow-500/30 bg-gray-900/40 hover:border-yellow-500/60 hover:scale-[1.02] transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Pishing class="size-6 text-yellow-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Phishing</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Correos o sitios falsos que simulan entidades legítimas para robar credenciales, datos bancarios o instalar malware.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-orange-500/30 bg-gray-900/40 hover:border-orange-500/60 hover:scale-[1.02] transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Bomb class="size-6 text-orange-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">DoS / DDoS</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Saturan servidores con tráfico masivo hasta hacerlos inoperables para usuarios legítimos.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-blue-500/30 bg-gray-900/40 hover:border-blue-500/60 hover:scale-[1.02] transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Spy class="size-6 text-blue-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Sniffing / MitM</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Interceptación de comunicaciones. El atacante puede espiar o modificar datos sin que las víctimas lo detecten.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-purple-500/30 bg-gray-900/40 hover:border-purple-500/60 hover:scale-[1.02] transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Injection class="size-6 text-purple-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Inyección SQL</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Código malicioso en formularios web para manipular bases de datos y robar registros confidenciales.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-red-500/30 bg-gray-900/40 hover:border-red-500/60 hover:scale-[1.02] transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Key class="size-6 text-red-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Ransomware</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Cifra los archivos de la víctima y exige pago para restaurar el acceso. Causa pérdidas millonarias globalmente.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ── CYBER KILL CHAIN ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Bolt class="size-6 text-yellow-400" />
+            Cadena de Ataque — Cyber Kill Chain
+          </h3>
+          <p class="text-sm text-gray-400 mb-5">
+            Modelo desarrollado por Lockheed Martin que describe las 7 fases de un ataque cibernético avanzado.
+            Comprender cada etapa permite a los defensores interrumpir la cadena antes de que el atacante logre su objetivo.
+          </p>
+          <div class="flex flex-wrap gap-2 items-center">
+
+            <div class="flex items-center gap-2">
+              <div class="flex flex-col items-center p-3 rounded-lg bg-gray-900/60 border border-gray-700/60 min-w-[90px] text-center hover:border-blue-500/40 transition-colors">
+                <span class="text-xs font-mono text-blue-400/60 mb-1">01</span>
+                <Search class="size-6 text-blue-400 mx-auto mb-1" />
+                <p class="text-xs font-semibold text-gray-200">Reconocimiento</p>
+                <p class="text-xs text-gray-500 mt-0.5">Investiga objetivo</p>
+              </div>
+              <span class="text-blue-400/40 text-lg font-bold hidden sm:block">▶</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <div class="flex flex-col items-center p-3 rounded-lg bg-gray-900/60 border border-gray-700/60 min-w-[90px] text-center hover:border-blue-500/40 transition-colors">
+                <span class="text-xs font-mono text-blue-400/60 mb-1">02</span>
+                <Tool class="size-6 text-orange-400 mx-auto mb-1" />
+                <p class="text-xs font-semibold text-gray-200">Armado</p>
+                <p class="text-xs text-gray-500 mt-0.5">Crea exploit</p>
+              </div>
+              <span class="text-blue-400/40 text-lg font-bold hidden sm:block">▶</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <div class="flex flex-col items-center p-3 rounded-lg bg-gray-900/60 border border-gray-700/60 min-w-[90px] text-center hover:border-blue-500/40 transition-colors">
+                <span class="text-xs font-mono text-blue-400/60 mb-1">03</span>
+                <Mail class="size-6 text-yellow-400 mx-auto mb-1" />
+                <p class="text-xs font-semibold text-gray-200">Entrega</p>
+                <p class="text-xs text-gray-500 mt-0.5">Email / web / USB</p>
+              </div>
+              <span class="text-blue-400/40 text-lg font-bold hidden sm:block">▶</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <div class="flex flex-col items-center p-3 rounded-lg bg-gray-900/60 border border-gray-700/60 min-w-[90px] text-center hover:border-blue-500/40 transition-colors">
+                <span class="text-xs font-mono text-blue-400/60 mb-1">04</span>
+                <Bomb class="size-6 text-red-400 mx-auto mb-1" />
+                <p class="text-xs font-semibold text-gray-200">Explotación</p>
+                <p class="text-xs text-gray-500 mt-0.5">Ejecuta código</p>
+              </div>
+              <span class="text-blue-400/40 text-lg font-bold hidden sm:block">▶</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <div class="flex flex-col items-center p-3 rounded-lg bg-gray-900/60 border border-gray-700/60 min-w-[90px] text-center hover:border-blue-500/40 transition-colors">
+                <span class="text-xs font-mono text-blue-400/60 mb-1">05</span>
+                <Settings class="size-6 text-purple-400 mx-auto mb-1" />
+                <p class="text-xs font-semibold text-gray-200">Instalación</p>
+                <p class="text-xs text-gray-500 mt-0.5">Persistencia</p>
+              </div>
+              <span class="text-blue-400/40 text-lg font-bold hidden sm:block">▶</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <div class="flex flex-col items-center p-3 rounded-lg bg-gray-900/60 border border-gray-700/60 min-w-[90px] text-center hover:border-blue-500/40 transition-colors">
+                <span class="text-xs font-mono text-blue-400/60 mb-1">06</span>
+                <Wifi class="size-6 text-cyan-400 mx-auto mb-1" />
+                <p class="text-xs font-semibold text-gray-200">C&amp;C</p>
+                <p class="text-xs text-gray-500 mt-0.5">Control remoto</p>
+              </div>
+              <span class="text-blue-400/40 text-lg font-bold hidden sm:block">▶</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <div class="flex flex-col items-center p-3 rounded-lg bg-gray-900/60 border border-red-500/40 min-w-[90px] text-center hover:border-red-500/60 transition-colors">
+                <span class="text-xs font-mono text-red-400/60 mb-1">07</span>
+                <Goal class="size-6 text-red-400 mx-auto mb-1" />
+                <p class="text-xs font-semibold text-gray-200">Objetivo</p>
+                <p class="text-xs text-gray-500 mt-0.5">Robo / daño</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ── TIPOS DE MALWARE + INGENIERÍA SOCIAL ── */}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+          {/* Tipos de Malware */}
+          <div>
+            <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+              <Virus class="size-6 text-red-400" />
+              Tipos de Malware
+            </h3>
+            <div class="overflow-x-auto rounded-lg border border-gray-700">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="bg-gray-900/80 border-b border-gray-700">
+                    <th class="px-3 py-2.5 text-left text-gray-300 font-semibold text-xs">Amenaza</th>
+                    <th class="px-3 py-2.5 text-left text-gray-300 font-semibold text-xs">Descripción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { nombre: "Virus",      color: "text-red-400",    dot: "bg-red-400",    desc: "Se adjunta a archivos legítimos y se replica al ejecutarlos, corrompiendo datos." },
+                    { nombre: "Gusano",     color: "text-orange-400", dot: "bg-orange-400", desc: "Se autopropaga por redes sin intervención humana, consumiendo recursos." },
+                    { nombre: "Troyano",    color: "text-yellow-400", dot: "bg-yellow-400", desc: "Aparenta ser software legítimo pero abre puertas traseras al sistema." },
+                    { nombre: "Ransomware", color: "text-red-400",    dot: "bg-red-400",    desc: "Cifra archivos y solicita rescate en criptomonedas anónimas." },
+                    { nombre: "Spyware",    color: "text-purple-400", dot: "bg-purple-400", desc: "Recopila contraseñas y hábitos enviándolos al atacante silenciosamente." },
+                    { nombre: "Rootkit",    color: "text-gray-400",   dot: "bg-gray-400",   desc: "Oculta la presencia de malware con privilegios de administrador." },
+                  ].map(({ nombre, color, dot, desc }) => (
+                    <tr class="border-b border-gray-700/50 last:border-0 hover:bg-gray-800/30 transition-colors">
+                      <td class="px-3 py-2.5">
+                        <span class={`flex items-center gap-1.5 font-semibold text-xs ${color}`}>
+                          <span class={`w-2 h-2 rounded-full ${dot} inline-block shrink-0`}></span>
+                          {nombre}
+                        </span>
+                      </td>
+                      <td class="px-3 py-2.5 text-gray-400 text-xs">{desc}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Ingeniería Social */}
+          <div>
+            <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+              <Spy class="size-6 text-blue-400" />
+              Ingeniería Social
+            </h3>
+            <div class="space-y-2">
+
+              <div class="flex gap-3 p-2.5 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-yellow-500/30 transition-colors">
+                <Pishing class="size-5 text-yellow-400 shrink-0 mt-0.5" />
+                <div>
+                  <p class="font-semibold text-gray-200 text-xs">Phishing</p>
+                  <p class="text-gray-400 text-xs mt-0.5">Correos masivos que simulan bancos o servicios para robar credenciales.</p>
+                </div>
+              </div>
+
+              <div class="flex gap-3 p-2.5 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-red-500/30 transition-colors">
+                <Goal class="size-5 text-red-400 shrink-0 mt-0.5" />
+                <div>
+                  <p class="font-semibold text-gray-200 text-xs">Spear Phishing</p>
+                  <p class="text-gray-400 text-xs mt-0.5">Ataque dirigido y personalizado. Muy difícil de detectar por su precisión.</p>
+                </div>
+              </div>
+
+              <div class="flex gap-3 p-2.5 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-blue-500/30 transition-colors">
+                <Phone class="size-5 text-blue-400 shrink-0 mt-0.5" />
+                <div>
+                  <p class="font-semibold text-gray-200 text-xs">Vishing</p>
+                  <p class="text-gray-400 text-xs mt-0.5">Engaño telefónico suplantando soporte técnico, bancos u organismos.</p>
+                </div>
+              </div>
+
+              <div class="flex gap-3 p-2.5 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-orange-500/30 transition-colors">
+                <Save class="size-5 text-orange-400 shrink-0 mt-0.5" />
+                <div>
+                  <p class="font-semibold text-gray-200 text-xs">Baiting</p>
+                  <p class="text-gray-400 text-xs mt-0.5">USB infectado dejado intencionalmente para que la víctima lo conecte.</p>
+                </div>
+              </div>
+
+              <div class="flex gap-3 p-2.5 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-green-500/30 transition-colors">
+                <ProfileCheck class="size-5 text-green-400 shrink-0 mt-0.5" />
+                <div>
+                  <p class="font-semibold text-gray-200 text-xs">Pretexting</p>
+                  <p class="text-gray-400 text-xs mt-0.5">Historia falsa para ganarse la confianza y obtener información sensible.</p>
+                </div>
+              </div>
+
+              <div class="flex gap-3 p-2.5 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-purple-500/30 transition-colors">
+                <Door class="size-5 text-purple-400 shrink-0 mt-0.5" />
+                <div>
+                  <p class="font-semibold text-gray-200 text-xs">Tailgating</p>
+                  <p class="text-gray-400 text-xs mt-0.5">Acceso físico no autorizado siguiendo a personas autorizadas.</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        {/* ── ANATOMÍA DE UN CORREO DE PHISHING ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Mail class="size-6 text-blue-400" />
+            Anatomía de un Correo de Phishing
+          </h3>
+          <p class="text-sm text-gray-400 mb-4">
+            A continuación se presenta un ejemplo educativo de correo malicioso con los indicadores de compromiso identificados:
+          </p>
+
+          <div class="rounded-lg border border-red-500/40 overflow-hidden bg-gray-900/60 max-w-2xl">
+            <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-red-400 font-mono font-bold">⚠ EJEMPLO EDUCATIVO — CORREO MALICIOSO IDENTIFICADO</span>
+            </div>
+            <div class="px-5 py-4 space-y-1.5 border-b border-gray-700/50">
+              <div class="flex gap-2 text-xs">
+                <span class="text-gray-500 w-16 shrink-0">De:</span>
+                <span class="text-red-400 font-mono">soporte@bancoseguro-noreply.xyz</span>
+                <span class="text-red-500/70 text-xs">⚠ Dominio sospechoso</span>
+              </div>
+              <div class="flex gap-2 text-xs">
+                <span class="text-gray-500 w-16 shrink-0">Asunto:</span>
+                <span class="text-yellow-300 font-semibold">🚨 URGENTE: Su cuenta será BLOQUEADA en 24 horas</span>
+              </div>
+              <div class="flex gap-2 text-xs">
+                <span class="text-gray-500 w-16 shrink-0">Para:</span>
+                <span class="text-gray-300 font-mono">usuario@empresa.com</span>
+              </div>
+            </div>
+            <div class="px-5 py-4 text-sm text-gray-300 space-y-3">
+              <p>
+                Estimado cliente, hemos detectado actividad sospechosa en su cuenta. Para evitar el bloqueo permanente,
+                debe verificar su identidad de forma inmediata haciendo clic en el siguiente enlace seguro:
+              </p>
+              <p class="font-mono text-xs text-red-400 break-all">
+                http://banco-seguro-verificacion.tk/login?token=a7f3k2
+                <span class="text-red-500/60 ml-2">← URL maliciosa</span>
+              </p>
+              <div>
+                <button class="mt-1 px-5 py-2 bg-red-600 text-white text-xs font-bold rounded cursor-default opacity-80">
+                  VERIFICAR AHORA →
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 space-y-2">
+            {[
+              "Dominio del remitente no coincide con el banco real (bancoseguro-noreply.xyz ≠ banco.com)",
+              "Lenguaje de urgencia extrema diseñado para presionar al usuario a actuar sin reflexionar",
+              "URL con dominio .tk (sospechoso) que no pertenece a ninguna entidad financiera legítima",
+              "Solicita clic en enlace externo en lugar de acceder directamente al portal oficial del banco",
+            ].map((item) => (
+              <div class="flex gap-2 items-start text-xs text-yellow-400/80">
+                <span class="shrink-0 mt-0.5">⚠</span>
+                <p>{item}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── NIVEL DE IMPACTO ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Tareas class="size-6 text-blue-400" />
+            Nivel de Impacto por Tipo de Ataque
+          </h3>
+          <div class="space-y-3 max-w-xl">
+            {[
+              { label: "Ransomware",    pct: 95, color: "bg-red-500",    text: "text-red-400"    },
+              { label: "Ing. Social",   pct: 90, color: "bg-yellow-500", text: "text-yellow-400" },
+              { label: "Phishing",      pct: 88, color: "bg-orange-500", text: "text-orange-400" },
+              { label: "DDoS",          pct: 80, color: "bg-blue-500",   text: "text-blue-400"   },
+              { label: "Inyección SQL", pct: 75, color: "bg-purple-500", text: "text-purple-400" },
+            ].map(({ label, pct, color, text }) => (
+              <div class="flex items-center gap-3 text-sm">
+                <span class="text-gray-400 w-28 text-xs text-right shrink-0">{label}</span>
+                <div class="flex-1 bg-gray-800 rounded-full h-4 overflow-hidden">
+                  <div class={`h-4 rounded-full ${color}`} style={`width: ${pct}%`}></div>
+                </div>
+                <span class={`text-xs font-bold w-8 ${text}`}>{pct}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── ESTRATEGIAS DE MITIGACIÓN ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Shield class="size-6 text-green-400" />
+            Estrategias de Mitigación
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+            <div class="p-4 rounded-lg border border-blue-500/30 bg-gray-900/40 text-center hover:scale-[1.02] transition-all">
+              <Restart class="size-8 text-blue-400 mx-auto mb-2" />
+              <p class="font-bold text-sm mb-2 text-blue-400">Actualizaciones</p>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Mantener sistemas y software actualizados. Los parches corrigen vulnerabilidades explotadas en ataques.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-green-500/30 bg-gray-900/40 text-center hover:scale-[1.02] transition-all">
+              <Certificate class="size-8 text-green-400 mx-auto mb-2" />
+              <p class="font-bold text-sm mb-2 text-green-400">Autenticación MFA</p>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Múltiple factor reduce en 99% el acceso no autorizado por credenciales robadas o filtradas.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-yellow-500/30 bg-gray-900/40 text-center hover:scale-[1.02] transition-all">
+              <Sun class="size-8 text-yellow-400 mx-auto mb-2" />
+              <p class="font-bold text-sm mb-2 text-yellow-400">Concientización</p>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Capacitar al personal para identificar phishing, ingeniería social y prácticas de uso seguro.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-orange-500/30 bg-gray-900/40 text-center hover:scale-[1.02] transition-all">
+              <Save class="size-8 text-orange-400 mx-auto mb-2" />
+              <p class="font-bold text-sm mb-2 text-orange-400">Respaldos 3-2-1</p>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                3 copias, 2 medios distintos, 1 fuera del sitio. Esencial para recuperarse del ransomware.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ── EVIDENCIA VISUAL ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80">Evidencia Visual</h3>
+          <figure class="relative transition-all duration-300 hover:scale-[1.01]">
+            <img
+              class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-800"
+              src={INFO_TAREA.imagen}
+              alt="Infografía Actividad 10 — Ataques, Conceptos y Técnicas"
+            />
+            <figcaption class="mt-2 text-center text-sm text-gray-500 italic">
+              Figura 1: Infografía del Módulo 2 — Ataques, Conceptos y Técnicas (Cisco Networking Academy).
+            </figcaption>
+          </figure>
+        </div>
+
+        {/* ── REFERENCIAS APA 7 ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Books class="size-6 text-blue-400" />
+            Referencias — APA 7
+          </h3>
+          <div class="space-y-3 text-sm text-gray-400">
+            <p class="pl-6 -indent-6 leading-relaxed">
+              Cisco Networking Academy. (2023). <em class="text-gray-300">Introducción a la ciberseguridad: Módulo 2 — Ataques, conceptos y técnicas.</em> Cisco Systems.
+              <a href="https://www.netacad.com" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline ml-1">https://www.netacad.com</a>
+            </p>
+            <p class="pl-6 -indent-6 leading-relaxed">
+              Stallings, W., &amp; Brown, L. (2018). <em class="text-gray-300">Computer security: Principles and practice</em> (4.ª ed.). Pearson Education.
+            </p>
+            <p class="pl-6 -indent-6 leading-relaxed">
+              Lockheed Martin. (2022). <em class="text-gray-300">The cyber kill chain framework.</em>
+              <a href="https://www.lockheedmartin.com/en-us/capabilities/cyber/cyber-kill-chain.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline ml-1 break-all">https://www.lockheedmartin.com/...</a>
+            </p>
+            <p class="pl-6 -indent-6 leading-relaxed">
+              MITRE Corporation. (2023). <em class="text-gray-300">ATT&amp;CK matrix for enterprise.</em>
+              <a href="https://attack.mitre.org" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline ml-1">https://attack.mitre.org</a>
+            </p>
+            <p class="pl-6 -indent-6 leading-relaxed">
+              CISA. (2023). <em class="text-gray-300">Understanding ransomware threat actors.</em> Cybersecurity and Infrastructure Security Agency.
+              <a href="https://www.cisa.gov/ransomware" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline ml-1">https://www.cisa.gov/ransomware</a>
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      {/* --- ZONA DE DESCARGA Y NAVEGACIÓN --- */}
+      <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        <a
+          href={INFO_TAREA.pdf}
+          download="Actividad10-Equipo5.pdf"
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30"
+        >
+          <Link class="size-5" />
+          Descargar PDF de la Tarea
+        </a>
+        <a
+          href="/#tareas"
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>

