@@ -1,0 +1,1820 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import Shield  from "../../components/Icons/Shield.astro"
+import Block   from "../../components/Icons/Block.astro"
+import Sms     from "../../components/Icons/Sms.astro"
+import Camera  from "../../components/Icons/Camera.astro"
+import Wifi    from "../../components/Icons/Wifi.astro"
+import Accept  from "../../components/Icons/Accept.astro"
+import XIcon   from "../../components/Icons/X.astro"
+import Pishing from "../../components/Icons/Pishing.astro"
+import Mail    from "../../components/Icons/Mail.astro"
+
+const INFO_TAREA = {
+  titulo: "Phishing Quiz: Test de Ingeniería Social",
+  descripcion: "Simulación interactiva de 10 escenarios de phishing para evaluar la capacidad de detección de amenazas en entornos digitales.",
+}
+
+const ESCENARIOS = Array.from({ length: 10 }, (_, i) => ({
+  id: i + 1,
+  label: `Escenario ${String(i + 1).padStart(2, '0')}`
+}));
+---
+
+<Layout title={`Portafolio - ${INFO_TAREA.titulo}`} description={INFO_TAREA.descripcion}>
+<style>
+  /* ── Hide global header/nav on this page only ── */
+  :global(header), :global(nav) { display: none !important; }
+
+  /* ══════════════════════════
+     SIDEBAR
+  ══════════════════════════ */
+  #roadmap-sidebar {
+    width: 236px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 1.5rem;
+    height: calc(100vh - 3rem);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #334155 transparent;
+  }
+
+  /* Progress bar */
+  .prog-track {
+    height: 5px;
+    background: #e2e8f0;
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+  .dark .prog-track { background: #1e293b; }
+  .prog-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #3b82f6 0%, #6366f1 100%);
+    border-radius: 9999px;
+    transition: width 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 8px rgba(99,102,241,0.35);
+  }
+
+  /* Sidebar items */
+  .sbi {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.45rem 0.5rem 0.45rem 0;
+    border-radius: 0.5rem;
+    transition: all 0.22s ease;
+    opacity: 0.4;
+    cursor: default;
+    user-select: none;
+  }
+  .sbi-num {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 800;
+    font-family: 'Courier New', monospace;
+    flex-shrink: 0;
+    border: 1.5px solid;
+    transition: all 0.22s ease;
+    /* pending */
+    background: transparent;
+    border-color: #cbd5e1;
+    color: #94a3b8;
+  }
+  .dark .sbi-num { border-color: #334155; color: #475569; }
+
+  .sbi-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: color 0.2s, font-weight 0.2s;
+    color: #64748b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+  }
+  .sbi-badge {
+    display: none;
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.2rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* active */
+  .sbi.active { opacity: 1; background: rgba(59,130,246,0.06); }
+  .dark .sbi.active { background: rgba(59,130,246,0.1); }
+  .sbi.active .sbi-num {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    color: #fff;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.22);
+  }
+  .sbi.active .sbi-label { color: #3b82f6; font-weight: 700; }
+
+  /* correct */
+  .sbi.done-ok { opacity: 1; }
+  .sbi.done-ok .sbi-num { background: #10b981; border-color: #10b981; color: #fff; box-shadow: 0 0 0 3px rgba(16,185,129,0.15); }
+  .sbi.done-ok .sbi-label { color: #10b981; }
+  .sbi.done-ok .sbi-badge { display: inline-block; background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.25); }
+
+  /* incorrect */
+  .sbi.done-fail { opacity: 1; }
+  .sbi.done-fail .sbi-num { background: #ef4444; border-color: #ef4444; color: #fff; box-shadow: 0 0 0 3px rgba(239,68,68,0.15); }
+  .sbi.done-fail .sbi-label { color: #ef4444; }
+  .sbi.done-fail .sbi-badge { display: inline-block; background: rgba(239,68,68,0.08); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+
+  /* ══════════════════════════
+     SCENARIO HEADER (above each scenario card)
+  ══════════════════════════ */
+  .scene-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.625rem;
+    padding: 0 0.25rem;
+  }
+  .scene-counter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .scene-counter-num {
+    font-size: 0.68rem;
+    font-weight: 800;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.06em;
+    color: #3b82f6;
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 0.3rem;
+    padding: 0.18rem 0.5rem;
+  }
+  .dark .scene-counter-num { background: rgba(59,130,246,0.12); border-color: rgba(59,130,246,0.25); }
+  .scene-steps {
+    display: flex;
+    gap: 3px;
+  }
+  .scene-step-dot {
+    width: 18px;
+    height: 4px;
+    border-radius: 2px;
+    background: #e2e8f0;
+    transition: background 0.3s;
+  }
+  .dark .scene-step-dot { background: #1e293b; }
+  .scene-step-dot.done { background: #10b981; }
+  .scene-step-dot.fail { background: #ef4444; }
+  .scene-step-dot.cur  { background: #3b82f6; }
+
+  .scene-type-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    background: #0f172a;
+    color: #475569;
+    border: 1px solid #1e293b;
+  }
+
+  /* ══════════════════════════
+     SCENARIO / SCREEN SHOW/HIDE
+  ══════════════════════════ */
+  .scenario-container { display: none; }
+  .scenario-container.active { display: block; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ══════════════════════════
+     DECISION PANEL
+  ══════════════════════════ */
+  #decision-panel { display: none; }
+  #decision-panel.visible { display: block; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+
+  .dp-card {
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 1rem;
+    padding: 1.125rem 1.25rem;
+    margin-top: 0.875rem;
+  }
+
+  .dp-prompt {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    text-align: center;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .dp-prompt::before, .dp-prompt::after { content:''; flex:1; height:1px; background:#1e293b; }
+
+  .dp-btns { display: flex; gap: 0.75rem; }
+
+  .dp-btn {
+    flex: 1;
+    padding: 0.875rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 800;
+    border: 2px solid;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .dp-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .dp-btn:hover { transform: translateY(-2px); }
+  .dp-btn:active { transform: scale(0.97) translateY(0); }
+
+  .dp-phishing {
+    background: rgba(239,68,68,0.05);
+    border-color: rgba(239,68,68,0.3);
+    color: #dc2626;
+  }
+  .dark .dp-phishing { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.3); color: #f87171; }
+  .dp-phishing:hover { background: rgba(239,68,68,0.12); border-color: #ef4444; box-shadow: 0 4px 20px rgba(239,68,68,0.2); }
+
+  .dp-legitimo {
+    background: rgba(16,185,129,0.05);
+    border-color: rgba(16,185,129,0.25);
+    color: #059669;
+  }
+  .dark .dp-legitimo { background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.25); color: #34d399; }
+  .dp-legitimo:hover { background: rgba(16,185,129,0.12); border-color: #10b981; box-shadow: 0 4px 20px rgba(16,185,129,0.2); }
+
+  .dp-shortcut {
+    font-size: 0.6rem;
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    opacity: 0.5;
+    background: currentColor;
+    color: inherit;
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.2rem;
+    border: 1px solid currentColor;
+  }
+
+  /* ══════════════════════════
+     FEEDBACK MODAL
+  ══════════════════════════ */
+  #feedback-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  #feedback-modal.visible { display: flex; animation: backdropIn 0.2s ease; }
+  @keyframes backdropIn { from { opacity:0; } to { opacity:1; } }
+
+  #feedback-card {
+    max-height: 88vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #334155 transparent;
+    animation: cardPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes cardPop {
+    from { opacity:0; transform: scale(0.9) translateY(20px); }
+    to   { opacity:1; transform: scale(1) translateY(0); }
+  }
+
+  /* Verdict strip */
+  .fb-verdict-ok   { background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.03)); border-bottom-color: rgba(16,185,129,0.18) !important; }
+  .fb-verdict-fail { background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(239,68,68,0.03)); border-bottom-color: rgba(239,68,68,0.18) !important; }
+
+  /* Indicator cards */
+  .fb-ind {
+    border-left: 3px solid;
+    border-radius: 0.5rem;
+    padding: 0.8rem 0.95rem;
+    margin-bottom: 0.5rem;
+    transition: transform 0.15s;
+  }
+  .fb-ind:hover { transform: translateX(2px); }
+  .fb-ind.danger  { background: rgba(239,68,68,0.04);  border-color: #ef4444; }
+  .dark .fb-ind.danger  { background: rgba(239,68,68,0.07); }
+  .fb-ind.success { background: rgba(16,185,129,0.04); border-color: #10b981; }
+  .dark .fb-ind.success { background: rgba(16,185,129,0.07); }
+
+  .fb-ind-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.35rem;
+    line-height: 1.4;
+  }
+  .fb-ind.danger  .fb-ind-title { color: #dc2626; }
+  .dark .fb-ind.danger  .fb-ind-title { color: #f87171; }
+  .fb-ind.success .fb-ind-title { color: #059669; }
+  .dark .fb-ind.success .fb-ind-title { color: #34d399; }
+
+  .fb-ind-body { font-size: 0.8rem; line-height: 1.65; color: #475569; }
+  .dark .fb-ind-body { color: #94a3b8; }
+  .fb-ind-body code {
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.74rem;
+    background: rgba(59,130,246,0.07);
+    color: #3b82f6;
+    padding: 0.07rem 0.3rem;
+    border-radius: 0.22rem;
+    border: 1px solid rgba(59,130,246,0.15);
+  }
+  .dark .fb-ind-body code { background: rgba(99,102,241,0.1); color: #818cf8; border-color: rgba(99,102,241,0.2); }
+  .fb-ind-body strong { color: #1e293b; font-weight: 600; }
+  .dark .fb-ind-body strong { color: #e2e8f0; }
+  .fb-ind-body em { color: #f59e0b; font-style: normal; font-weight: 600; }
+
+  .fb-lesson {
+    background: rgba(245,158,11,0.055);
+    border: 1px solid rgba(245,158,11,0.18);
+    border-left: 3px solid #f59e0b;
+    border-radius: 0.5rem;
+    padding: 0.85rem 1rem;
+    font-size: 0.8rem;
+    line-height: 1.65;
+    color: #fcd34d;
+    margin-bottom: 1rem;
+  }
+  .fb-lesson strong { color: #fbbf24; font-weight: 700; }
+
+  .fb-sec-title {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .fb-sec-title::after { content:''; flex:1; height:1px; background:#1e293b; }
+
+  /* ══════════════════════════
+     RESULTS — animated score ring
+  ══════════════════════════ */
+  .score-ring-wrap {
+    position: relative;
+    width: 11rem;
+    height: 11rem;
+    margin: 0 auto 2rem;
+  }
+  .score-ring-svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+  .score-ring-bg { fill: none; stroke: #1e293b; stroke-width: 8; }
+  .score-ring-arc {
+    fill: none;
+    stroke: url(#scoreGrad);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 314;
+    stroke-dashoffset: 314;
+    transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .score-ring-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Stat cards */
+  .stat-card {
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 0.75rem;
+    padding: 0.875rem 1rem;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .stat-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.35); transform: translateY(-1px); }
+  .stat-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #475569; margin-bottom: 0.25rem; }
+  .stat-value { font-size: 1.05rem; font-weight: 800; color: #e2e8f0; }
+
+  /* Score color thresholds */
+  .score-s { color: #10b981; }  /* 9-10 */
+  .score-a { color: #3b82f6; }  /* 7-8  */
+  .score-b { color: #f59e0b; }  /* 5-6  */
+  .score-c { color: #ef4444; }  /* 0-4  */
+
+  /* ══════════════════════════
+     RANKING GLOBAL
+  ══════════════════════════ */
+  .ranking-table { width: 100%; border-collapse: collapse; }
+  .ranking-table th {
+    font-size: 0.61rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #475569;
+    padding: 0.55rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #1e293b;
+    background: #080c14;
+  }
+  .ranking-table td {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.81rem;
+    color: #64748b;
+    border-bottom: 1px solid #0a0e18;
+    transition: background 0.15s;
+  }
+  .ranking-row-me td { background: rgba(59,130,246,0.07) !important; color: #cbd5e1; }
+  .ranking-row-me td:first-child { border-left: 3px solid #3b82f6; }
+  .ranking-pos { font-family: 'Courier New', monospace; font-weight: 800; font-size: 0.75rem; color: #334155; }
+  .ranking-pos.gold   { color: #f59e0b; }
+  .ranking-pos.silver { color: #94a3b8; }
+  .ranking-pos.bronze { color: #b45309; }
+  .ranking-score { font-weight: 800; font-size: 0.88rem; }
+  .score-col-s { color: #10b981; }
+  .score-col-a { color: #3b82f6; }
+  .score-col-b { color: #f59e0b; }
+  .score-col-c { color: #ef4444; }
+
+  .analysis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.5rem; }
+  .analysis-card {
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 0.625rem;
+    padding: 0.8rem 1rem;
+  }
+  .analysis-lbl { font-size: 0.59rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #475569; margin-bottom: 0.2rem; }
+  .analysis-val { font-size: 0.95rem; font-weight: 800; color: #e2e8f0; }
+  .analysis-sub { font-size: 0.68rem; color: #334155; margin-top: 0.1rem; }
+
+  .ranking-spinner {
+    width: 1.75rem; height: 1.75rem;
+    border: 3px solid #1e293b;
+    border-top-color: #3b82f6;
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+    margin: 1.5rem auto 0.5rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .det-bar-wrap { background: #1e293b; border-radius: 9999px; height: 4px; overflow: hidden; margin-top: 0.2rem; }
+  .det-bar { height: 100%; border-radius: 9999px; transition: width 0.9s ease; }
+
+  .rank-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .rank-divider-line { flex: 1; height: 1px; background: #1e293b; }
+  .rank-divider-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #334155;
+    white-space: nowrap;
+  }
+
+  /* ══════════════════════════
+     RESPONSIVE
+  ══════════════════════════ */
+  @media (max-width: 1023px) {
+    #roadmap-sidebar { display: none !important; }
+  }
+  @media (max-width: 640px) {
+    .dp-btns { flex-direction: column; }
+    .dp-shortcut { display: none; }
+  }
+</style>
+
+<main class="px-4 py-8">
+  <div class="flex gap-6 items-start max-w-[1200px] mx-auto">
+
+    <!-- ████ SIDEBAR ████ -->
+    <aside id="roadmap-sidebar" class="hidden lg:flex flex-col border-r border-gray-200 dark:border-gray-800 pr-5">
+
+      <!-- Brand header -->
+      <div class="mb-5">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+          <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-gray-400 dark:text-gray-500">CyberDetect Quiz</p>
+        </div>
+        <p class="text-xs text-gray-400 dark:text-gray-600 mb-3">Actividad PR02 · 10 escenarios</p>
+
+        <!-- Progress bar -->
+        <div class="prog-track mb-1.5">
+          <div class="prog-fill" id="progress-fill"></div>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-[10px] text-gray-400 dark:text-gray-500">completados</span>
+          <span class="text-[11px] font-bold font-mono text-blue-500">
+            <span id="score-counter">0</span> / 10
+          </span>
+        </div>
+      </div>
+
+      <!-- Score card -->
+      <div class="rounded-xl border border-gray-200 dark:border-gray-700 mb-5 overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 dark:from-blue-500/15 dark:to-indigo-500/15 px-3 py-2.5 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+          <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Puntaje actual</p>
+          <span class="text-[10px] text-gray-400 dark:text-gray-500 font-mono">/ 10</span>
+        </div>
+        <div class="bg-white dark:bg-gray-800/40 px-3 py-2.5 flex items-center justify-between">
+          <span class="text-3xl font-black text-blue-500 font-mono leading-none" id="sidebar-score">0</span>
+          <div class="flex gap-1" id="score-pips">
+            {Array.from({length:10}).map((_,i) => (
+              <div class="w-1.5 h-4 rounded-full bg-gray-100 dark:bg-gray-700 transition-all duration-300" id={`pip-${i+1}`}></div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Step list -->
+      <div class="flex flex-col gap-0.5">
+        {ESCENARIOS.map((esc) => (
+          <div class="sbi" id={`sbi-${esc.id}`}>
+            <div class="sbi-num">{String(esc.id).padStart(2,'0')}</div>
+            <span class="sbi-label">{esc.label}</span>
+            <span class="sbi-badge" id={`rb-${esc.id}`}></span>
+          </div>
+        ))}
+      </div>
+
+      <!-- Legend -->
+      <div class="mt-5 pt-4 border-t border-gray-200 dark:border-gray-800">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Leyenda</p>
+        <div class="space-y-1.5">
+          <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+            <span class="w-5 h-5 rounded-[0.3rem] bg-blue-500 flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0">01</span> Activo
+          </div>
+          <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+            <span class="w-5 h-5 rounded-[0.3rem] bg-emerald-500 flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0">✓</span> Correcto
+          </div>
+          <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+            <span class="w-5 h-5 rounded-[0.3rem] bg-red-500 flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0">✗</span> Incorrecto
+          </div>
+        </div>
+      </div>
+
+      <!-- Keyboard hint -->
+      <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Atajos de teclado</p>
+        <div class="space-y-1">
+          <div class="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500">
+            <kbd class="bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded px-1.5 py-0.5 text-[10px] font-mono font-bold">P</kbd>
+            <span>Phishing</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500">
+            <kbd class="bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded px-1.5 py-0.5 text-[10px] font-mono font-bold">L</kbd>
+            <span>Legítimo</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ████ CONTENT AREA ████ -->
+    <div class="flex-1 min-w-0">
+
+      <!-- ══════════════════════════
+           INTRO SCREEN
+      ══════════════════════════ -->
+      <div id="intro-screen" class="scenario-container active">
+        <div class="bg-[#0c0f1a] border border-[#1e293b] rounded-2xl overflow-hidden shadow-sm">
+
+          <!-- Hero band -->
+          <div class="bg-gradient-to-br from-slate-800 to-slate-900 px-8 pt-10 pb-8 text-center relative overflow-hidden border-b border-slate-700">
+            <!-- decorative circles -->
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded-full"></div>
+            <div class="absolute -bottom-6 -left-6 w-28 h-28 bg-white/5 rounded-full"></div>
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-2xl mb-4 backdrop-blur-sm border border-white/15"><Shield /></div>
+            <h1 class="text-3xl font-bold text-white mb-2 tracking-tight">Phishing Quiz Interactivo</h1>
+            <p class="text-slate-400 text-sm max-w-md mx-auto leading-relaxed">
+              Analiza <strong class="text-white">10 mensajes reales</strong> e identifica cuáles son ataques de phishing y cuáles son legítimos.
+            </p>
+          </div>
+
+          <div class="p-8">
+            <!-- Feature pills -->
+            <div class="flex flex-wrap justify-center gap-2 mb-7">
+              <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800/40"><Mail /> Correos falsos</span>
+              <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-800/40"><Sms /> SMS y WhatsApp</span>
+              <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-pink-50 dark:bg-pink-900/20 text-pink-700 dark:text-pink-300 border border-pink-100 dark:border-pink-800/40"><Camera /> Redes sociales</span>
+              <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-800/40"><Wifi /> Ataques Wi-Fi</span>
+              <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-800/40"><Accept /> Feedback detallado</span>
+            </div>
+
+            <!-- Notice -->
+            <div class="bg-amber-950/40 border border-amber-800/40 border-l-4 border-l-amber-600 rounded-lg p-4 mb-6 text-sm text-amber-300 max-w-lg mx-auto text-left leading-relaxed">
+              <strong>⚠️ Consentimiento Informado:</strong> Simulación académica. Ningún enlace captura credenciales reales. Nunca introduzcas contraseñas verdaderas.
+            </div>
+
+            <!-- Form -->
+            <div class="max-w-md mx-auto mb-7 bg-[#0f172a] border border-[#1e293b] rounded-xl p-6">
+              <p class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-4 flex items-center gap-2">
+                <span class="w-4 h-4 bg-blue-500 rounded flex items-center justify-center text-white"><Block /></span>
+                Registro de Participante
+              </p>
+              <div class="mb-4">
+                <label for="user-name" class="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-1.5">Nombre Completo</label>
+                <input type="text" id="user-name" placeholder="Ej. Diego Osvaldo Hernández"
+                  class="w-full px-4 py-2.5 rounded-lg border border-[#1e293b] bg-[#0c0f1a] text-white placeholder-slate-600 focus:ring-2 focus:ring-blue-700 focus:border-blue-700 outline-none transition-all text-sm">
+              </div>
+              <div>
+                <label for="user-email" class="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-1.5">Correo Electrónico</label>
+                <input type="email" id="user-email" placeholder="ejemplo@correo.com"
+                  class="w-full px-4 py-2.5 rounded-lg border border-[#1e293b] bg-[#0c0f1a] text-white placeholder-slate-600 focus:ring-2 focus:ring-blue-700 focus:border-blue-700 outline-none transition-all text-sm">
+              </div>
+              <p id="form-error" class="text-red-500 text-xs mt-2.5 hidden font-semibold flex items-center gap-1.5">⚠️ Completa tu nombre y correo para continuar.</p>
+            </div>
+
+            <div class="text-center">
+              <button id="btn-start-quiz"
+                class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3.5 px-12 rounded-full transition-all active:scale-95 shadow-lg shadow-blue-500/30 text-[0.95rem]">
+                Comenzar Quiz
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+              </button>
+              <p class="text-xs text-gray-400 dark:text-gray-500 mt-3">Usa <kbd class="bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded px-1 py-0.5 font-mono text-[10px]">P</kbd> y <kbd class="bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded px-1 py-0.5 font-mono text-[10px]">L</kbd> como atajos de teclado durante el quiz.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SCENARIO 1 — GitHub Email (PHISHING) ══ -->
+      <div id="scenario-1" class="scenario-container" data-correct-answer="phishing" data-type="Email">
+        <div class="scene-header">
+          <div class="scene-counter">
+            <span class="scene-counter-num">01 / 10</span>
+            <div class="scene-steps" id="steps-row-1"></div>
+          </div>
+          <span class="scene-type-badge"><Mail /> Email</span>
+        </div>
+        <div class="bg-[#1e1e1e] rounded-t-xl p-4 border-b border-gray-700 flex items-center justify-between">
+          <h2 class="text-white font-semibold text-base md:text-sm leading-tight">[Urgente] Alerta de seguridad: Intento de acceso no autorizado a tu repositorio</h2>
+          <span class="px-3 py-1 bg-gray-700 text-gray-300 text-xs rounded border border-gray-600 hidden md:block flex-shrink-0 ml-3">Resumir</span>
+        </div>
+        <div class="bg-[#121212] p-6 rounded-b-xl border border-t-0 border-gray-700 shadow-2xl font-sans text-gray-200">
+          <div class="flex items-start gap-4 mb-6">
+            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 24 24" width="30" height="30"><path fill="#121212" d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            </div>
+            <div class="flex-1">
+              <div class="flex flex-col md:flex-row md:items-center justify-between">
+                <p class="font-bold text-[#4599ff]">GitHub Security <span class="text-gray-500 font-normal text-sm block md:inline">&lt;notifications@githuh.com&gt;</span></p>
+                <p class="text-xs text-gray-500 mt-1 md:mt-0">Jue 12/03/2026 18:02</p>
+              </div>
+              <p class="text-sm mt-1">Para: <span class="text-gray-300">Diego Osvaldo Hernández Fernández</span></p>
+              <p class="text-sm text-gray-500">CC: y 1 más</p>
+            </div>
+          </div>
+          <div class="pl-2">
+            <div class="flex items-center gap-2 text-red-500 font-bold mb-6"><span>❗️</span> Importancia alta</div>
+            <p class="mb-4 text-gray-300">Hola Desarrollador,</p>
+            <p class="mb-4 text-gray-300 leading-relaxed">Hemos detectado un intento de inicio de sesión en tu cuenta desde una dirección IP no reconocida <strong>(203.0.113.85)</strong> ubicada en Moscú, Rusia.</p>
+            <p class="mb-6 text-gray-300 leading-relaxed">Si no fuiste tú, tus repositorios podrían estar en riesgo. Por favor, verifica tu identidad inmediatamente. Si no te verificas en 24 horas, tu cuenta se bloqueará temporalmente.</p>
+            <p class="mb-8 text-gray-300"><strong>Enlace de verificación:</strong>
+              <a href="#" class="text-[#4599ff] hover:underline break-all group relative inline-block">
+                http://alerta-seguridad.verificacion-cuentas.example.com/login-urgente?token=x8f9d2a1
+                <span class="absolute hidden group-hover:block bottom-[-35px] left-0 bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded shadow-lg border border-gray-400 whitespace-nowrap z-10">Ir a: http://alerta-seguridad.verificacion-cuentas.example.com/login-urgente?token=x8f9d2a1</span>
+              </a>
+            </p>
+            <p class="mb-8 text-gray-300">El Equipo de Seguridad.</p>
+            <div class="bg-white inline-block px-4 py-2 rounded"><span class="text-black font-extrabold text-2xl tracking-tighter">GitHub</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SCENARIO 2 — DHL WhatsApp (PHISHING) ══ -->
+      <div id="scenario-2" class="scenario-container" data-correct-answer="phishing" data-type="WhatsApp">
+        <div class="scene-header">
+          <div class="scene-counter"><span class="scene-counter-num">02 / 10</span><div class="scene-steps" id="steps-row-2"></div></div>
+          <span class="scene-type-badge"><Sms /> WhatsApp</span>
+        </div>
+        <div class="bg-[#1e1e1e] rounded-t-xl p-4 border-b border-gray-700 flex items-center gap-3">
+          <div class="w-10 h-10 bg-[#FFCC00] rounded-full flex items-center justify-center font-bold text-[#D40511] text-sm flex-shrink-0">DHL</div>
+          <div>
+            <h2 class="text-white font-semibold text-base leading-tight">Soporte DHL Express</h2>
+            <p class="text-gray-400 text-xs">Cuenta de empresa</p>
+          </div>
+        </div>
+        <div class="bg-[#0f0f11] p-6 min-h-[380px] flex flex-col justify-end border-x border-gray-700 font-sans">
+          <div class="flex justify-center mb-6"><span class="text-xs font-semibold text-gray-400 bg-[#1e1e1e] px-3 py-1 rounded-full">Hoy</span></div>
+          <div class="bg-[#1e1e1e] text-gray-200 p-4 rounded-2xl rounded-tl-none max-w-[90%] md:max-w-[75%] border border-gray-800 shadow-md">
+            <p class="font-bold flex items-center gap-2 mb-3"><span class="text-lg">📦</span> DHL Express Informa:</p>
+            <p class="mb-4 text-[15px] leading-relaxed">Estimado cliente, su paquete con guía <strong>#98347592</strong> está retenido porque la dirección de entrega está incompleta.</p>
+            <p class="mb-4 text-[15px] leading-relaxed">Para evitar la devolución en las próximas 12 horas, actualice su información y cubra la tarifa de reprogramación ($25.00 MXN):</p>
+            <p class="mb-4"><a href="#" class="text-[#4599ff] hover:underline break-all relative group inline-block text-[15px]">https://rastreo-paquetes.dhl-logistica.example.com/update-info?id=98347592<span class="absolute hidden group-hover:block bottom-[-30px] left-0 bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded shadow-lg border border-gray-400 whitespace-nowrap z-10">Ir a: https://rastreo-paquetes.dhl-logistica.example.com/update-info?id=98347592</span></a></p>
+            <p class="text-[15px]">Gracias por confiar en nosotros.</p>
+            <div class="text-right mt-2"><span class="text-xs text-gray-500">6:26 p.m.</span></div>
+          </div>
+        </div>
+        <div class="bg-[#1e1e1e] p-3 border border-t-0 border-gray-700 rounded-b-xl">
+          <div class="bg-[#2d2d2d] rounded-full px-4 py-2 text-gray-400 text-sm">Escribe un mensaje</div>
+        </div>
+      </div>
+
+      <!-- ══ SCENARIO 3 — Google Drive (PHISHING) ══ -->
+      <div id="scenario-3" class="scenario-container" data-correct-answer="phishing" data-type="Email">
+        <div class="scene-header">
+          <div class="scene-counter"><span class="scene-counter-num">03 / 10</span><div class="scene-steps" id="steps-row-3"></div></div>
+          <span class="scene-type-badge"><Mail /> Email</span>
+        </div>
+        <div class="bg-white rounded-t-xl p-4 md:p-6 border border-b-0 border-gray-200">
+          <h2 class="text-gray-900 font-normal text-xl mb-3">Recursos Humanos te ha compartido: "Ajustes_Salariales_y_Bonos_2026.pdf"</h2>
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center bg-gray-100 border border-gray-200">
+                <svg viewBox="0 0 48 48" width="24" height="24"><path fill="#FFC107" d="M17 6l-6 10 11 19 6-10z"/><path fill="#1976D2" d="M11 16h22l-6-10H5z"/><path fill="#4CAF50" d="M33 16l6 10-11 19h-11z"/></svg>
+              </div>
+              <div>
+                <p class="text-sm font-bold text-gray-900">Google Drive <span class="font-normal text-gray-500 text-xs">&lt;drive-shares-noreply@googledrive-docs.example.com&gt;</span></p>
+                <p class="text-xs text-gray-500">para mí ▼</p>
+              </div>
+            </div>
+            <div class="text-xs text-gray-500 flex-shrink-0">📎 18:45</div>
+          </div>
+        </div>
+        <div class="bg-white p-6 border-x border-gray-200 font-sans text-gray-800">
+          <div class="max-w-2xl mx-auto border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+            <div class="bg-white p-5 flex justify-center border-b border-gray-100">
+              <div class="flex items-center gap-2 text-lg font-medium text-gray-600">
+                <svg viewBox="0 0 48 48" width="28" height="28"><path fill="#FFC107" d="M17 6l-6 10 11 19 6-10z"/><path fill="#1976D2" d="M11 16h22l-6-10H5z"/><path fill="#4CAF50" d="M33 16l6 10-11 19h-11z"/></svg>
+                Google Drive
+              </div>
+            </div>
+            <div class="p-8 text-center bg-white">
+              <p class="text-gray-700 text-[15px] mb-7 text-left leading-relaxed"><strong>Recursos Humanos</strong> (<a href="#" class="text-blue-600 hover:underline">rrhh-admin@empresa.com</a>) te ha invitado a ver:</p>
+              <div class="border border-gray-300 rounded-lg p-4 flex items-center gap-4 mb-7 text-left hover:bg-gray-50 cursor-pointer">
+                <div class="w-10 h-10 bg-red-50 flex items-center justify-center rounded text-red-600 font-bold text-[10px] border border-red-100">PDF</div>
+                <span class="font-bold text-gray-700 text-sm">Ajustes_Salariales_y_Bonos_2026.pdf</span>
+              </div>
+              <a href="#" class="group relative inline-block bg-[#1a73e8] hover:bg-blue-700 text-white font-bold py-2.5 px-8 rounded transition-colors text-sm shadow-sm">
+                Abrir documento
+                <span class="absolute hidden group-hover:block bottom-[-35px] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1.5 rounded shadow-lg whitespace-nowrap z-10">Ir a: https://login.google.com.auth-docs.example.com/drive/view</span>
+              </a>
+            </div>
+            <div class="bg-gray-50 p-5 text-center border-t border-gray-200">
+              <p class="text-xs text-gray-500">Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-b-xl p-4 border border-t-0 border-gray-200">
+          <button class="px-5 py-2 border border-gray-300 rounded-full text-sm text-gray-600 font-medium hover:bg-gray-50">↩ Responder</button>
+        </div>
+      </div>
+
+      <!-- ══ SCENARIO 4 — WhatsApp Job Scam (PHISHING) ══ -->
+      <div id="scenario-4" class="scenario-container" data-correct-answer="phishing" data-type="WhatsApp">
+        <div class="scene-header">
+          <div class="scene-counter"><span class="scene-counter-num">04 / 10</span><div class="scene-steps" id="steps-row-4"></div></div>
+          <span class="scene-type-badge"><Sms /> WhatsApp</span>
+        </div>
+        <div class="bg-[#1f2c34] rounded-t-xl p-3 border-b border-gray-800 flex items-center gap-4">
+          <div class="w-10 h-10 bg-red-400 rounded-full flex items-center justify-center font-bold text-white text-sm flex-shrink-0">RT</div>
+          <div class="flex-1 min-w-0">
+            <h2 class="text-white font-semibold text-base leading-tight">Reclutamiento Tech Global</h2>
+            <p class="text-gray-400 text-xs">última vez recientemente</p>
+          </div>
+        </div>
+        <div class="bg-[#0b141a] p-6 min-h-[380px] flex flex-col justify-end border-x border-gray-800 font-sans" style="background-image: radial-gradient(#202c33 1px, transparent 1px); background-size: 20px 20px;">
+          <div class="flex justify-center mb-6"><span class="text-xs font-medium text-gray-400 bg-[#182229] px-3 py-1 rounded-lg">Today</span></div>
+          <div class="bg-[#202c33] text-gray-200 p-3 rounded-xl rounded-tl-sm max-w-[85%] md:max-w-[70%] shadow-sm">
+            <p class="font-bold text-white mb-2 text-[15px]">🚀 ¡Oportunidad Remota IT!</p>
+            <p class="mb-3 text-[15px] leading-snug">Hola, vimos tu perfil y buscamos estudiantes o perfiles junior para Software Testing a medio tiempo.</p>
+            <p class="mb-1 text-[15px]">💰 <strong>Pago:</strong> $400 - $600 USD semanales.</p>
+            <p class="mb-4 text-[15px]">⏱️ <strong>Horario:</strong> 100% flexible y remoto.</p>
+            <p class="mb-4 text-[15px] leading-snug">Para aplicar y agendar tu entrevista, completa tu perfil en nuestro portal:</p>
+            <p class="mb-3"><a href="#" class="text-[#53bdeb] hover:underline break-all relative group inline-block text-[15px]">https://tech-recruitment.portal-empleos.example.com/registro-candidatos<span class="absolute hidden group-hover:block bottom-[-30px] left-0 bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded shadow-lg border border-gray-400 whitespace-nowrap z-10">Ir a: https://tech-recruitment.portal-empleos.example.com/registro-candidatos</span></a></p>
+            <p class="text-[13px] text-gray-400 italic mb-2">*(Cupos limitados. Asegura tu lugar hoy).*</p>
+            <div class="text-right"><span class="text-[11px] text-gray-400">22:11</span></div>
+          </div>
+        </div>
+        <div class="bg-[#1f2c34] p-3 border border-t-0 border-gray-800 rounded-b-xl">
+          <div class="bg-[#2a3942] rounded-lg px-4 py-2 text-gray-400 text-[15px]">Message</div>
+        </div>
+      </div>
+
+      <!-- ══ SCENARIO 5 — Instagram DM (PHISHING) ══ -->
+      <div id="scenario-5" class="scenario-container" data-correct-answer="phishing" data-type="Instagram DM">
+        <div class="scene-header">
+          <div class="scene-counter"><span class="scene-counter-num">05 / 10</span><div class="scene-steps" id="steps-row-5"></div></div>
+          <span class="scene-type-badge"><Camera /> Instagram DM</span>
+        </div>
+        <div class="bg-black border border-gray-800 rounded-t-xl p-4 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 p-[2px] flex-shrink-0">
+            <div class="bg-black w-full h-full rounded-full flex items-center justify-center">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </div>
+          </div>
+          <div>
+            <h2 class="text-white font-semibold text-sm leading-tight">Soporte de Instagram</h2>
+            <p class="text-gray-400 text-[11px]">ig.copyright_support</p>
+          </div>
+        </div>
+        <div class="bg-black p-4 md:p-6 min-h-[380px] flex flex-col border-x border-gray-800 font-sans">
+          <div class="flex justify-center mb-6"><span class="text-xs text-gray-500">Hoy, 10:14</span></div>
+          <div class="flex justify-end w-full">
+            <div class="bg-[#262626] text-white p-4 rounded-2xl max-w-[95%] md:max-w-[440px] shadow-sm">
+              <p class="font-bold text-[#F5C518] mb-3 text-[15px] flex items-center gap-2"><span>⚠️</span> Aviso del Centro de Ayuda de Instagram</p>
+              <p class="mb-4 text-[14px] leading-relaxed text-[#e0e0e0]">Hemos recibido múltiples quejas sobre una publicación en tu cuenta que infringe derechos de autor.</p>
+              <p class="mb-4 text-[14px] leading-relaxed text-[#e0e0e0]">Tu cuenta será eliminada permanentemente en 24 horas. Envía una apelación de inmediato:</p>
+              <p class="mb-4"><a href="#" class="text-[#e0e0e0] underline hover:text-white break-all relative group inline-block text-[14px]">https://help-instagram-appeal.example.com/verify-account<span class="absolute hidden group-hover:block bottom-[-30px] right-0 bg-white text-black text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap z-10 font-medium">Ir a: https://help-instagram-appeal.example.com/verify-account</span></a></p>
+              <p class="mb-3 text-[14px] text-[#e0e0e0]">Si ignoras este mensaje, perderás el acceso de forma irreversible.</p>
+              <p class="text-[12px] text-gray-500">© Meta Platforms, Inc.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-black p-4 border border-t-0 border-gray-800 rounded-b-xl">
+          <div class="border border-gray-700 rounded-full px-4 py-2.5 text-gray-400 text-[15px]">Envía un mensaje...</div>
+        </div>
+      </div>
+
+      <!-- ══ SCENARIO 6 — Google Security (LEGÍTIMO) ══ -->
+      <div id="scenario-6" class="scenario-container" data-correct-answer="legitimo" data-type="Email">
+        <div class="scene-header">
+          <div class="scene-counter"><span class="scene-counter-num">06 / 10</span><div class="scene-steps" id="steps-row-6"></div></div>
+          <span class="scene-type-badge"><Mail /> Email</span>
+        </div>
+        <div class="bg-white rounded-t-xl p-4 md:p-6 border border-b-0 border-gray-200">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-blue-500 text-white font-bold text-xl flex items-center justify-center flex-shrink-0">G</div>
+              <div>
+                <p class="text-sm font-bold text-gray-900">Google <span class="font-normal text-gray-500 text-xs">&lt;no-reply@accounts.google.com&gt;</span></p>
+                <p class="text-xs text-gray-500">para mí ▼</p>
+              </div>
+            </div>
+            <div class="text-xs text-gray-500 flex-shrink-0">10 mar 2026</div>
+          </div>
+        </div>
+        <div class="bg-white p-6 border-x border-gray-200 font-sans text-gray-800 pb-14">
+          <div class="max-w-md mx-auto border border-gray-300 rounded-lg p-8 text-center shadow-sm">
+            <div class="mb-6 font-bold text-2xl tracking-tighter"><span class="text-blue-500">G</span><span class="text-red-500">o</span><span class="text-yellow-500">o</span><span class="text-blue-500">g</span><span class="text-green-500">l</span><span class="text-red-500">e</span></div>
+            <h2 class="text-2xl font-normal text-gray-900 mb-5">Nuevo inicio de sesión en Windows</h2>
+            <p class="text-[15px] text-gray-800 mb-7 leading-relaxed">Hemos detectado un nuevo inicio de sesión en tu cuenta de Google en un dispositivo Windows. Si has sido tú, no es necesario que hagas nada.</p>
+            <div class="mb-7">
+              <a href="#" class="group relative inline-block bg-[#0b57d0] hover:bg-blue-800 text-white font-medium py-2.5 px-6 rounded-full transition-colors text-sm">
+                Comprobar actividad
+                <span class="absolute hidden group-hover:block bottom-[-35px] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1.5 rounded shadow-lg whitespace-nowrap z-10">Ir a: https://myaccount.google.com/alert/nt/1773184...</span>
+              </a>
+            </div>
+            <p class="text-xs text-gray-500">También puedes ver la actividad en <a href="#" class="text-blue-600 hover:underline group relative inline-block">https://myaccount.google.com/notifications<span class="absolute hidden group-hover:block bottom-[-30px] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap z-10">Ir a: https://myaccount.google.com/notifications</span></a></p>
+          </div>
+        </div>
+        <div class="bg-white rounded-b-xl p-4 border border-t-0 border-gray-200">
+          <button class="px-5 py-2 border border-gray-300 rounded-full text-sm text-gray-600 font-medium hover:bg-gray-50">↩ Responder</button>
+        </div>
+      </div>
+
+      <!-- ══ SCENARIO 7 — SMS Bancario (PHISHING) ══ -->
+      <div id="scenario-7" class="scenario-container" data-correct-answer="phishing" data-type="SMS">
+        <div class="scene-header">
+          <div class="scene-counter"><span class="scene-counter-num">07 / 10</span><div class="scene-steps" id="steps-row-7"></div></div>
+          <span class="scene-type-badge"><Sms /> SMS</span>
+        </div>
+        <div class="bg-[#f9f9f9] border border-gray-300 rounded-t-xl pt-4 pb-2 px-4 flex flex-col items-center relative font-sans">
+          <div class="absolute left-4 top-1/2 transform -translate-y-1/2 flex items-center text-blue-500 cursor-pointer">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <span class="text-lg ml-[-4px]">77372</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="w-14 h-14 bg-gray-300 rounded-full flex items-center justify-center text-white mb-1">
+              <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
+            <div class="text-xs text-gray-500 font-medium">INFO BANCO</div>
+          </div>
+        </div>
+        <div class="bg-white p-6 min-h-[320px] flex flex-col border-x border-gray-300 font-sans">
+          <div class="flex flex-col items-center mb-6">
+            <span class="text-[11px] font-medium text-gray-400">SMS</span>
+            <span class="text-xs font-semibold text-gray-500">24 Jul 11:49 PM</span>
+          </div>
+          <div class="bg-[#e9e9eb] text-black p-3.5 rounded-2xl rounded-bl-sm max-w-[85%] md:max-w-[60%] shadow-sm text-[15px] leading-relaxed">
+            🔴 BANCO: Cargo retenido por $4,999.00 MXN en MERCADOLIBRE con su tarjeta terminada en 4391. Si no reconoce esta operacion, cancele ingresando a:<br>
+            <a href="#" class="text-blue-600 hover:underline break-all relative group mt-1 inline-block">https://alertas-banco.cancelacion-cargos.example.com<span class="absolute hidden group-hover:block bottom-[-30px] left-0 bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap z-10">Ir a: https://alertas-banco.cancelacion-cargos.example.com</span></a>
+          </div>
+        </div>
+        <div class="bg-[#f9f9f9] p-3 border border-t-0 border-gray-300 rounded-b-xl">
+          <div class="bg-white border border-gray-300 rounded-full px-4 py-1.5 text-gray-400 text-[15px]">SMS</div>
+        </div>
+      </div>
+
+      <!-- ══ SCENARIO 8 — Netflix (PHISHING) ══ -->
+      <div id="scenario-8" class="scenario-container" data-correct-answer="phishing" data-type="Email">
+        <div class="scene-header">
+          <div class="scene-counter"><span class="scene-counter-num">08 / 10</span><div class="scene-steps" id="steps-row-8"></div></div>
+          <span class="scene-type-badge"><Mail /> Email</span>
+        </div>
+        <div class="bg-white rounded-t-xl p-4 md:p-6 border border-b-0 border-gray-200 flex items-start gap-3">
+          <div class="w-10 h-10 rounded-full bg-black text-[#e50914] font-bold text-xl flex items-center justify-center flex-shrink-0">N</div>
+          <div>
+            <p class="text-sm font-bold text-gray-900">Netflix <span class="font-normal text-gray-500 text-xs">&lt;support@netflix-billing-update.example.com&gt;</span></p>
+            <p class="text-xs text-gray-500">para mí ▼</p>
+          </div>
+        </div>
+        <div class="bg-[#f4f4f4] p-6 border-x border-b border-gray-200 rounded-b-xl font-sans">
+          <div class="max-w-lg mx-auto bg-black text-white shadow-lg overflow-hidden">
+            <div class="p-8 md:p-10">
+              <div class="text-[#e50914] font-black text-3xl tracking-tighter mb-8">NETFLIX</div>
+              <h2 class="text-2xl md:text-3xl font-bold mb-6 leading-tight">Actualiza tu información de pago para volver a ver Netflix.</h2>
+              <p class="mb-4 text-[#cccccc] text-[15px]">Hola, Osvaldo:</p>
+              <p class="mb-8 text-[#cccccc] text-[15px] leading-relaxed">Tuvimos un problema con la información de pago de tu cuenta. Actualiza tus datos para que puedas seguir disfrutando de Netflix.</p>
+              <a href="#" class="block w-full bg-[#e50914] hover:bg-[#f6121d] text-white text-center font-bold py-3 md:py-4 rounded text-[15px] transition-colors relative group">
+                ACTUALIZAR PAGO
+                <span class="absolute hidden group-hover:block bottom-[-35px] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1.5 rounded shadow-lg whitespace-nowrap z-10">Ir a: https://netflix-billing-update.example.com/login</span>
+              </a>
+            </div>
+            <div class="bg-[#141414] p-8 md:p-10 text-[#737373] text-[11px] leading-relaxed">
+              <p class="mb-3">¿Preguntas? Llama al 01 800 286 9109.</p>
+              <p>© 2026 Netflix, Inc. 100 Winchester Circle, Los Gatos, CA 95032, EE. UU.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SCENARIO 9 — MercadoLibre (LEGÍTIMO) ══ -->
+      <div id="scenario-9" class="scenario-container" data-correct-answer="legitimo" data-type="Email">
+        <div class="scene-header">
+          <div class="scene-counter"><span class="scene-counter-num">09 / 10</span><div class="scene-steps" id="steps-row-9"></div></div>
+          <span class="scene-type-badge"><Mail /> Email</span>
+        </div>
+        <div class="bg-white rounded-t-xl p-4 md:p-6 border border-b-0 border-gray-200">
+          <h2 class="text-gray-900 font-normal text-xl mb-3">¡Ayúdanos a mejorar Meli+!</h2>
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center border border-gray-200 bg-white text-xs flex-shrink-0">🤝</div>
+              <div>
+                <p class="text-sm font-bold text-gray-900 flex flex-col md:block">
+                  Mercado Libre
+                  <svg class="w-3.5 h-3.5 text-blue-500 inline ml-1" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                  <span class="font-normal text-gray-500 text-xs md:ml-1">&lt;noreply@no-responder.mercadolibre.com&gt;</span>
+                </p>
+                <p class="text-xs text-blue-600 hover:underline cursor-pointer mt-1">Darse de baja <span class="text-gray-500 ml-1">· para mí ▼</span></p>
+              </div>
+            </div>
+            <div class="text-xs text-gray-500 flex-shrink-0">12:29</div>
+          </div>
+        </div>
+        <div class="bg-[#f5f5f5] p-6 border-x border-b border-gray-200 rounded-b-xl font-sans text-gray-800">
+          <div class="max-w-lg mx-auto bg-white border border-gray-200 shadow-sm">
+            <div class="bg-[#ffe600] py-4 flex justify-center items-center">
+              <span class="font-bold text-[#2d3277] text-2xl tracking-tight">🤝 mercado libre</span>
+            </div>
+            <div class="p-8 md:p-12 text-center">
+              <h2 class="text-2xl font-normal text-[#333333] mb-5">¡Queremos conocer tu opinión!</h2>
+              <p class="text-[#666666] text-[15px] mb-5 leading-relaxed">Te invitamos a contarnos tu opinión sobre <strong>Meli+</strong>, el programa de suscripción con beneficios exclusivos.</p>
+              <p class="text-[#666666] text-[15px] mb-7">Solo te tomará unos minutos.</p>
+              <a href="#" class="inline-block bg-[#3483fa] hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded transition-colors text-[15px] relative group">
+                Completar encuesta
+                <span class="absolute hidden group-hover:block bottom-[-35px] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1.5 rounded shadow-lg whitespace-nowrap z-10 font-normal">Ir a: https://formularios.mercadolibre.com/encuestas/meli-plus-op...</span>
+              </a>
+            </div>
+          </div>
+          <p class="text-center text-[#999999] text-sm mt-5">¡Muchas gracias! El equipo de Mercado Libre</p>
+        </div>
+      </div>
+
+      <!-- ══ SCENARIO 10 — Evil Twin Wi-Fi (PHISHING) ══ -->
+      <div id="scenario-10" class="scenario-container" data-correct-answer="phishing" data-type="Portal Wi-Fi">
+        <div class="scene-header">
+          <div class="scene-counter"><span class="scene-counter-num">10 / 10</span><div class="scene-steps" id="steps-row-10"></div></div>
+          <span class="scene-type-badge"><Wifi /> Portal Wi-Fi</span>
+        </div>
+        <div class="bg-[#e9ecef] rounded-xl border border-gray-200 min-h-[480px] flex items-center justify-center p-4 font-sans">
+          <div class="bg-white p-8 md:p-10 rounded-xl shadow-lg w-full max-w-sm text-center">
+            <h2 class="text-[#1a1a1a] text-2xl font-bold mb-2 flex items-center justify-center gap-2">✈️ Aeropuerto Free Wi-Fi</h2>
+            <p class="text-[#6c757d] text-[15px] mb-7 leading-relaxed">Bienvenido a la red de invitados. Para comenzar a navegar, verifica tu identidad.</p>
+            <div class="text-left">
+              <div class="mb-4">
+                <label class="block text-[13px] text-[#495057] font-bold mb-2">Correo Electrónico</label>
+                <input type="email" placeholder="ejemplo@gmail.com" class="w-full p-3.5 border border-[#ced4da] rounded-lg text-sm bg-[#f8f9fa] focus:outline-none" readonly>
+              </div>
+              <div class="mb-7">
+                <label class="block text-[13px] text-[#495057] font-bold mb-2 text-red-600">Contraseña de tu correo</label>
+                <input type="password" placeholder="Ingresa tu contraseña" class="w-full p-3.5 border border-[#ced4da] rounded-lg text-sm bg-[#f8f9fa] focus:outline-none" readonly>
+              </div>
+              <button type="button" class="w-full py-3.5 bg-[#0d6efd] hover:bg-blue-700 text-white font-bold rounded-lg text-base transition-colors">Conectar a Internet</button>
+            </div>
+            <p class="text-[#adb5bd] text-[11px] mt-7 leading-tight">Al conectarte, aceptas nuestros Términos de Servicio y Política de Privacidad.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ DECISION PANEL ══ -->
+      <div id="decision-panel">
+        <div class="dp-card">
+          <p class="dp-prompt">¿Qué tipo de mensaje es este?</p>
+          <div class="dp-btns">
+            <button class="dp-btn dp-phishing answer-btn" data-answer="phishing">
+              <Pishing /> Es Phishing
+              <span class="dp-shortcut">P</span>
+            </button>
+            <button class="dp-btn dp-legitimo answer-btn" data-answer="legitimo">
+              <Accept /> Es Legítimo
+              <span class="dp-shortcut">L</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ RESULTS SCREEN ══ -->
+      <div id="results-screen" class="scenario-container">
+        <div class="bg-[#0c0f1a] border border-[#1e293b] rounded-2xl overflow-hidden shadow-sm">
+
+          <!-- Top band -->
+          <div class="bg-gradient-to-br from-slate-800 to-slate-900 px-8 py-7 text-center relative overflow-hidden border-b border-slate-700">
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded-full"></div>
+            <div class="absolute -bottom-6 -left-6 w-28 h-28 bg-white/5 rounded-full"></div>
+            <h2 class="text-2xl font-bold text-white mb-1">¡Simulación Completada!</h2>
+            <p class="text-slate-400 text-sm">Análisis de tu desempeño en detección de amenazas</p>
+          </div>
+
+          <div class="p-8">
+            <!-- Animated score ring -->
+            <div class="score-ring-wrap">
+              <svg class="score-ring-svg" viewBox="0 0 100 100">
+                <defs>
+                  <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#1d4ed8"/>
+                    <stop offset="100%" stop-color="#4338ca"/>
+                  </linearGradient>
+                </defs>
+                <circle class="score-ring-bg" cx="50" cy="50" r="42"/>
+                <circle class="score-ring-arc" id="score-arc" cx="50" cy="50" r="42"/>
+              </svg>
+              <div class="score-ring-inner">
+                <span id="final-score" class="text-5xl font-black score-a leading-none">0</span>
+                <span class="text-xs text-gray-400 dark:text-gray-500 font-semibold mt-1">de 10</span>
+                <span id="score-grade" class="text-xs font-bold mt-0.5"></span>
+              </div>
+            </div>
+
+            <!-- Participant card -->
+            <div class="bg-[#0f172a] border border-[#1e293b] rounded-xl p-5 max-w-md mx-auto mb-5">
+              <p class="text-xs font-bold uppercase tracking-widest text-slate-500 pb-3 border-b border-[#1e293b] mb-3">Datos del Participante</p>
+              <div class="flex justify-between items-center mb-2 text-sm">
+                <span class="text-slate-500">Nombre</span>
+                <span id="display-name" class="text-blue-400 font-semibold text-right max-w-[60%] truncate"></span>
+              </div>
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-slate-500">Correo</span>
+                <span id="display-email" class="text-blue-400 font-semibold text-right max-w-[60%] truncate"></span>
+              </div>
+            </div>
+
+            <!-- Stats grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto mb-6">
+              <div class="stat-card"><p class="stat-label">Tiempo total</p><p class="stat-value" id="total-time">—</p></div>
+              <div class="stat-card"><p class="stat-label">Más lento</p><p class="stat-value" id="longest-scenario">—</p></div>
+              <div class="stat-card">
+                <p class="stat-label">Phishing</p>
+                <p class="stat-value" id="phishing-correct">0 / 8</p>
+              </div>
+              <div class="stat-card">
+                <p class="stat-label">Legítimos</p>
+                <p class="stat-value" id="legit-correct">0 / 2</p>
+              </div>
+            </div>
+
+            <div class="text-center mb-6">
+              <a href="/" class="inline-flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full transition-all active:scale-95 shadow-lg text-sm">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m3 12 2-2m0 0 7-7 7 7M5 10v10a1 1 0 0 0 1 1h3m10-11 2 2m-2-2v10a1 1 0 0 1-1 1h-3m-6 0a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1m-6 0h6"/></svg>
+                Volver al Inicio
+              </a>
+            </div>
+
+            <!-- ══ RANKING GLOBAL ══ -->
+            <div class="max-w-2xl mx-auto">
+
+              <!-- Divider -->
+              <div class="rank-divider">
+                <div class="rank-divider-line"></div>
+                <span class="rank-divider-label">🏆 Ranking Global en Tiempo Real</span>
+                <div class="rank-divider-line"></div>
+              </div>
+
+              <!-- Loading -->
+              <div id="ranking-loading" class="text-center py-2">
+                <div class="ranking-spinner"></div>
+                <p class="text-xs text-slate-600 mt-1">Guardando resultado y cargando ranking...</p>
+              </div>
+
+              <!-- Error -->
+              <div id="ranking-error" class="hidden text-center py-3">
+                <p class="text-xs text-red-400">No se pudo conectar con Firebase. Verifica tu conexión.</p>
+              </div>
+
+              <!-- Table -->
+              <div id="ranking-table-wrap" class="hidden bg-[#0a0e18] border border-[#1e293b] rounded-xl overflow-hidden mb-5">
+                <table class="ranking-table" id="ranking-table">
+                  <thead>
+                    <tr>
+                      <th class="w-10">#</th>
+                      <th>Participante</th>
+                      <th class="text-center">Score</th>
+                      <th class="text-center hidden md:table-cell">Tiempo</th>
+                      <th class="text-center hidden md:table-cell">Phishing</th>
+                      <th class="text-center hidden md:table-cell">Legítimos</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ranking-body"></tbody>
+                </table>
+              </div>
+
+              <!-- Analysis -->
+              <div id="ranking-analysis" class="hidden">
+                <div class="rank-divider">
+                  <div class="rank-divider-line"></div>
+                  <span class="rank-divider-label">📊 Análisis del Grupo</span>
+                  <div class="rank-divider-line"></div>
+                </div>
+
+                <!-- Summary cards -->
+                <div class="analysis-grid mb-4" id="analysis-cards"></div>
+
+                <!-- Time per scenario bars -->
+                <div class="bg-[#0a0e18] border border-[#1e293b] rounded-xl p-4">
+                  <p class="text-xs font-bold uppercase tracking-widest text-slate-600 mb-3">Tiempo promedio por escenario</p>
+                  <div id="detection-bars" class="space-y-2.5"></div>
+                </div>
+              </div>
+
+            </div><!-- /ranking -->
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /flex -->
+</main>
+
+<!-- Hidden icon templates for JS injection in feedback modal -->
+<span id="tpl-accept" class="hidden" aria-hidden="true"><Accept /></span>
+<span id="tpl-x"      class="hidden" aria-hidden="true"><XIcon /></span>
+
+<!-- ████ FEEDBACK MODAL ████ -->
+<div id="feedback-modal">
+  <div id="feedback-card" class="bg-[#0c0f1a] rounded-2xl max-w-2xl w-full shadow-2xl border border-[#1e293b]">
+
+    <!-- Verdict header -->
+    <div id="fb-header" class="flex items-center gap-4 p-5 border-b border-gray-200 dark:border-gray-800 rounded-t-2xl">
+      <div id="fb-icon" class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"></div>
+      <div class="flex-1 min-w-0">
+        <h3 id="fb-title" class="text-xl font-bold"></h3>
+        <p id="fb-type" class="text-xs text-gray-400 dark:text-gray-500 font-mono mt-0.5 uppercase tracking-widest truncate"></p>
+      </div>
+      <!-- Mini score pill -->
+      <div class="flex-shrink-0 text-right">
+        <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">Score</p>
+        <p class="text-lg font-black text-blue-500 font-mono leading-none" id="fb-score">0</p>
+      </div>
+    </div>
+
+    <!-- Body (injected) -->
+    <div id="fb-body" class="p-5 md:p-6"></div>
+  </div>
+</div>
+
+<script>
+// @ts-nocheck
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* ══════════════════════════
+     FEEDBACK DATA
+  ══════════════════════════ */
+  const FEEDBACKS = {
+    1: {
+      type: "Typosquatting + Urgencia Artificial",
+      indicators: [
+        { c:"danger", t:"Typosquatting en el dominio del remitente", b:`El correo llega de <code>notifications@githuh.com</code>. Compáralo letra por letra con el dominio oficial: <code>github.com</code>. Falta la <strong>"b"</strong>. Esta técnica se llama <em>typosquatting</em>: los atacantes registran dominios con errores tipográficos imperceptibles (<code>paypa1.com</code>, <code>micros0ft.com</code>) confiando en que leerás rápido y bajo presión.` },
+        { c:"danger", t:"URL de destino: el dominio raíz real es example.com", b:`Lee la URL <strong>de derecha a izquierda hasta la primera barra</strong>: el dominio raíz real de <code>http://alerta-seguridad.verificacion-cuentas.example.com/...</code> es <strong>example.com</strong>. Todo lo anterior son subdominios que cualquier atacante puede crear a su gusto para imitar marcas. GitHub nunca usaría un dominio ajeno para sus alertas.` },
+        { c:"danger", t:"HTTP sin cifrado en lugar de HTTPS", b:`La URL empieza con <code>http://</code>, sin SSL/TLS. Ninguna empresa de tecnología usaría un protocolo no cifrado para un proceso de seguridad. Las URLs legítimas de GitHub siempre usan <code>https://</code> con candado visible en el navegador.` },
+        { c:"danger", t:"Urgencia de 24 horas — ingeniería social pura", b:`La amenaza de "tu cuenta se bloqueará en 24 horas" es ingeniería social clásica. Su único objetivo es <strong>desactivar tu pensamiento crítico</strong> y hacerte actuar por miedo antes de razonar. GitHub no bloquea cuentas automáticamente por intentos externos; solo los registra en la sección Seguridad de tu perfil.` },
+        { c:"danger", t:"IP en Moscú: presión psicológica falsificable", b:`Mencionar una IP en <strong>Moscú, Rusia</strong> explota el miedo geopolítico. Esta información es <strong>trivialmente falsificable</strong>: cualquier atacante puede escribir cualquier IP y ciudad. No tiene ningún valor probatorio; es únicamente presión psicológica adicional.` }
+      ],
+      lesson: `<strong>💡 Regla de oro:</strong> Ante cualquier alerta de seguridad por correo, <strong>NUNCA hagas clic en el enlace</strong>. Abre tu navegador, escribe manualmente <code>github.com</code> y revisa la actividad en Configuración → Seguridad.`
+    },
+    2: {
+      type: "Smishing (WhatsApp Phishing) + Pago Falso",
+      indicators: [
+        { c:"danger", t:"DHL no usa WhatsApp para notificaciones de paquetes", b:`<strong>DHL Express no tiene canal oficial de WhatsApp</strong> para alertas de paquetes. Sus canales reales son la app oficial y el portal <code>dhl.com/mx</code>. Recibir una alerta de paquete de un número desconocido de WhatsApp es una señal de alarma inmediata; ninguna empresa de logística real opera así.` },
+        { c:"danger", t:"Dominio del enlace: el raíz es example.com, no dhl.com", b:`La URL apunta a <code>rastreo-paquetes.dhl-logistica.example.com</code>. Leyendo de derecha a izquierda, el dominio raíz real es <strong>example.com</strong>. El texto "dhl-logistica" en el subdominio es solo decorativo. El dominio oficial de DHL México es <code>dhl.com/mx</code>.` },
+        { c:"danger", t:"$25 MXN: monto pequeño diseñado para bajar la guardia", b:`Solicitar <strong>$25.00 MXN</strong> (~$1.50 USD) es una táctica deliberada. El monto bajo no genera alarma, pero el formulario de pago capturará los datos <strong>completos</strong> de tu tarjeta: número, fecha de vencimiento y CVV. Con esa información pueden hacer cargos de miles de pesos.` },
+        { c:"danger", t:"Urgencia de 12 horas para impedir verificación externa", b:`El plazo de 12 horas está diseñado para que no tengas tiempo de verificar la guía en el sitio real de DHL. <strong>La presión de tiempo artificial siempre es señal de fraude</strong>: las empresas legítimas no presionan así a sus clientes.` },
+        { c:"danger", t:"La guía no puede rastrearse desde el enlace fraudulento", b:`Un mensaje real de DHL te indicaría rastrear en <code>dhl.com/es/es/home/tracking.html</code>. Que el enlace de este mensaje NO lleve al sitio oficial impide cualquier verificación, lo cual es completamente intencional.` }
+      ],
+      lesson: `<strong>💡 Regla de oro:</strong> Si recibes una notificación de paquete sospechosa, copia el número de guía y búscalo <strong>directamente en dhl.com</strong>. Nunca pagues nada a través de un enlace recibido por WhatsApp o SMS, sin importar el monto.`
+    },
+    3: {
+      type: "Baiting (Cebo de Salarios) + Robo de Credenciales Google",
+      indicators: [
+        { c:"danger", t:"Dominio del remitente: googledrive-docs.example.com no es Google", b:`El correo viene de <code>drive-shares-noreply@googledrive-docs.example.com</code>. Los correos reales de Google Drive usan <code>@google.com</code>. El dominio <code>googledrive-docs.example.com</code> parece Google, pero el <strong>dominio raíz es example.com</strong>, que no le pertenece a Google en absoluto.` },
+        { c:"danger", t:"Técnica Baiting: el archivo de salarios es un cebo emocional", b:`El archivo <strong>"Ajustes_Salariales_y_Bonos_2026.pdf"</strong> es un señuelo calculado. Los atacantes saben que temas como <em>salarios y bonos</em> generan curiosidad intensa y reducen el pensamiento crítico. Cuando algo nos importa económicamente, tendemos a hacer clic sin cuestionar el origen.` },
+        { c:"danger", t:"'Abrir documento' conduce a un login falso de Google", b:`La URL del botón es <code>login.google.com.auth-docs.example.com/drive/view</code>. Leyendo de derecha a izquierda, el dominio raíz es <strong>example.com</strong>. El <code>login.google.com</code> al inicio es solo un subdominio del dominio falso. Si ingresas tu contraseña ahí, el atacante la captura al instante.` },
+        { c:"danger", t:"Email Spoofing: el campo 'De:' puede ser falsificado", b:`El correo dice que <code>rrhh-admin@empresa.com</code> compartió el documento, pero el <em>remitente real del encabezado SMTP</em> es el dominio falso. Los atacantes pueden falsificar el campo "De:" sin ser dueños de ese dominio. Esta técnica se llama <em>email spoofing</em>.` },
+        { c:"danger", t:"Gmail mostraría advertencias de autenticación", b:`Los clientes de correo modernos muestran un aviso "<strong>No se pudo verificar que este correo sea de google.com</strong>" cuando el DKIM y SPF fallan. Correos fraudulentos como este típicamente disparan esas advertencias. Siempre revisa los indicadores antes de abrir archivos compartidos.` }
+      ],
+      lesson: `<strong>💡 Regla de oro:</strong> Los archivos de alto valor emocional (salarios, contratos, bonos) son los cebos más efectivos. Antes de abrir cualquier "documento compartido", verifica con el supuesto remitente por teléfono. El dominio del remitente es tu primera línea de defensa.`
+    },
+    4: {
+      type: "Task Scam / Oferta de Trabajo Falsa",
+      indicators: [
+        { c:"danger", t:"Contacto no solicitado desde número de celular desconocido", b:`Una empresa de reclutamiento legítima <strong>nunca</strong> inicia contacto por WhatsApp sin comunicación previa en LinkedIn, OCC o Indeed. Los reclutadores reales se identifican desde correo corporativo con dominio verificable. Un número de celular anónimo no tiene trazabilidad ni responsabilidad legal.` },
+        { c:"danger", t:"$400-600 USD semanales por trabajo junior a medio tiempo es irreal", b:`Esto equivale a ~$27,000-40,000 MXN mensuales por trabajo "básico a medio tiempo" para perfil junior: 3x-5x el salario real de mercado. El salario inflado existe para <em>desactivar el escepticismo</em>: cuando algo parece demasiado bueno para ser verdad, generalmente lo es.` },
+        { c:"danger", t:"Empresa sin presencia verificable en ningún registro", b:`No existe ninguna empresa "Reclutamiento Tech Global" verificable en LinkedIn, Google, SAT, ni en el Registro Público de Comercio. El portal en <code>tech-recruitment.portal-empleos.example.com</code> no tiene ningún respaldo corporativo real.` },
+        { c:"danger", t:"'Cupos limitados' — urgencia para impedir verificación", b:`Esta frase crea presión para actuar sin verificar. Los procesos de reclutamiento legítimos nunca tienen plazos tan cortos. Esta urgencia existe para que entregues tus datos antes de investigar la empresa.` },
+        { c:"danger", t:"Dos modalidades de daño: robo de datos o cuota de activación falsa", b:`<strong>(1) Robo de identidad</strong>: el formulario captura nombre, CURP, RFC, cuenta bancaria "para pagarte" o fotos de identificación para cometer fraude. <strong>(2) Cuota de activación</strong>: te piden pagar por "materiales" o "depósito de seguridad". En ambos casos el trabajo no existe.` }
+      ],
+      lesson: `<strong>💡 Regla de oro:</strong> Busca la empresa en LinkedIn, Google y SAT antes de compartir cualquier dato. Si no hay rastro verificable, es una estafa. Ningún trabajo legítimo te contacta por WhatsApp y pide datos personales antes de una entrevista formal.`
+    },
+    5: {
+      type: "Suplantación de Soporte + Amenaza de Eliminación de Cuenta",
+      indicators: [
+        { c:"danger", t:"Instagram NUNCA notifica asuntos legales por Mensajes Directos", b:`Instagram y Meta <strong>jamás</strong> notifican violaciones de derechos de autor ni suspensiones a través de DMs. Sus canales oficiales son: notificaciones dentro de la app en Configuración → Soporte, y correos desde <code>@support.instagram.com</code> o <code>@facebookmail.com</code>. Un DM de "soporte" siempre es una estafa.` },
+        { c:"danger", t:"La cuenta no tiene verificación oficial de Instagram", b:`El perfil "ig.copyright_support" no tiene la <strong>palomita azul de verificación</strong>. Todas las cuentas oficiales de Meta en la plataforma están verificadas sin excepción. Cualquier persona puede crear una cuenta con ese nombre.` },
+        { c:"danger", t:"El enlace de apelación apunta a example.com, no a instagram.com", b:`La URL lleva a <code>help-instagram-appeal.example.com</code>. Los procesos reales de apelación ocurren <strong>exclusivamente dentro de la app</strong> o en <code>instagram.com</code>. Nunca en dominios de terceros.` },
+        { c:"danger", t:"Eliminación en 24 horas: táctica de pánico calculado", b:`El proceso real de Instagram ante una primera infracción incluye múltiples notificaciones previas y un período de apelación de hasta 30 días. La plataforma <strong>nunca elimina cuentas en 24 horas</strong> sin proceso previo.` },
+        { c:"danger", t:"Sin detalles del contenido supuestamente infractor", b:`Un aviso legal real especifica: qué publicación fue reportada, qué fragmento fue reclamado, y quién es el titular del copyright. Este mensaje no menciona nada de eso porque es genérico y se envía masivamente esperando que alguien caiga.` }
+      ],
+      lesson: `<strong>💡 Regla de oro:</strong> Si alguien en tus DMs dice ser soporte de Instagram, es 100% una estafa. Verifica tus infracciones reales en Configuración → Soporte dentro de la app.`
+    },
+    6: {
+      type: "✅ Alerta de Seguridad Legítima de Google",
+      indicators: [
+        { c:"success", t:"Dominio del remitente 100% oficial: accounts.google.com", b:`El correo viene de <code>no-reply@accounts.google.com</code>, el dominio oficial que Google usa para notificaciones, verificable en registros WHOIS. No hay subdominio sospechoso, no hay dominio de terceros, no hay typosquatting de ningún tipo.` },
+        { c:"success", t:"Todos los enlaces apuntan directamente a subdominios de google.com", b:`El botón lleva a <code>myaccount.google.com/alert/nt/...</code> y el enlace secundario a <code>myaccount.google.com/notifications</code>. Ambos son <strong>subdominios directos de google.com</strong>. No hay redirecciones intermedias ni acortadores de URL.` },
+        { c:"success", t:"No solicita contraseña, datos bancarios ni información sensible", b:`El correo es <em>exclusivamente informativo</em>. No contiene formulario, campo de contraseña ni ningún tipo de solicitud de datos. Google solo te informa de la actividad; <strong>no te pide nada a cambio</strong>.` },
+        { c:"success", t:"Tono neutral e informativo, sin urgencia ni amenazas", b:`La frase clave es: <em>"Si has sido tú, no es necesario que hagas nada."</em> Las alertas legítimas son neutrales y reconocen que probablemente el usuario sí inició sesión. El phishing siempre incluye amenazas de bloqueo o pérdida inminente.` },
+        { c:"success", t:"Comportamiento documentado y esperado de Google", b:`Google envía automáticamente estas alertas cuando detecta un inicio de sesión desde un nuevo dispositivo o ubicación. Este mecanismo está documentado en el Centro de Ayuda de Google y es una función real de seguridad proactiva.` }
+      ],
+      lesson: `<strong>💡 Lección Clave:</strong> Distingue entre un correo que te <em>informa</em> vs. uno que te <em>presiona</em>. Las alertas legítimas son neutrales y no solicitan datos. El dominio del remitente y los destinos de los enlaces son tu mejor herramienta de verificación.`
+    },
+    7: {
+      type: "Smishing Financiero + Pánico por Cargo Falso",
+      indicators: [
+        { c:"danger", t:"'INFO BANCO' no corresponde a ninguna institución registrada ante la CNBV", b:`Los bancos en México se identifican siempre por su nombre completo: <strong>BBVA, BANAMEX, HSBC, SANTANDER, BANORTE</strong>, etc. "INFO BANCO" no corresponde a ninguna institución registrada. Es la primera y más obvia señal de fraude.` },
+        { c:"danger", t:"La CNBV y Banxico prohíben incluir enlaces de cancelación en SMS bancarios", b:`Los bancos pueden notificar transacciones por SMS pero <strong>nunca incluyen enlaces de cancelación</strong>. El protocolo real ante un cargo no reconocido es: app del banco, llamada al número del reverso de la tarjeta, o acudir a sucursal.` },
+        { c:"danger", t:"Dominio del enlace: example.com no tiene relación con ningún banco", b:`La URL lleva a <code>alertas-banco.cancelacion-cargos.example.com</code>. El dominio raíz es <strong>example.com</strong>. Los sitios reales son <code>bbva.mx</code>, <code>banamex.com.mx</code>, <code>hsbc.com.mx</code>, etc.` },
+        { c:"danger", t:"$4,999 MXN: monto calibrado para generar pánico máximo", b:`<strong>$4,999.00 MXN</strong> está calculado deliberadamente: alto suficiente para alarmar, pero por debajo de $5,000 para parecer consistente con límites conocidos. La mención de "MERCADOLIBRE" (plataforma familiar) crea una narrativa altamente convincente.` },
+        { c:"danger", t:"Los últimos 4 dígitos de la tarjeta NO prueban legitimidad", b:`Estos datos se obtienen de <strong>filtraciones masivas de bases de datos</strong> o de tickets fotografiados. Los estafadores envían millones de mensajes esperando coincidencias. Los últimos 4 dígitos no autentican el mensaje.` }
+      ],
+      lesson: `<strong>💡 Regla de oro:</strong> Si recibes un SMS sobre un cargo bancario sospechoso, <strong>nunca entres al enlace</strong>. Llama al número del reverso de tu tarjeta o entra a la app oficial de tu banco.`
+    },
+    8: {
+      type: "Billing Phishing — Phishing de Pago",
+      indicators: [
+        { c:"danger", t:"Dominio del remitente: netflix-billing-update.example.com no es Netflix", b:`El correo viene de <code>support@netflix-billing-update.example.com</code>. Netflix usa exclusivamente <code>@account.netflix.com</code>, <code>@mailer.netflix.com</code> o <code>@netflix.com</code>. El dominio <code>netflix-billing-update.example.com</code> no le pertenece a Netflix.` },
+        { c:"danger", t:"El nombre personalizado no prueba que el correo sea de Netflix", b:`Los atacantes obtienen listas de nombre + correo + servicio de <strong>filtraciones masivas de bases de datos</strong>. Que conozcan tu nombre <em>no</em> significa que el correo sea de Netflix.` },
+        { c:"danger", t:"'Para volver a ver Netflix' crea urgencia implícita de acceso perdido", b:`Esta frase implica que <em>ya perdiste el acceso</em>, creando urgencia sin amenaza explícita. Es una técnica sofisticada: no te amenaza directamente pero te hace asumir que tienes un problema urgente que resolver ahora.` },
+        { c:"danger", t:"'ACTUALIZAR PAGO' lleva a una página de captura de tarjeta", b:`El enlace apunta a <code>netflix-billing-update.example.com/login</code>, visualmente idéntica a Netflix, donde el atacante captura en tiempo real número de tarjeta, fecha de vencimiento y CVV.` },
+        { c:"danger", t:"El pie de página oficial copiado no convierte un dominio falso en legítimo", b:`El texto "© 2026 Netflix, Inc. 100 Winchester Circle..." fue copiado de correos reales de Netflix. <strong>Cualquier atacante puede hacer esto</strong>. Un pie de página no tiene ningún peso técnico para autenticar el dominio del remitente.` }
+      ],
+      lesson: `<strong>💡 Regla de oro:</strong> Ante cualquier correo de "problema de pago", cierra el correo y entra <strong>manualmente</strong> a <code>netflix.com</code> desde tu navegador para verificar el estado real de tu cuenta.`
+    },
+    9: {
+      type: "✅ Encuesta de Satisfacción Legítima de MercadoLibre",
+      indicators: [
+        { c:"success", t:"Dominio del remitente oficial: mercadolibre.com verificado", b:`El correo viene de <code>noreply@no-responder.mercadolibre.com</code>. El dominio raíz es <strong>mercadolibre.com</strong>, verificable en registros WHOIS. El subdominio <code>no-responder</code> es el que Mercado Libre usa estándarmente para comunicaciones masivas de marketing.` },
+        { c:"success", t:"El enlace de acción permanece dentro de mercadolibre.com", b:`El botón lleva a <code>formularios.mercadolibre.com/encuestas/...</code>. El dominio raíz es <strong>mercadolibre.com</strong>. No hay redirecciones a terceros, no hay dominios sospechosos.` },
+        { c:"success", t:"No solicita contraseña, datos bancarios ni información sensible", b:`La encuesta pide exclusivamente la <strong>opinión del usuario</strong> sobre Meli+. No solicita credenciales, datos de tarjeta, CVV, CURP ni RFC. Las encuestas de satisfacción legítimas solo necesitan respuestas de valoración.` },
+        { c:"success", t:"El enlace 'Darse de baja' es obligatorio y su presencia es indicador positivo", b:`La LFPDPPP y regulaciones anti-spam internacionales <strong>exigen</strong> este enlace en correos comerciales. Los atacantes raramente lo incluyen porque no les interesa el cumplimiento legal. Su presencia es un indicador positivo de legitimidad.` },
+        { c:"success", t:"Tono cordial, no urgente y completamente transparente", b:`El mensaje usa frases como "solo te tomará unos minutos" y "¡Muchas gracias!". No hay amenazas, no hay cargos, no hay cuentas en riesgo, no hay plazos de tiempo. El tono es exactamente lo opuesto al phishing.` }
+      ],
+      lesson: `<strong>💡 Lección Clave:</strong> No todo correo con un enlace es phishing. Los indicadores positivos incluyen: dominio oficial del remitente, enlaces dentro del mismo dominio, sin solicitud de datos sensibles, tono no amenazante y opción de darse de baja. Aprender a reconocer lo legítimo es igual de importante que detectar lo peligroso.`
+    },
+    10: {
+      type: "Evil Twin / Portal Cautivo Malicioso — Ataque de Wi-Fi",
+      indicators: [
+        { c:"danger", t:"Las redes Wi-Fi NUNCA necesitan la contraseña de tu correo", b:`Para conectarte a Wi-Fi, tu dispositivo se autentica con el punto de acceso mediante el protocolo 802.11. Este proceso es <strong>completamente independiente de tu cuenta de correo</strong>. Tu contraseña de Gmail, Outlook o Yahoo es irrelevante para establecer una conexión. Una red que la solicita está capturando credenciales.` },
+        { c:"danger", t:"Evil Twin: el punto de acceso falso imita el SSID real del aeropuerto", b:`El atacante crea un punto de acceso con el <strong>mismo nombre (SSID)</strong> que la red legítima. Tu dispositivo puede unirse automáticamente al punto falso. El portal cautivo malicioso captura tus credenciales <em>antes</em> de darte acceso real a internet.` },
+        { c:"danger", t:"Los portales legítimos nunca piden contraseñas de servicios externos", b:`Los portales cautivos legítimos pueden pedir aceptar términos o ingresar tu correo para recibir un <em>código de un solo uso</em>. Lo que <strong>absolutamente nunca piden</strong>: la contraseña de tu correo ni credenciales de ningún servicio. Esa información no tiene ninguna función técnica para conectarte a Wi-Fi.` },
+        { c:"danger", t:"La etiqueta en rojo 'Contraseña de tu correo' revela la intención", b:`El campo en <strong>color rojo</strong> imita el diseño de campo obligatorio crítico. Los portales Wi-Fi legítimos usan formularios simples y neutrales; no marcan campos de contraseña de servicios externos como urgentes.` },
+        { c:"danger", t:"Consecuencia: control total de tu vida digital en segundos", b:`Si ingresas tu contraseña, el atacante obtiene <strong>control total de tu cuenta</strong>. Desde ahí puede: resetear contraseñas de TODOS tus servicios vinculados (bancos, redes sociales, tiendas), leer información confidencial, y suplantar tu identidad. El daño es inmediato y masivo.` }
+      ],
+      lesson: `<strong>💡 Regla de oro:</strong> En Wi-Fi pública, usa siempre una VPN confiable y verifica el SSID exacto con personal del establecimiento. <strong>Si un portal cautivo pide tu contraseña de correo, cierra inmediatamente.</strong> Usa los datos móviles de tu celular como hotspot siempre que sea posible.`
+    }
+  };
+
+  /* ══════════════════════════
+     STATE
+  ══════════════════════════ */
+  let step = 0;
+  let score = 0;
+  let phishingOk = 0;
+  let legitOk = 0;
+  let startTime = 0;
+  const times = [];
+  let userName = "";
+  let userEmail = "";
+  const results = {}; // step -> {ok, correct}
+
+  /* ══════════════════════════
+     ELEMENTS
+  ══════════════════════════ */
+  const introScreen   = document.getElementById("intro-screen");
+  const decPanel      = document.getElementById("decision-panel");
+  const fbModal       = document.getElementById("feedback-modal");
+  const resultsScreen = document.getElementById("results-screen");
+  const progFill      = document.getElementById("progress-fill");
+  const scoreCounter  = document.getElementById("score-counter");
+  const sidebarScore  = document.getElementById("sidebar-score");
+
+  /* ══════════════════════════
+     START
+  ══════════════════════════ */
+  document.getElementById("btn-start-quiz").addEventListener("click", () => {
+    const name  = document.getElementById("user-name").value.trim();
+    const email = document.getElementById("user-email").value.trim();
+    const err   = document.getElementById("form-error");
+    if (!name || !email) { err.classList.remove("hidden"); return; }
+    err.classList.add("hidden");
+    userName = name; userEmail = email;
+    introScreen.classList.remove("active");
+    showScene(1);
+  });
+
+  /* ══════════════════════════
+     SHOW SCENE
+  ══════════════════════════ */
+  function showScene(n) {
+    step = n;
+    document.querySelectorAll(".scenario-container").forEach(el => el.classList.remove("active"));
+    const sc = document.getElementById(`scenario-${n}`);
+    if (!sc) { showResults(); return; }
+    sc.classList.add("active");
+    decPanel.classList.add("visible");
+    updateSidebar(n);
+    renderStepDots(n);
+    startTime = Date.now();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  /* ══════════════════════════
+     STEP DOTS in scenario header
+  ══════════════════════════ */
+  function renderStepDots(currentN) {
+    const row = document.getElementById(`steps-row-${currentN}`);
+    if (!row) return;
+    row.innerHTML = "";
+    for (let i = 1; i <= 10; i++) {
+      const dot = document.createElement("div");
+      dot.className = "scene-step-dot";
+      if (results[i]) {
+        dot.classList.add(results[i].ok ? "done" : "fail");
+      } else if (i === currentN) {
+        dot.classList.add("cur");
+      }
+      row.appendChild(dot);
+    }
+  }
+
+  /* ══════════════════════════
+     SIDEBAR
+  ══════════════════════════ */
+  function updateSidebar(active) {
+    document.querySelectorAll(".sbi").forEach(el => {
+      if (!el.classList.contains("done-ok") && !el.classList.contains("done-fail")) {
+        el.classList.remove("active");
+      }
+    });
+    const item = document.getElementById(`sbi-${active}`);
+    if (item) item.classList.add("active");
+    const progress = ((active - 1) / 10) * 100;
+    if (progFill)     progFill.style.width = progress + "%";
+    if (scoreCounter) scoreCounter.textContent = score;
+    if (sidebarScore) sidebarScore.textContent = score;
+  }
+
+  function markSidebarDone(n, isOk, correctAnswer) {
+    const item  = document.getElementById(`sbi-${n}`);
+    const badge = document.getElementById(`rb-${n}`);
+    const pip   = document.getElementById(`pip-${n}`);
+    if (!item) return;
+    item.classList.remove("active");
+    item.classList.add(isOk ? "done-ok" : "done-fail");
+    if (badge) badge.textContent = correctAnswer === "phishing" ? "Phishing" : "Legítimo";
+    if (pip) {
+      pip.style.background = isOk ? "#10b981" : "#ef4444";
+      pip.style.boxShadow  = isOk ? "0 0 6px rgba(16,185,129,0.5)" : "0 0 6px rgba(239,68,68,0.5)";
+    }
+  }
+
+  /* ══════════════════════════
+     ANSWER BUTTONS
+  ══════════════════════════ */
+  document.querySelectorAll(".answer-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const answer  = e.currentTarget.getAttribute("data-answer");
+      const scEl    = document.getElementById(`scenario-${step}`);
+      if (!scEl) return;
+      const correct  = scEl.getAttribute("data-correct-answer");
+      const elapsed  = (Date.now() - startTime) / 1000;
+      const isOk     = answer === correct;
+      times.push({ step, elapsed });
+      results[step] = { ok: isOk, correct };
+      if (isOk) { score++; if (correct === "phishing") phishingOk++; else legitOk++; }
+      markSidebarDone(step, isOk, correct);
+      decPanel.classList.remove("visible");
+      showFeedback(isOk, step, correct);
+    });
+  });
+
+  /* ══════════════════════════
+     KEYBOARD SHORTCUTS
+  ══════════════════════════ */
+  document.addEventListener("keydown", (e) => {
+    if (!decPanel.classList.contains("visible")) return;
+    if (e.key === "p" || e.key === "P") {
+      document.querySelector('[data-answer="phishing"]')?.click();
+    }
+    if (e.key === "l" || e.key === "L") {
+      document.querySelector('[data-answer="legitimo"]')?.click();
+    }
+  });
+
+  /* ══════════════════════════
+     FEEDBACK MODAL
+  ══════════════════════════ */
+  function showFeedback(isOk, n, correctAnswer) {
+    const data   = FEEDBACKS[n];
+    const icon   = document.getElementById("fb-icon");
+    const title  = document.getElementById("fb-title");
+    const typeEl = document.getElementById("fb-type");
+    const header = document.getElementById("fb-header");
+    const body   = document.getElementById("fb-body");
+    const fbScoreEl = document.getElementById("fb-score");
+
+    // Verdict header
+    if (isOk) {
+      icon.className   = "w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800/40";
+      icon.innerHTML   = document.getElementById('tpl-accept').innerHTML;
+      title.className  = "text-xl font-bold text-emerald-600 dark:text-emerald-400";
+      title.textContent = "¡Análisis correcto!";
+      header.className = "fb-verdict-ok flex items-center gap-4 p-5 border-b border-gray-200 dark:border-gray-800 rounded-t-2xl";
+    } else {
+      icon.className   = "w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40";
+      icon.innerHTML   = document.getElementById('tpl-x').innerHTML;
+      title.className  = "text-xl font-bold text-red-600 dark:text-red-400";
+      title.textContent = "¡Trampa detectada! Analicemos por qué";
+      header.className = "fb-verdict-fail flex items-center gap-4 p-5 border-b border-gray-200 dark:border-gray-800 rounded-t-2xl";
+    }
+    typeEl.textContent  = data ? data.type : "";
+    fbScoreEl.textContent = score;
+
+    // Body HTML
+    const sectionLabel = correctAnswer === "phishing"
+      ? "Indicadores de Phishing en este mensaje"
+      : "Por qué este mensaje es legítimo";
+    let html = `<p class="fb-sec-title">${sectionLabel}</p>`;
+
+    if (data?.indicators) {
+      data.indicators.forEach(ind => {
+        html += `
+          <div class="fb-ind ${ind.c}">
+            <div class="fb-ind-title">
+              <span style="margin-top:1px;flex-shrink:0">${ind.c === "danger" ? "🔴" : "🟢"}</span>
+              ${ind.t}
+            </div>
+            <div class="fb-ind-body">${ind.b}</div>
+          </div>`;
+      });
+    }
+    if (data?.lesson) html += `<div class="fb-lesson">${data.lesson}</div>`;
+
+    const isLast = n === 10;
+    html += `
+      <button id="btn-next"
+        class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3 rounded-xl transition-all text-[0.9rem] flex items-center justify-center gap-2">
+        ${isLast ? "Ver mis resultados" : "Continuar al siguiente"}
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+      </button>`;
+
+    body.innerHTML = html;
+
+    // Update sidebar counts
+    if (scoreCounter) scoreCounter.textContent = score;
+    if (sidebarScore) sidebarScore.textContent = score;
+    if (progFill)     progFill.style.width = (step / 10 * 100) + "%";
+
+    fbModal.classList.add("visible");
+    document.getElementById("feedback-card").scrollTop = 0;
+
+    document.getElementById("btn-next").addEventListener("click", () => {
+      fbModal.classList.remove("visible");
+      showScene(step + 1);
+    });
+  }
+
+  /* ══════════════════════════
+     RESULTS
+  ══════════════════════════ */
+  function showResults() {
+    document.querySelectorAll(".scenario-container").forEach(el => el.classList.remove("active"));
+    decPanel.classList.remove("visible");
+    resultsScreen.classList.add("active");
+    if (progFill)     progFill.style.width = "100%";
+    if (scoreCounter) scoreCounter.textContent = "10";
+    if (sidebarScore) sidebarScore.textContent = score;
+
+    document.getElementById("display-name").textContent  = userName;
+    document.getElementById("display-email").textContent = userEmail;
+
+    // Score display
+    const scoreEl = document.getElementById("final-score");
+    scoreEl.textContent = score;
+    // Color threshold
+    const cls = score >= 9 ? "score-s" : score >= 7 ? "score-a" : score >= 5 ? "score-b" : "score-c";
+    scoreEl.className = `text-5xl font-black ${cls} leading-none`;
+    // Grade label
+    const gradeEl = document.getElementById("score-grade");
+    const grades = ["F","F","F","F","F","C","B","B","A","A","S"];
+    const gradeColors = { S:"text-emerald-500", A:"text-blue-500", B:"text-amber-500", C:"text-orange-500", F:"text-red-500" };
+    const g = grades[score];
+    gradeEl.textContent = `Calificación: ${g}`;
+    gradeEl.className = `text-xs font-bold mt-0.5 ${gradeColors[g]}`;
+
+    // Animate ring
+    setTimeout(() => {
+      const arc = document.getElementById("score-arc");
+      if (arc) {
+        const circumference = 314;
+        const offset = circumference - (score / 10) * circumference;
+        arc.style.strokeDashoffset = offset;
+      }
+    }, 200);
+
+    document.getElementById("phishing-correct").textContent = phishingOk + " / 8";
+    document.getElementById("legit-correct").textContent    = legitOk + " / 2";
+
+    let total = 0, maxT = 0, longestN = 1;
+    times.forEach(d => {
+      total += d.elapsed;
+      if (d.elapsed > maxT) { maxT = d.elapsed; longestN = d.step; }
+    });
+    document.getElementById("total-time").textContent      = total.toFixed(1) + " seg";
+    document.getElementById("longest-scenario").textContent = `Esc. ${String(longestN).padStart(2,'0')} (${maxT.toFixed(1)}s)`;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // Build per-scene times map and dispatch to Firebase module
+    const scenesTimes = {};
+    times.forEach(d => { scenesTimes[String(d.step)] = parseFloat(d.elapsed.toFixed(2)); });
+
+    window.__quizEmail = userEmail;
+    window.dispatchEvent(new CustomEvent('quiz:completed', {
+      detail: {
+        nombre:       userName,
+        email:        userEmail,
+        score:        score,
+        totalTime:    parseFloat(total.toFixed(2)),
+        phishingOk:   phishingOk,
+        legitOk:      legitOk,
+        longestScene: longestN,
+        longestTime:  parseFloat(maxT.toFixed(2)),
+        scenesTimes:  scenesTimes,
+      }
+    }));
+  }
+
+});
+</script>
+
+<!-- ████ FIREBASE — RANKING GLOBAL ████ -->
+<script type="module" is:inline>
+import { initializeApp }       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, doc, setDoc, collection, query,
+         orderBy, limit, onSnapshot, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+/* ── Inicializar Firebase ── */
+const firebaseConfig = {
+  apiKey:            "AIzaSyAzBrFQKLRZZXEmJ5tIUkoavsSKr3GWBUY",
+  authDomain:        "phishing-quiz-cno.firebaseapp.com",
+  projectId:         "phishing-quiz-cno",
+  storageBucket:     "phishing-quiz-cno.firebasestorage.app",
+  messagingSenderId: "165839107448",
+  appId:             "1:165839107448:web:57dab96654dbcf5f7b848d"
+};
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+/* ── Escuchar evento del quiz ── */
+window.addEventListener('quiz:completed', async (e) => {
+  const data = e.detail;
+
+  // Usar email sanitizado como ID del documento → actualiza si ya existe
+  const docId = data.email.toLowerCase().replace(/[^a-z0-9]/g, '_');
+
+  try {
+    await setDoc(doc(db, 'results', docId), {
+      nombre:       data.nombre,
+      email:        data.email,
+      score:        data.score,
+      totalTime:    data.totalTime,
+      phishingOk:   data.phishingOk,
+      legitOk:      data.legitOk,
+      longestScene: data.longestScene,
+      longestTime:  data.longestTime,
+      scenesTimes:  data.scenesTimes,
+      completedAt:  serverTimestamp(),
+    });
+  } catch (err) {
+    console.error('[Firebase] Error al guardar:', err);
+    const errEl = document.getElementById('ranking-error');
+    const loadEl = document.getElementById('ranking-loading');
+    if (errEl)  errEl.classList.remove('hidden');
+    if (loadEl) loadEl.classList.add('hidden');
+    return;
+  }
+
+  startRankingListener();
+});
+
+/* ── Listener en tiempo real ── */
+function startRankingListener() {
+  const q = query(
+    collection(db, 'results'),
+    orderBy('score', 'desc'),
+    limit(50)
+  );
+
+  onSnapshot(q, (snap) => {
+    const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderRanking(docs);
+    renderAnalysis(docs);
+  }, (err) => {
+    console.error('[Firebase] Error en listener:', err);
+    const errEl  = document.getElementById('ranking-error');
+    const loadEl = document.getElementById('ranking-loading');
+    if (errEl)  errEl.classList.remove('hidden');
+    if (loadEl) loadEl.classList.add('hidden');
+  });
+}
+
+/* ── Renderizar tabla de ranking ── */
+function renderRanking(docs) {
+  const loadEl    = document.getElementById('ranking-loading');
+  const tableWrap = document.getElementById('ranking-table-wrap');
+  const tbody     = document.getElementById('ranking-body');
+  if (!tbody) return;
+
+  if (loadEl)    loadEl.classList.add('hidden');
+  if (tableWrap) tableWrap.classList.remove('hidden');
+
+  const currentEmail = (window.__quizEmail || '').toLowerCase();
+
+  tbody.innerHTML = docs.map((row, i) => {
+    const pos     = i + 1;
+    const isMe    = row.email?.toLowerCase() === currentEmail;
+    const medal   = pos === 1 ? '🥇' : pos === 2 ? '🥈' : pos === 3 ? '🥉' : `#${pos}`;
+    const posClass = pos === 1 ? 'gold' : pos === 2 ? 'silver' : pos === 3 ? 'bronze' : '';
+    const sClass  = row.score >= 9 ? 'score-col-s'
+                  : row.score >= 7 ? 'score-col-a'
+                  : row.score >= 5 ? 'score-col-b'
+                  :                  'score-col-c';
+    const tiempo  = typeof row.totalTime === 'number' ? row.totalTime.toFixed(1) + 's' : '—';
+    // Show first name + first letter of last name for privacy
+    const partes  = (row.nombre || 'Anónimo').trim().split(' ');
+    const display = partes.length >= 2
+      ? `${partes[0]} ${partes[1][0]}.`
+      : partes[0];
+
+    return `<tr class="${isMe ? 'ranking-row-me' : ''}">
+      <td><span class="ranking-pos ${posClass}">${medal}</span></td>
+      <td class="font-semibold ${isMe ? 'text-blue-300' : ''}">
+        ${display}${isMe ? ' <span class="text-[10px] text-blue-500 font-mono ml-1">(tú)</span>' : ''}
+      </td>
+      <td class="text-center"><span class="ranking-score ${sClass}">${row.score}/10</span></td>
+      <td class="text-center hidden md:table-cell text-slate-500">${tiempo}</td>
+      <td class="text-center hidden md:table-cell text-slate-500">${row.phishingOk ?? '—'}/8</td>
+      <td class="text-center hidden md:table-cell text-slate-500">${row.legitOk ?? '—'}/2</td>
+    </tr>`;
+  }).join('');
+}
+
+/* ── Renderizar análisis de grupo ── */
+function renderAnalysis(docs) {
+  const wrap     = document.getElementById('ranking-analysis');
+  const cardsEl  = document.getElementById('analysis-cards');
+  const barsEl   = document.getElementById('detection-bars');
+  if (!wrap || !cardsEl || !barsEl || docs.length === 0) return;
+
+  wrap.classList.remove('hidden');
+
+  const n        = docs.length;
+  const avgScore = (docs.reduce((s, d) => s + (d.score    || 0), 0) / n).toFixed(1);
+  const avgTime  = (docs.reduce((s, d) => s + (d.totalTime || 0), 0) / n).toFixed(1);
+
+  // Best score
+  const best = docs[0]; // already sorted desc by score
+
+  // Per-scene average times
+  const sceneTotals = {};
+  docs.forEach(d => {
+    if (d.scenesTimes && typeof d.scenesTimes === 'object') {
+      Object.entries(d.scenesTimes).forEach(([sc, t]) => {
+        if (!sceneTotals[sc]) sceneTotals[sc] = { total: 0, count: 0 };
+        sceneTotals[sc].total += Number(t);
+        sceneTotals[sc].count++;
+      });
+    }
+  });
+
+  // Slowest scenario on average
+  let slowestSc = '—', slowestAvg = 0;
+  Object.entries(sceneTotals).forEach(([sc, v]) => {
+    const avg = v.total / v.count;
+    if (avg > slowestAvg) { slowestAvg = avg; slowestSc = sc; }
+  });
+  const slowestLabel = slowestSc !== '—'
+    ? `Esc. ${String(slowestSc).padStart(2,'0')}`
+    : '—';
+
+  // Participant of the moment (highest score, lowest time)
+  const bestName = (best.nombre || 'Anónimo').trim().split(' ')[0];
+
+  cardsEl.innerHTML = `
+    <div class="analysis-card">
+      <p class="analysis-lbl">Participantes</p>
+      <p class="analysis-val">${n}</p>
+      <p class="analysis-sub">han completado el quiz</p>
+    </div>
+    <div class="analysis-card">
+      <p class="analysis-lbl">Score promedio</p>
+      <p class="analysis-val">${avgScore}<span class="text-slate-600 text-sm font-normal">/10</span></p>
+    </div>
+    <div class="analysis-card">
+      <p class="analysis-lbl">Tiempo promedio</p>
+      <p class="analysis-val">${avgTime}<span class="text-slate-600 text-sm font-normal">s</span></p>
+    </div>
+    <div class="analysis-card">
+      <p class="analysis-lbl">Escenario más lento</p>
+      <p class="analysis-val">${slowestLabel}</p>
+      <p class="analysis-sub">${slowestAvg.toFixed(1)}s prom. grupal</p>
+    </div>
+    <div class="analysis-card">
+      <p class="analysis-lbl">Mejor puntaje</p>
+      <p class="analysis-val">${best.score}/10</p>
+      <p class="analysis-sub">${bestName}</p>
+    </div>`;
+
+  // Bars: time per scenario
+  if (Object.keys(sceneTotals).length > 0) {
+    const avgs = Object.entries(sceneTotals)
+      .map(([sc, v]) => ({ sc: String(sc), avg: v.total / v.count }))
+      .sort((a, b) => parseInt(a.sc) - parseInt(b.sc));
+
+    const maxAvg = Math.max(...avgs.map(x => x.avg));
+
+    barsEl.innerHTML = avgs.map(({ sc, avg }) => {
+      const pct   = Math.min(100, Math.round((avg / maxAvg) * 100));
+      const color = pct > 75 ? '#ef4444' : pct > 50 ? '#f59e0b' : '#3b82f6';
+      return `
+        <div>
+          <div class="flex justify-between items-center mb-0.5">
+            <span class="text-xs text-slate-500 font-mono">Esc. ${sc.padStart(2,'0')}</span>
+            <span class="text-xs text-slate-500">${avg.toFixed(1)}s promedio</span>
+          </div>
+          <div class="det-bar-wrap">
+            <div class="det-bar" style="width:${pct}%;background:${color}"></div>
+          </div>
+        </div>`;
+    }).join('');
+  } else {
+    barsEl.innerHTML = '<p class="text-xs text-slate-600">No hay datos suficientes aún.</p>';
+  }
+}
+</script>
+</Layout>
