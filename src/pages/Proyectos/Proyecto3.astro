@@ -435,78 +435,299 @@ const ESCENARIOS = Array.from({ length: 10 }, (_, i) => ({
   .score-b { color: #f59e0b; }  /* 5-6  */
   .score-c { color: #ef4444; }  /* 0-4  */
 
-  /* ══════════════════════════
-     RANKING GLOBAL
-  ══════════════════════════ */
-  .ranking-table { width: 100%; border-collapse: collapse; }
-  .ranking-table th {
-    font-size: 0.61rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #475569;
-    padding: 0.55rem 0.75rem;
-    text-align: left;
-    border-bottom: 1px solid #1e293b;
-    background: #080c14;
-  }
-  .ranking-table td {
-    padding: 0.6rem 0.75rem;
-    font-size: 0.81rem;
-    color: #64748b;
-    border-bottom: 1px solid #0a0e18;
-    transition: background 0.15s;
-  }
-  .ranking-row-me td { background: rgba(59,130,246,0.07) !important; color: #cbd5e1; }
-  .ranking-row-me td:first-child { border-left: 3px solid #3b82f6; }
-  .ranking-pos { font-family: 'Courier New', monospace; font-weight: 800; font-size: 0.75rem; color: #334155; }
-  .ranking-pos.gold   { color: #f59e0b; }
-  .ranking-pos.silver { color: #94a3b8; }
-  .ranking-pos.bronze { color: #b45309; }
-  .ranking-score { font-weight: 800; font-size: 0.88rem; }
-  .score-col-s { color: #10b981; }
-  .score-col-a { color: #3b82f6; }
-  .score-col-b { color: #f59e0b; }
-  .score-col-c { color: #ef4444; }
+  /* ══════════════════════════════════════════
+     RANKING GLOBAL — DISEÑO MEJORADO
+  ══════════════════════════════════════════ */
 
-  .analysis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.5rem; }
-  .analysis-card {
-    background: #0f172a;
-    border: 1px solid #1e293b;
-    border-radius: 0.625rem;
-    padding: 0.8rem 1rem;
-  }
-  .analysis-lbl { font-size: 0.59rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #475569; margin-bottom: 0.2rem; }
-  .analysis-val { font-size: 0.95rem; font-weight: 800; color: #e2e8f0; }
-  .analysis-sub { font-size: 0.68rem; color: #334155; margin-top: 0.1rem; }
-
-  .ranking-spinner {
-    width: 1.75rem; height: 1.75rem;
-    border: 3px solid #1e293b;
-    border-top-color: #3b82f6;
-    border-radius: 50%;
-    animation: spin 0.75s linear infinite;
-    margin: 1.5rem auto 0.5rem;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .det-bar-wrap { background: #1e293b; border-radius: 9999px; height: 4px; overflow: hidden; margin-top: 0.2rem; }
-  .det-bar { height: 100%; border-radius: 9999px; transition: width 0.9s ease; }
-
+  /* Divider */
   .rank-divider {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
   }
-  .rank-divider-line { flex: 1; height: 1px; background: #1e293b; }
+  .rank-divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #1e293b 40%, #1e293b 60%, transparent);
+  }
   .rank-divider-label {
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #475569;
+    white-space: nowrap;
+    padding: 0.3rem 0.75rem;
+    background: #0a0e18;
+    border: 1px solid #1e293b;
+    border-radius: 9999px;
+  }
+
+  /* Loading */
+  .ranking-spinner {
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid #1e293b;
+    border-top-color: #3b82f6;
+    border-right-color: #6366f1;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 1.5rem auto 0.75rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Table wrapper */
+  #ranking-table-wrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.875rem !important;
+    border: 1px solid #1a2236 !important;
+  }
+  #ranking-table-wrap::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 5%, #3b82f6 40%, #6366f1 60%, transparent 95%);
+    opacity: 0.7;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Table cap — header bar above thead */
+  .ranking-cap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.625rem 0.875rem;
+    background: #050810;
+    border-bottom: 1px solid #0f172a;
+  }
+  .ranking-cap-title {
     font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
+    font-weight: 800;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: #334155;
-    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .ranking-cap-title::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: #3b82f6;
+    border-radius: 50%;
+    box-shadow: 0 0 6px #3b82f6;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 6px #3b82f6; }
+    50% { opacity: 0.5; box-shadow: 0 0 2px #3b82f6; }
+  }
+  .ranking-cap-count {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #1e293b;
+    font-family: 'Courier New', monospace;
+  }
+
+  /* Table */
+  .ranking-table { width: 100%; border-collapse: collapse; }
+  .ranking-table thead tr {
+    background: linear-gradient(to bottom, #070b13, #050810);
+  }
+  .ranking-table th {
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #1e293b;
+    padding: 0.6rem 0.875rem;
+    text-align: left;
+    border-bottom: 1px solid #0f172a;
+  }
+  .ranking-table td {
+    padding: 0.7rem 0.875rem;
+    font-size: 0.81rem;
+    color: #475569;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.8);
+    transition: background 0.18s ease, color 0.18s ease;
+  }
+  .ranking-table tbody tr:hover td { background: rgba(59,130,246,0.035); }
+  .ranking-table tbody tr:last-child td { border-bottom: none; }
+
+  /* Current user row */
+  .ranking-row-me td {
+    background: rgba(59,130,246,0.06) !important;
+    color: #94a3b8 !important;
+  }
+  .ranking-row-me:hover td { background: rgba(59,130,246,0.09) !important; }
+  .ranking-row-me td:first-child {
+    border-left: 2px solid #3b82f6;
+    padding-left: calc(0.875rem - 2px);
+  }
+
+  /* Position badge */
+  .ranking-pos {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    font-family: 'Courier New', monospace;
+    font-weight: 800;
+    font-size: 0.6rem;
+    color: #334155;
+    background: #0a0e18;
+    border: 1px solid #1e293b;
+    border-radius: 0.4rem;
+  }
+  .ranking-pos.gold {
+    font-size: 1rem;
+    background: rgba(245,158,11,0.07);
+    border-color: rgba(245,158,11,0.2);
+    box-shadow: 0 0 10px rgba(245,158,11,0.1);
+  }
+  .ranking-pos.silver {
+    font-size: 1rem;
+    background: rgba(148,163,184,0.05);
+    border-color: rgba(148,163,184,0.15);
+  }
+  .ranking-pos.bronze {
+    font-size: 1rem;
+    background: rgba(180,83,9,0.06);
+    border-color: rgba(180,83,9,0.18);
+  }
+
+  /* Score chips */
+  .ranking-score {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.76rem;
+    font-family: 'Courier New', monospace;
+    padding: 0.18rem 0.55rem;
+    border-radius: 0.375rem;
+    min-width: 2.75rem;
+    letter-spacing: 0.02em;
+  }
+  .score-col-s {
+    color: #10b981;
+    background: rgba(16,185,129,0.08);
+    border: 1px solid rgba(16,185,129,0.2);
+    box-shadow: 0 0 8px rgba(16,185,129,0.08);
+  }
+  .score-col-a {
+    color: #3b82f6;
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.2);
+    box-shadow: 0 0 8px rgba(59,130,246,0.08);
+  }
+  .score-col-b {
+    color: #f59e0b;
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.2);
+    box-shadow: 0 0 8px rgba(245,158,11,0.08);
+  }
+  .score-col-c {
+    color: #ef4444;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.18);
+    box-shadow: 0 0 8px rgba(239,68,68,0.06);
+  }
+
+  /* Analysis grid */
+  .analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.625rem;
+  }
+  .analysis-card {
+    background: #080c14;
+    border: 1px solid #1a2236;
+    border-radius: 0.75rem;
+    padding: 0.875rem 1rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .analysis-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.4);
+  }
+  .analysis-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6, #6366f1);
+    opacity: 0.5;
+  }
+  .analysis-lbl {
+    font-size: 0.57rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #1e293b;
+    margin-bottom: 0.35rem;
+  }
+  .analysis-val {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #cbd5e1;
+    font-family: 'Courier New', monospace;
+    line-height: 1.2;
+  }
+  .analysis-sub {
+    font-size: 0.63rem;
+    color: #334155;
+    margin-top: 0.2rem;
+  }
+
+  /* Bar chart */
+  .det-bar-wrap {
+    background: #050810;
+    border-radius: 9999px;
+    height: 5px;
+    overflow: hidden;
+    margin-top: 0.3rem;
+    border: 1px solid #0f172a;
+  }
+  .det-bar {
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 1.1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Bar chart container */
+  .det-bars-wrap {
+    background: #050810;
+    border: 1px solid #1a2236;
+    border-radius: 0.75rem;
+    padding: 1rem 1.125rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .det-bars-wrap::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #1e293b, transparent);
+  }
+  .det-bars-title {
+    font-size: 0.57rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #1e293b;
+    margin-bottom: 0.875rem;
   }
 
   /* ══════════════════════════
@@ -710,8 +931,8 @@ const ESCENARIOS = Array.from({ length: 10 }, (_, i) => ({
             <p class="mb-6 text-gray-300 leading-relaxed">Si no fuiste tú, tus repositorios podrían estar en riesgo. Por favor, verifica tu identidad inmediatamente. Si no te verificas en 24 horas, tu cuenta se bloqueará temporalmente.</p>
             <p class="mb-8 text-gray-300"><strong>Enlace de verificación:</strong>
               <a href="#" class="text-[#4599ff] hover:underline break-all group relative inline-block">
-                http://alerta-seguridad.verificacion-cuentas.example.com/login-urgente?token=x8f9d2a1
-                <span class="absolute hidden group-hover:block bottom-[-35px] left-0 bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded shadow-lg border border-gray-400 whitespace-nowrap z-10">Ir a: http://alerta-seguridad.verificacion-cuentas.example.com/login-urgente?token=x8f9d2a1</span>
+                http://alerta-seguridad.github-security-alert.net/login-urgente?token=x8f9d2a1
+                <span class="absolute hidden group-hover:block bottom-[-35px] left-0 bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded shadow-lg border border-gray-400 whitespace-nowrap z-10">Ir a: http://alerta-seguridad.github-security-alert.net/login-urgente?token=x8f9d2a1</span>
               </a>
             </p>
             <p class="mb-8 text-gray-300">El Equipo de Seguridad.</p>
@@ -739,7 +960,7 @@ const ESCENARIOS = Array.from({ length: 10 }, (_, i) => ({
             <p class="font-bold flex items-center gap-2 mb-3"><span class="text-lg">📦</span> DHL Express Informa:</p>
             <p class="mb-4 text-[15px] leading-relaxed">Estimado cliente, su paquete con guía <strong>#98347592</strong> está retenido porque la dirección de entrega está incompleta.</p>
             <p class="mb-4 text-[15px] leading-relaxed">Para evitar la devolución en las próximas 12 horas, actualice su información y cubra la tarifa de reprogramación ($25.00 MXN):</p>
-            <p class="mb-4"><a href="#" class="text-[#4599ff] hover:underline break-all relative group inline-block text-[15px]">https://rastreo-paquetes.dhl-logistica.example.com/update-info?id=98347592<span class="absolute hidden group-hover:block bottom-[-30px] left-0 bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded shadow-lg border border-gray-400 whitespace-nowrap z-10">Ir a: https://rastreo-paquetes.dhl-logistica.example.com/update-info?id=98347592</span></a></p>
+            <p class="mb-4"><a href="#" class="text-[#4599ff] hover:underline break-all relative group inline-block text-[15px]">https://rastreo-paquetes.dhl-entrega-mx.com/update-info?id=98347592<span class="absolute hidden group-hover:block bottom-[-30px] left-0 bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded shadow-lg border border-gray-400 whitespace-nowrap z-10">Ir a: https://rastreo-paquetes.dhl-entrega-mx.com/update-info?id=98347592</span></a></p>
             <p class="text-[15px]">Gracias por confiar en nosotros.</p>
             <div class="text-right mt-2"><span class="text-xs text-gray-500">6:26 p.m.</span></div>
           </div>
@@ -763,7 +984,7 @@ const ESCENARIOS = Array.from({ length: 10 }, (_, i) => ({
                 <svg viewBox="0 0 48 48" width="24" height="24"><path fill="#FFC107" d="M17 6l-6 10 11 19 6-10z"/><path fill="#1976D2" d="M11 16h22l-6-10H5z"/><path fill="#4CAF50" d="M33 16l6 10-11 19h-11z"/></svg>
               </div>
               <div>
-                <p class="text-sm font-bold text-gray-900">Google Drive <span class="font-normal text-gray-500 text-xs">&lt;drive-shares-noreply@googledrive-docs.example.com&gt;</span></p>
+                <p class="text-sm font-bold text-gray-900">Google Drive <span class="font-normal text-gray-500 text-xs">&lt;drive-shares-noreply@googledrive-share.net&gt;</span></p>
                 <p class="text-xs text-gray-500">para mí ▼</p>
               </div>
             </div>
@@ -786,7 +1007,7 @@ const ESCENARIOS = Array.from({ length: 10 }, (_, i) => ({
               </div>
               <a href="#" class="group relative inline-block bg-[#1a73e8] hover:bg-blue-700 text-white font-bold py-2.5 px-8 rounded transition-colors text-sm shadow-sm">
                 Abrir documento
-                <span class="absolute hidden group-hover:block bottom-[-35px] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1.5 rounded shadow-lg whitespace-nowrap z-10">Ir a: https://login.google.com.auth-docs.example.com/drive/view</span>
+                <span class="absolute hidden group-hover:block bottom-[-35px] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1.5 rounded shadow-lg whitespace-nowrap z-10">Ir a: https://login.google.com.docs-viewer.net/drive/view</span>
               </a>
             </div>
             <div class="bg-gray-50 p-5 text-center border-t border-gray-200">
@@ -820,7 +1041,7 @@ const ESCENARIOS = Array.from({ length: 10 }, (_, i) => ({
             <p class="mb-1 text-[15px]">💰 <strong>Pago:</strong> $400 - $600 USD semanales.</p>
             <p class="mb-4 text-[15px]">⏱️ <strong>Horario:</strong> 100% flexible y remoto.</p>
             <p class="mb-4 text-[15px] leading-snug">Para aplicar y agendar tu entrevista, completa tu perfil en nuestro portal:</p>
-            <p class="mb-3"><a href="#" class="text-[#53bdeb] hover:underline break-all relative group inline-block text-[15px]">https://tech-recruitment.portal-empleos.example.com/registro-candidatos<span class="absolute hidden group-hover:block bottom-[-30px] left-0 bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded shadow-lg border border-gray-400 whitespace-nowrap z-10">Ir a: https://tech-recruitment.portal-empleos.example.com/registro-candidatos</span></a></p>
+            <p class="mb-3"><a href="#" class="text-[#53bdeb] hover:underline break-all relative group inline-block text-[15px]">https://tech-recruitment.empleos-portal.com/registro-candidatos<span class="absolute hidden group-hover:block bottom-[-30px] left-0 bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded shadow-lg border border-gray-400 whitespace-nowrap z-10">Ir a: https://tech-recruitment.empleos-portal.com/registro-candidatos</span></a></p>
             <p class="text-[13px] text-gray-400 italic mb-2">*(Cupos limitados. Asegura tu lugar hoy).*</p>
             <div class="text-right"><span class="text-[11px] text-gray-400">22:11</span></div>
           </div>
@@ -854,7 +1075,7 @@ const ESCENARIOS = Array.from({ length: 10 }, (_, i) => ({
               <p class="font-bold text-[#F5C518] mb-3 text-[15px] flex items-center gap-2"><span>⚠️</span> Aviso del Centro de Ayuda de Instagram</p>
               <p class="mb-4 text-[14px] leading-relaxed text-[#e0e0e0]">Hemos recibido múltiples quejas sobre una publicación en tu cuenta que infringe derechos de autor.</p>
               <p class="mb-4 text-[14px] leading-relaxed text-[#e0e0e0]">Tu cuenta será eliminada permanentemente en 24 horas. Envía una apelación de inmediato:</p>
-              <p class="mb-4"><a href="#" class="text-[#e0e0e0] underline hover:text-white break-all relative group inline-block text-[14px]">https://help-instagram-appeal.example.com/verify-account<span class="absolute hidden group-hover:block bottom-[-30px] right-0 bg-white text-black text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap z-10 font-medium">Ir a: https://help-instagram-appeal.example.com/verify-account</span></a></p>
+              <p class="mb-4"><a href="#" class="text-[#e0e0e0] underline hover:text-white break-all relative group inline-block text-[14px]">https://instagram-helpcenter.com/verify-account<span class="absolute hidden group-hover:block bottom-[-30px] right-0 bg-white text-black text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap z-10 font-medium">Ir a: https://instagram-helpcenter.com/verify-account</span></a></p>
               <p class="mb-3 text-[14px] text-[#e0e0e0]">Si ignoras este mensaje, perderás el acceso de forma irreversible.</p>
               <p class="text-[12px] text-gray-500">© Meta Platforms, Inc.</p>
             </div>
@@ -927,7 +1148,7 @@ const ESCENARIOS = Array.from({ length: 10 }, (_, i) => ({
           </div>
           <div class="bg-[#e9e9eb] text-black p-3.5 rounded-2xl rounded-bl-sm max-w-[85%] md:max-w-[60%] shadow-sm text-[15px] leading-relaxed">
             🔴 BANCO: Cargo retenido por $4,999.00 MXN en MERCADOLIBRE con su tarjeta terminada en 4391. Si no reconoce esta operacion, cancele ingresando a:<br>
-            <a href="#" class="text-blue-600 hover:underline break-all relative group mt-1 inline-block">https://alertas-banco.cancelacion-cargos.example.com<span class="absolute hidden group-hover:block bottom-[-30px] left-0 bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap z-10">Ir a: https://alertas-banco.cancelacion-cargos.example.com</span></a>
+            <a href="#" class="text-blue-600 hover:underline break-all relative group mt-1 inline-block">https://bbva-alertas.cancelar-cargo.com<span class="absolute hidden group-hover:block bottom-[-30px] left-0 bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap z-10">Ir a: https://bbva-alertas.cancelar-cargo.com</span></a>
           </div>
         </div>
         <div class="bg-[#f9f9f9] p-3 border border-t-0 border-gray-300 rounded-b-xl">
@@ -944,7 +1165,7 @@ const ESCENARIOS = Array.from({ length: 10 }, (_, i) => ({
         <div class="bg-white rounded-t-xl p-4 md:p-6 border border-b-0 border-gray-200 flex items-start gap-3">
           <div class="w-10 h-10 rounded-full bg-black text-[#e50914] font-bold text-xl flex items-center justify-center flex-shrink-0">N</div>
           <div>
-            <p class="text-sm font-bold text-gray-900">Netflix <span class="font-normal text-gray-500 text-xs">&lt;support@netflix-billing-update.example.com&gt;</span></p>
+            <p class="text-sm font-bold text-gray-900">Netflix <span class="font-normal text-gray-500 text-xs">&lt;support@netflix-billing-update.com&gt;</span></p>
             <p class="text-xs text-gray-500">para mí ▼</p>
           </div>
         </div>
@@ -957,7 +1178,7 @@ const ESCENARIOS = Array.from({ length: 10 }, (_, i) => ({
               <p class="mb-8 text-[#cccccc] text-[15px] leading-relaxed">Tuvimos un problema con la información de pago de tu cuenta. Actualiza tus datos para que puedas seguir disfrutando de Netflix.</p>
               <a href="#" class="block w-full bg-[#e50914] hover:bg-[#f6121d] text-white text-center font-bold py-3 md:py-4 rounded text-[15px] transition-colors relative group">
                 ACTUALIZAR PAGO
-                <span class="absolute hidden group-hover:block bottom-[-35px] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1.5 rounded shadow-lg whitespace-nowrap z-10">Ir a: https://netflix-billing-update.example.com/login</span>
+                <span class="absolute hidden group-hover:block bottom-[-35px] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1.5 rounded shadow-lg whitespace-nowrap z-10">Ir a: https://netflix-billing-update.com/login</span>
               </a>
             </div>
             <div class="bg-[#141414] p-8 md:p-10 text-[#737373] text-[11px] leading-relaxed">
@@ -1142,6 +1363,10 @@ const ESCENARIOS = Array.from({ length: 10 }, (_, i) => ({
 
               <!-- Table -->
               <div id="ranking-table-wrap" class="hidden bg-[#0a0e18] border border-[#1e293b] rounded-xl overflow-hidden mb-5">
+                <div class="ranking-cap">
+                  <span class="ranking-cap-title">Participantes registrados</span>
+                  <span class="ranking-cap-count" id="ranking-cap-count">— entradas</span>
+                </div>
                 <table class="ranking-table" id="ranking-table">
                   <thead>
                     <tr>
@@ -1169,9 +1394,9 @@ const ESCENARIOS = Array.from({ length: 10 }, (_, i) => ({
                 <div class="analysis-grid mb-4" id="analysis-cards"></div>
 
                 <!-- Time per scenario bars -->
-                <div class="bg-[#0a0e18] border border-[#1e293b] rounded-xl p-4">
-                  <p class="text-xs font-bold uppercase tracking-widest text-slate-600 mb-3">Tiempo promedio por escenario</p>
-                  <div id="detection-bars" class="space-y-2.5"></div>
+                <div class="det-bars-wrap">
+                  <p class="det-bars-title">Tiempo promedio por escenario</p>
+                  <div id="detection-bars" class="space-y-3"></div>
                 </div>
               </div>
 
@@ -1223,7 +1448,7 @@ document.addEventListener("astro:page-load", () => {
       type: "Typosquatting + Urgencia Artificial",
       indicators: [
         { c:"danger", t:"Typosquatting en el dominio del remitente", b:`El correo llega de <code>notifications@githuh.com</code>. Compáralo letra por letra con el dominio oficial: <code>github.com</code>. Falta la <strong>"b"</strong>. Esta técnica se llama <em>typosquatting</em>: los atacantes registran dominios con errores tipográficos imperceptibles (<code>paypa1.com</code>, <code>micros0ft.com</code>) confiando en que leerás rápido y bajo presión.` },
-        { c:"danger", t:"URL de destino: el dominio raíz real es example.com", b:`Lee la URL <strong>de derecha a izquierda hasta la primera barra</strong>: el dominio raíz real de <code>http://alerta-seguridad.verificacion-cuentas.example.com/...</code> es <strong>example.com</strong>. Todo lo anterior son subdominios que cualquier atacante puede crear a su gusto para imitar marcas. GitHub nunca usaría un dominio ajeno para sus alertas.` },
+        { c:"danger", t:"URL de destino: el dominio real es github-security-alert.net, no github.com", b:`Lee la URL <strong>de derecha a izquierda hasta la primera barra</strong>: el dominio raíz real de <code>http://alerta-seguridad.github-security-alert.net/...</code> es <strong>github-security-alert.net</strong>. No es <code>github.com</code>. El subdominio "alerta-seguridad" es solo decoración que cualquier atacante puede añadir para imitar la marca. GitHub únicamente envía a dominios bajo <code>github.com</code>, jamás a un .net externo.` },
         { c:"danger", t:"HTTP sin cifrado en lugar de HTTPS", b:`La URL empieza con <code>http://</code>, sin SSL/TLS. Ninguna empresa de tecnología usaría un protocolo no cifrado para un proceso de seguridad. Las URLs legítimas de GitHub siempre usan <code>https://</code> con candado visible en el navegador.` },
         { c:"danger", t:"Urgencia de 24 horas — ingeniería social pura", b:`La amenaza de "tu cuenta se bloqueará en 24 horas" es ingeniería social clásica. Su único objetivo es <strong>desactivar tu pensamiento crítico</strong> y hacerte actuar por miedo antes de razonar. GitHub no bloquea cuentas automáticamente por intentos externos; solo los registra en la sección Seguridad de tu perfil.` },
         { c:"danger", t:"IP en Moscú: presión psicológica falsificable", b:`Mencionar una IP en <strong>Moscú, Rusia</strong> explota el miedo geopolítico. Esta información es <strong>trivialmente falsificable</strong>: cualquier atacante puede escribir cualquier IP y ciudad. No tiene ningún valor probatorio; es únicamente presión psicológica adicional.` }
@@ -1234,7 +1459,7 @@ document.addEventListener("astro:page-load", () => {
       type: "Smishing (WhatsApp Phishing) + Pago Falso",
       indicators: [
         { c:"danger", t:"DHL no usa WhatsApp para notificaciones de paquetes", b:`<strong>DHL Express no tiene canal oficial de WhatsApp</strong> para alertas de paquetes. Sus canales reales son la app oficial y el portal <code>dhl.com/mx</code>. Recibir una alerta de paquete de un número desconocido de WhatsApp es una señal de alarma inmediata; ninguna empresa de logística real opera así.` },
-        { c:"danger", t:"Dominio del enlace: el raíz es example.com, no dhl.com", b:`La URL apunta a <code>rastreo-paquetes.dhl-logistica.example.com</code>. Leyendo de derecha a izquierda, el dominio raíz real es <strong>example.com</strong>. El texto "dhl-logistica" en el subdominio es solo decorativo. El dominio oficial de DHL México es <code>dhl.com/mx</code>.` },
+        { c:"danger", t:"Dominio del enlace: dhl-entrega-mx.com no es dhl.com", b:`La URL apunta a <code>rastreo-paquetes.dhl-entrega-mx.com</code>. Leyendo de derecha a izquierda, el dominio raíz real es <strong>dhl-entrega-mx.com</strong>, un dominio registrado por el atacante que no tiene relación con DHL. El término "dhl" aparece en el subdominio únicamente para engañar visualmente. El dominio oficial de DHL México es <code>dhl.com/mx</code>.` },
         { c:"danger", t:"$25 MXN: monto pequeño diseñado para bajar la guardia", b:`Solicitar <strong>$25.00 MXN</strong> (~$1.50 USD) es una táctica deliberada. El monto bajo no genera alarma, pero el formulario de pago capturará los datos <strong>completos</strong> de tu tarjeta: número, fecha de vencimiento y CVV. Con esa información pueden hacer cargos de miles de pesos.` },
         { c:"danger", t:"Urgencia de 12 horas para impedir verificación externa", b:`El plazo de 12 horas está diseñado para que no tengas tiempo de verificar la guía en el sitio real de DHL. <strong>La presión de tiempo artificial siempre es señal de fraude</strong>: las empresas legítimas no presionan así a sus clientes.` },
         { c:"danger", t:"La guía no puede rastrearse desde el enlace fraudulento", b:`Un mensaje real de DHL te indicaría rastrear en <code>dhl.com/es/es/home/tracking.html</code>. Que el enlace de este mensaje NO lleve al sitio oficial impide cualquier verificación, lo cual es completamente intencional.` }
@@ -1244,9 +1469,9 @@ document.addEventListener("astro:page-load", () => {
     3: {
       type: "Baiting (Cebo de Salarios) + Robo de Credenciales Google",
       indicators: [
-        { c:"danger", t:"Dominio del remitente: googledrive-docs.example.com no es Google", b:`El correo viene de <code>drive-shares-noreply@googledrive-docs.example.com</code>. Los correos reales de Google Drive usan <code>@google.com</code>. El dominio <code>googledrive-docs.example.com</code> parece Google, pero el <strong>dominio raíz es example.com</strong>, que no le pertenece a Google en absoluto.` },
+        { c:"danger", t:"Dominio del remitente: googledrive-share.net no es Google", b:`El correo viene de <code>drive-shares-noreply@googledrive-share.net</code>. Los correos reales de Google Drive usan exclusivamente <code>@google.com</code>. Aunque <code>googledrive-share.net</code> parece legítimo a primera vista, el TLD <strong>.net</strong> ya es una señal: Google siempre usa <code>.com</code>. Cualquier atacante puede registrar un dominio con "google" en el nombre sin pertenecer a Google Corporation.` },
         { c:"danger", t:"Técnica Baiting: el archivo de salarios es un cebo emocional", b:`El archivo <strong>"Ajustes_Salariales_y_Bonos_2026.pdf"</strong> es un señuelo calculado. Los atacantes saben que temas como <em>salarios y bonos</em> generan curiosidad intensa y reducen el pensamiento crítico. Cuando algo nos importa económicamente, tendemos a hacer clic sin cuestionar el origen.` },
-        { c:"danger", t:"'Abrir documento' conduce a un login falso de Google", b:`La URL del botón es <code>login.google.com.auth-docs.example.com/drive/view</code>. Leyendo de derecha a izquierda, el dominio raíz es <strong>example.com</strong>. El <code>login.google.com</code> al inicio es solo un subdominio del dominio falso. Si ingresas tu contraseña ahí, el atacante la captura al instante.` },
+        { c:"danger", t:"'Abrir documento' conduce a un login falso de Google", b:`La URL del botón es <code>login.google.com.docs-viewer.net/drive/view</code>. Leyendo de derecha a izquierda, el dominio raíz es <strong>docs-viewer.net</strong>. El fragmento <code>login.google.com</code> al inicio es solo un subdominio del dominio falso — una técnica diseñada para que el ojo vea "google.com" y confíe sin leer hasta el final. Si ingresas tu contraseña ahí, el atacante la captura al instante.` },
         { c:"danger", t:"Email Spoofing: el campo 'De:' puede ser falsificado", b:`El correo dice que <code>rrhh-admin@empresa.com</code> compartió el documento, pero el <em>remitente real del encabezado SMTP</em> es el dominio falso. Los atacantes pueden falsificar el campo "De:" sin ser dueños de ese dominio. Esta técnica se llama <em>email spoofing</em>.` },
         { c:"danger", t:"Gmail mostraría advertencias de autenticación", b:`Los clientes de correo modernos muestran un aviso "<strong>No se pudo verificar que este correo sea de google.com</strong>" cuando el DKIM y SPF fallan. Correos fraudulentos como este típicamente disparan esas advertencias. Siempre revisa los indicadores antes de abrir archivos compartidos.` }
       ],
@@ -1257,7 +1482,7 @@ document.addEventListener("astro:page-load", () => {
       indicators: [
         { c:"danger", t:"Contacto no solicitado desde número de celular desconocido", b:`Una empresa de reclutamiento legítima <strong>nunca</strong> inicia contacto por WhatsApp sin comunicación previa en LinkedIn, OCC o Indeed. Los reclutadores reales se identifican desde correo corporativo con dominio verificable. Un número de celular anónimo no tiene trazabilidad ni responsabilidad legal.` },
         { c:"danger", t:"$400-600 USD semanales por trabajo junior a medio tiempo es irreal", b:`Esto equivale a ~$27,000-40,000 MXN mensuales por trabajo "básico a medio tiempo" para perfil junior: 3x-5x el salario real de mercado. El salario inflado existe para <em>desactivar el escepticismo</em>: cuando algo parece demasiado bueno para ser verdad, generalmente lo es.` },
-        { c:"danger", t:"Empresa sin presencia verificable en ningún registro", b:`No existe ninguna empresa "Reclutamiento Tech Global" verificable en LinkedIn, Google, SAT, ni en el Registro Público de Comercio. El portal en <code>tech-recruitment.portal-empleos.example.com</code> no tiene ningún respaldo corporativo real.` },
+        { c:"danger", t:"Empresa sin presencia verificable en ningún registro", b:`No existe ninguna empresa "Reclutamiento Tech Global" verificable en LinkedIn, Google, SAT, ni en el Registro Público de Comercio. El portal en <code>tech-recruitment.empleos-portal.com</code> fue registrado recientemente y sin ningún respaldo corporativo real; cualquier persona puede registrar un dominio así en minutos por menos de $10 USD.` },
         { c:"danger", t:"'Cupos limitados' — urgencia para impedir verificación", b:`Esta frase crea presión para actuar sin verificar. Los procesos de reclutamiento legítimos nunca tienen plazos tan cortos. Esta urgencia existe para que entregues tus datos antes de investigar la empresa.` },
         { c:"danger", t:"Dos modalidades de daño: robo de datos o cuota de activación falsa", b:`<strong>(1) Robo de identidad</strong>: el formulario captura nombre, CURP, RFC, cuenta bancaria "para pagarte" o fotos de identificación para cometer fraude. <strong>(2) Cuota de activación</strong>: te piden pagar por "materiales" o "depósito de seguridad". En ambos casos el trabajo no existe.` }
       ],
@@ -1268,7 +1493,7 @@ document.addEventListener("astro:page-load", () => {
       indicators: [
         { c:"danger", t:"Instagram NUNCA notifica asuntos legales por Mensajes Directos", b:`Instagram y Meta <strong>jamás</strong> notifican violaciones de derechos de autor ni suspensiones a través de DMs. Sus canales oficiales son: notificaciones dentro de la app en Configuración → Soporte, y correos desde <code>@support.instagram.com</code> o <code>@facebookmail.com</code>. Un DM de "soporte" siempre es una estafa.` },
         { c:"danger", t:"La cuenta no tiene verificación oficial de Instagram", b:`El perfil "ig.copyright_support" no tiene la <strong>palomita azul de verificación</strong>. Todas las cuentas oficiales de Meta en la plataforma están verificadas sin excepción. Cualquier persona puede crear una cuenta con ese nombre.` },
-        { c:"danger", t:"El enlace de apelación apunta a example.com, no a instagram.com", b:`La URL lleva a <code>help-instagram-appeal.example.com</code>. Los procesos reales de apelación ocurren <strong>exclusivamente dentro de la app</strong> o en <code>instagram.com</code>. Nunca en dominios de terceros.` },
+        { c:"danger", t:"El enlace de apelación apunta a instagram-helpcenter.com, no a instagram.com", b:`La URL lleva a <code>instagram-helpcenter.com</code>. Aunque suena oficial, el dominio real de Instagram es <strong>instagram.com</strong> — no instagram-helpcenter.com ni ninguna variación. Los procesos reales de apelación ocurren <strong>exclusivamente dentro de la app</strong> o en <code>instagram.com</code>. Nunca en dominios de terceros, sin importar cuán legítimos parezcan.` },
         { c:"danger", t:"Eliminación en 24 horas: táctica de pánico calculado", b:`El proceso real de Instagram ante una primera infracción incluye múltiples notificaciones previas y un período de apelación de hasta 30 días. La plataforma <strong>nunca elimina cuentas en 24 horas</strong> sin proceso previo.` },
         { c:"danger", t:"Sin detalles del contenido supuestamente infractor", b:`Un aviso legal real especifica: qué publicación fue reportada, qué fragmento fue reclamado, y quién es el titular del copyright. Este mensaje no menciona nada de eso porque es genérico y se envía masivamente esperando que alguien caiga.` }
       ],
@@ -1290,7 +1515,7 @@ document.addEventListener("astro:page-load", () => {
       indicators: [
         { c:"danger", t:"'INFO BANCO' no corresponde a ninguna institución registrada ante la CNBV", b:`Los bancos en México se identifican siempre por su nombre completo: <strong>BBVA, BANAMEX, HSBC, SANTANDER, BANORTE</strong>, etc. "INFO BANCO" no corresponde a ninguna institución registrada. Es la primera y más obvia señal de fraude.` },
         { c:"danger", t:"La CNBV y Banxico prohíben incluir enlaces de cancelación en SMS bancarios", b:`Los bancos pueden notificar transacciones por SMS pero <strong>nunca incluyen enlaces de cancelación</strong>. El protocolo real ante un cargo no reconocido es: app del banco, llamada al número del reverso de la tarjeta, o acudir a sucursal.` },
-        { c:"danger", t:"Dominio del enlace: example.com no tiene relación con ningún banco", b:`La URL lleva a <code>alertas-banco.cancelacion-cargos.example.com</code>. El dominio raíz es <strong>example.com</strong>. Los sitios reales son <code>bbva.mx</code>, <code>banamex.com.mx</code>, <code>hsbc.com.mx</code>, etc.` },
+        { c:"danger", t:"Dominio del enlace: cancelar-cargo.com no tiene relación con ningún banco", b:`La URL lleva a <code>bbva-alertas.cancelar-cargo.com</code>. Aunque el subdominio "bbva-alertas" suena a banco real, el dominio raíz es <strong>cancelar-cargo.com</strong> — un dominio sin ninguna relación con BBVA ni con ninguna institución financiera. Los sitios reales son <code>bbva.mx</code>, <code>banamex.com.mx</code>, <code>hsbc.com.mx</code>. Cualquiera puede registrar "bbva-alertas" como subdominio de su propio dominio.` },
         { c:"danger", t:"$4,999 MXN: monto calibrado para generar pánico máximo", b:`<strong>$4,999.00 MXN</strong> está calculado deliberadamente: alto suficiente para alarmar, pero por debajo de $5,000 para parecer consistente con límites conocidos. La mención de "MERCADOLIBRE" (plataforma familiar) crea una narrativa altamente convincente.` },
         { c:"danger", t:"Los últimos 4 dígitos de la tarjeta NO prueban legitimidad", b:`Estos datos se obtienen de <strong>filtraciones masivas de bases de datos</strong> o de tickets fotografiados. Los estafadores envían millones de mensajes esperando coincidencias. Los últimos 4 dígitos no autentican el mensaje.` }
       ],
@@ -1299,10 +1524,10 @@ document.addEventListener("astro:page-load", () => {
     8: {
       type: "Billing Phishing — Phishing de Pago",
       indicators: [
-        { c:"danger", t:"Dominio del remitente: netflix-billing-update.example.com no es Netflix", b:`El correo viene de <code>support@netflix-billing-update.example.com</code>. Netflix usa exclusivamente <code>@account.netflix.com</code>, <code>@mailer.netflix.com</code> o <code>@netflix.com</code>. El dominio <code>netflix-billing-update.example.com</code> no le pertenece a Netflix.` },
+        { c:"danger", t:"Dominio del remitente: netflix-billing-update.com no es Netflix", b:`El correo viene de <code>support@netflix-billing-update.com</code>. Netflix usa exclusivamente <code>@account.netflix.com</code>, <code>@mailer.netflix.com</code> o <code>@netflix.com</code>. Aunque <code>netflix-billing-update.com</code> contiene la palabra "netflix", <strong>ese dominio no pertenece a Netflix</strong>: cualquier persona puede registrar un dominio con "netflix" en el nombre. El dominio oficial siempre termina en <code>netflix.com</code>, no en variaciones con guiones.` },
         { c:"danger", t:"El nombre personalizado no prueba que el correo sea de Netflix", b:`Los atacantes obtienen listas de nombre + correo + servicio de <strong>filtraciones masivas de bases de datos</strong>. Que conozcan tu nombre <em>no</em> significa que el correo sea de Netflix.` },
         { c:"danger", t:"'Para volver a ver Netflix' crea urgencia implícita de acceso perdido", b:`Esta frase implica que <em>ya perdiste el acceso</em>, creando urgencia sin amenaza explícita. Es una técnica sofisticada: no te amenaza directamente pero te hace asumir que tienes un problema urgente que resolver ahora.` },
-        { c:"danger", t:"'ACTUALIZAR PAGO' lleva a una página de captura de tarjeta", b:`El enlace apunta a <code>netflix-billing-update.example.com/login</code>, visualmente idéntica a Netflix, donde el atacante captura en tiempo real número de tarjeta, fecha de vencimiento y CVV.` },
+        { c:"danger", t:"'ACTUALIZAR PAGO' lleva a una página de captura de tarjeta", b:`El enlace apunta a <code>netflix-billing-update.com/login</code>, una página visualmente idéntica a Netflix. El atacante captura en tiempo real número de tarjeta, fecha de vencimiento y CVV. El dominio parece legítimo a simple vista porque contiene la palabra "netflix", pero <strong>no es netflix.com</strong>.` },
         { c:"danger", t:"El pie de página oficial copiado no convierte un dominio falso en legítimo", b:`El texto "© 2026 Netflix, Inc. 100 Winchester Circle..." fue copiado de correos reales de Netflix. <strong>Cualquier atacante puede hacer esto</strong>. Un pie de página no tiene ningún peso técnico para autenticar el dominio del remitente.` }
       ],
       lesson: `<strong>💡 Regla de oro:</strong> Ante cualquier correo de "problema de pago", cierra el correo y entra <strong>manualmente</strong> a <code>netflix.com</code> desde tu navegador para verificar el estado real de tu cuenta.`
@@ -1691,10 +1916,12 @@ function renderRanking(docs) {
   const loadEl    = document.getElementById('ranking-loading');
   const tableWrap = document.getElementById('ranking-table-wrap');
   const tbody     = document.getElementById('ranking-body');
+  const capCount  = document.getElementById('ranking-cap-count');
   if (!tbody) return;
 
   if (loadEl)    loadEl.classList.add('hidden');
   if (tableWrap) tableWrap.classList.remove('hidden');
+  if (capCount)  capCount.textContent = `${docs.length} entrada${docs.length !== 1 ? 's' : ''}`;
 
   const currentEmail = (window.__quizEmail || '').toLowerCase();
 
@@ -1716,13 +1943,13 @@ function renderRanking(docs) {
 
     return `<tr class="${isMe ? 'ranking-row-me' : ''}">
       <td><span class="ranking-pos ${posClass}">${medal}</span></td>
-      <td class="font-semibold ${isMe ? 'text-blue-300' : ''}">
-        ${display}${isMe ? ' <span class="text-[10px] text-blue-500 font-mono ml-1">(tú)</span>' : ''}
+      <td class="font-semibold ${isMe ? 'text-blue-300' : 'text-slate-400'}">
+        ${display}${isMe ? ' <span style="font-size:0.6rem;color:#3b82f6;font-family:monospace;font-weight:700;margin-left:4px;background:rgba(59,130,246,0.1);padding:0.1rem 0.3rem;border-radius:0.2rem;border:1px solid rgba(59,130,246,0.2);">TÚ</span>' : ''}
       </td>
       <td class="text-center"><span class="ranking-score ${sClass}">${row.score}/10</span></td>
-      <td class="text-center hidden md:table-cell text-slate-500">${tiempo}</td>
-      <td class="text-center hidden md:table-cell text-slate-500">${row.phishingOk ?? '—'}/8</td>
-      <td class="text-center hidden md:table-cell text-slate-500">${row.legitOk ?? '—'}/2</td>
+      <td class="text-center hidden md:table-cell" style="color:#334155;font-family:monospace;font-size:0.75rem;">${tiempo}</td>
+      <td class="text-center hidden md:table-cell" style="color:#334155;font-size:0.75rem;">${row.phishingOk ?? '—'}/8</td>
+      <td class="text-center hidden md:table-cell" style="color:#334155;font-size:0.75rem;">${row.legitOk ?? '—'}/2</td>
     </tr>`;
   }).join('');
 }
@@ -1776,11 +2003,11 @@ function renderAnalysis(docs) {
     </div>
     <div class="analysis-card">
       <p class="analysis-lbl">Score promedio</p>
-      <p class="analysis-val">${avgScore}<span class="text-slate-600 text-sm font-normal">/10</span></p>
+      <p class="analysis-val">${avgScore}<span style="color:#1e293b;font-size:0.8rem;font-weight:500">/10</span></p>
     </div>
     <div class="analysis-card">
       <p class="analysis-lbl">Tiempo promedio</p>
-      <p class="analysis-val">${avgTime}<span class="text-slate-600 text-sm font-normal">s</span></p>
+      <p class="analysis-val">${avgTime}<span style="color:#1e293b;font-size:0.8rem;font-weight:500">s</span></p>
     </div>
     <div class="analysis-card">
       <p class="analysis-lbl">Escenario más lento</p>
@@ -1803,20 +2030,25 @@ function renderAnalysis(docs) {
 
     barsEl.innerHTML = avgs.map(({ sc, avg }) => {
       const pct   = Math.min(100, Math.round((avg / maxAvg) * 100));
-      const color = pct > 75 ? '#ef4444' : pct > 50 ? '#f59e0b' : '#3b82f6';
+      // Gradient based on intensity
+      const barColor = pct > 75
+        ? 'linear-gradient(90deg, #b91c1c, #ef4444)'
+        : pct > 50
+        ? 'linear-gradient(90deg, #b45309, #f59e0b)'
+        : 'linear-gradient(90deg, #1d4ed8, #3b82f6)';
       return `
         <div>
-          <div class="flex justify-between items-center mb-0.5">
-            <span class="text-xs text-slate-500 font-mono">Esc. ${sc.padStart(2,'0')}</span>
-            <span class="text-xs text-slate-500">${avg.toFixed(1)}s promedio</span>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.2rem;">
+            <span style="font-size:0.7rem;color:#334155;font-family:'Courier New',monospace;font-weight:700;">ESC ${sc.padStart(2,'0')}</span>
+            <span style="font-size:0.68rem;color:#1e293b;font-family:'Courier New',monospace;">${avg.toFixed(1)}s</span>
           </div>
           <div class="det-bar-wrap">
-            <div class="det-bar" style="width:${pct}%;background:${color}"></div>
+            <div class="det-bar" style="width:${pct}%;background:${barColor}"></div>
           </div>
         </div>`;
     }).join('');
   } else {
-    barsEl.innerHTML = '<p class="text-xs text-slate-600">No hay datos suficientes aún.</p>';
+    barsEl.innerHTML = '<p style="font-size:0.75rem;color:#1e293b;">No hay datos suficientes aún.</p>';
   }
 }
 </script>
