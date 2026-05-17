@@ -127,7 +127,7 @@ const PROJECTS = [
     "github": "", 
     "image": "/projects/Imagen1Tarea9.png", 
     "tags": [TAGS.BELL],
-    "parcial": 2 // <-- ASIGNADO AL PARCIAL 2
+    "parcial": 2
   },
   {
     "title": "ACTIVIDAD 10 - Ataques, Conceptos y Técnicas (Infografia)",
@@ -136,7 +136,79 @@ const PROJECTS = [
     "github": "", 
     "image": "/projects/Imagen1Tarea10.png", 
     "tags": [TAGS.BELL],
-    "parcial": 2 // <-- ASIGNADO AL PARCIAL 2
+    "parcial": 2
+  },
+  {
+    "title": "ACTIVIDAD 11 - Red Team Report: Napping 101",
+    "description": "Evaluación integral de seguridad ofensiva sobre la infraestructura corporativa 'Napping 101'. Documentación de la cadena de explotación desde el reconocimiento inicial hasta el compromiso absoluto del sistema operativo.",
+    "link": "/Tareas/Tarea11",
+    "github": "",
+    "image": "/projects/Imagen2Tarea11.png",
+    "tags": [TAGS.BELL],
+    "parcial": 2
+  },
+  {
+    "title": "ACTIVIDAD 12 - Spyware: Análisis y Desarrollo de un Keylogger",
+    "description": "Análisis práctico del comportamiento de un software espía (Spyware). Desarrollo y ejecución en un entorno controlado de un Keylogger escrito en Python capaz de interceptar y registrar eventos del teclado a nivel de sistema operativo.",
+    "link": "/Tareas/Tarea12",
+    "github": "",
+    "image": "/projects/Imagen1Tarea12.jpg",
+    "tags": [TAGS.BELL],
+    "parcial": 2
+  },
+  {
+    "title": "ACTIVIDAD 13 - Spyware Avanzado: Keylogger con Persistencia y C2",
+    "description": "Evolución y optimización de un software espía. Implementación de funciones de formateo automatizado, persistencia de datos mediante escritura de archivos locales en disco y simulación de exfiltración de información hacia un Servidor C2.",
+    "link": "/Tareas/Tarea13",
+    "github": "",
+    "image": "/projects/Imagen1Tarea13.png",
+    "tags": [TAGS.BELL],
+    "parcial": 2
+  },
+  {
+    "title": "ACTIVIDAD 14 - Anatomía de un Ransomware: Desarrollo y Análisis",
+    "description": "Diseño, desarrollo y análisis de la cadena de ejecución de un Ransomware en Python. Implementación de evasión de defensas, bomba lógica, cifrado intermitente, inhibición de copias de seguridad y movimiento lateral.",
+    "link": "/Tareas/Tarea14",
+    "github": "",
+    "image": "/projects/Imagen1Tarea14.png",
+    "tags": [TAGS.BELL],
+    "parcial": 3
+  },
+  {
+    "title": "ACTIVIDAD 15 - Ingeniería Social: Campaña de Phishing con SET",
+    "description": "Diseño e implementación de una infraestructura SMTP ofensiva utilizando Postfix y el Social-Engineer Toolkit (SET) en Kali Linux para simular una campaña de Phishing corporativa dirigida y evadir filtros antispam.",
+    "link": "/Tareas/Tarea15",
+    "github": "",
+    "image": "/projects/Imagen1Tarea15.png",
+    "tags": [TAGS.BELL],
+    "parcial": 3
+  },
+  {
+    "title": "ACTIVIDAD 16 - Dilemas Éticos en la Ciberseguridad",
+    "description": "Análisis crítico de escenarios de conflicto ético y legal en el ejercicio de la seguridad informática. Evaluación bajo marcos de ética utilitarista, enfoque de derechos y el bien común, fundamentado en el Código Penal Federal.",
+    "link": "/Tareas/Tarea16",
+    "github": "",
+    "image": "/projects/Imagen1Tarea16.png",
+    "tags": [TAGS.BELL],
+    "parcial": 3
+  },
+  {
+    "title": "ACTIVIDAD 17 - Evaluación de Vulnerabilidades con CVSS v3.1",
+    "description": "Aplicación del estándar internacional CVSS v3.1 para la cuantificación de la severidad de vulnerabilidades. Análisis de métricas de explotabilidad e impacto en un escenario de sistema web interno.",
+    "link": "/Tareas/Tarea17",
+    "github": "",
+    "image": "/projects/Imagen1Tarea17.png",
+    "tags": [TAGS.BELL],
+    "parcial": 3
+  },
+  {
+    "title": "ACTIVIDAD 18 - Inteligencia de Amenazas: El Modelo Diamante",
+    "description": "Análisis y modelado de intrusiones cibernéticas avanzadas mediante la metodología del Modelo Diamante. Mapeo de hilos de actividad, técnicas de evasión perimetral por Proxy y pivoteo en redes internas confiables.",
+    "link": "/Tareas/Tarea18",
+    "github": "",
+    "image": "/projects/Imagen1Tarea18.png",
+    "tags": [TAGS.BELL],
+    "parcial": 3
   }
 ]
 
@@ -184,7 +256,6 @@ const FILTERED_TAREAS = PROJECTS.filter(tarea => tarea.parcial === parcial);
           )}
 
           {/* Botón de Ver Tarea (MODIFICADO) */}
-          {/* Usamos una etiqueta 'a' normal en lugar de LinkButton para que NO abra pestaña nueva */}
           {link && (
             <a 
               href={link}

@@ -1,0 +1,216 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// ── Íconos
+import Shield from "../../components/Icons/Shield.astro"
+import Bolt from "../../components/Icons/Bolt.astro"
+import Security from "../../components/Icons/Security.astro"
+import Books from "../../components/Icons/Books.astro"
+import Settings from "../../components/Icons/Settings.astro"
+import Search from "../../components/Icons/Search.astro"
+
+const INFO_TAREA = {
+  titulo: "Actividad 17: Evaluación de Vulnerabilidades con CVSS v3.1",
+  fecha: "15 de Mayo, 2026",
+  descripcion: "Aplicación del estándar internacional CVSS v3.1 para la cuantificación de la severidad de vulnerabilidades. Análisis de métricas de explotabilidad e impacto en un escenario de sistema web interno.",
+  pdf: "/pdfs/182217-Act17.pdf",
+  imagen1: "/projects/Imagen1Tarea17.png"
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+
+      {/* --- ENCABEZADO --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* Banner VULNERABILITY SCORE */}
+      <div class="mb-10 flex items-center gap-3 px-4 py-3 rounded-lg bg-yellow-900/20 border border-yellow-500/30">
+        <Bolt class="size-5 text-yellow-400 shrink-0" />
+        <p class="text-yellow-300 text-sm font-medium">
+          Severidad Detectada: 4.7 (Media) — La vulnerabilidad requiere atención programada para mitigar vectores de escalada de privilegios.
+        </p>
+        <span class="ml-auto text-xs font-mono text-yellow-500/60 hidden sm:block">CVSS_V3.1: 4.7_MEDIUM</span>
+      </div>
+
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-12">
+
+        {/* ── CONCEPTO CLAVE: CVSS ── */}
+        <div>
+          <p class="text-xs font-mono text-gray-500 mb-1">// MARCO DE EVALUACIÓN ESTÁNDAR</p>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">¿Qué es el modelo CVSS?</h3>
+          <p>
+            El <strong>Common Vulnerability Scoring System (CVSS)</strong> es un framework abierto y estándar de la industria que se utiliza para comunicar las características y la gravedad de las vulnerabilidades de seguridad de los sistemas informáticos. 
+          </p>
+          <p class="mt-3">
+            Este sistema permite a los especialistas de ciberseguridad priorizar de manera estratégica las acciones de remediación basándose en métricas objetivas de <strong>explotabilidad</strong> e <strong>impacto</strong>, evitando la subjetividad en la gestión de riesgos organizacionales.
+          </p>
+        </div>
+
+        {/* ── ESCENARIO TÉCNICO ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Search class="size-6 text-blue-400" />
+            Análisis del Escenario: Sistema Web Interno
+          </h3>
+          <p class="text-sm text-gray-400 mb-6">
+            Se evaluó un hallazgo técnico detectado en un portal web corporativo, identificando que la vulnerabilidad es accesible desde la red pero requiere de una cuenta con privilegios administrativos para ser activada:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <div class="p-4 rounded-lg bg-gray-900/30 border border-gray-800">
+              <h4 class="text-sm font-bold text-gray-200 mb-3 underline decoration-blue-500/50">Métricas de Explotabilidad</h4>
+              <ul class="space-y-2 text-xs text-gray-400 list-none p-0">
+                <li class="flex justify-between"><span>Vector de Ataque (AV):</span> <span class="text-blue-400">Red (Network)</span></li>
+                <li class="flex justify-between"><span>Complejidad (AC):</span> <span class="text-blue-400">Baja (Low)</span></li>
+                <li class="flex justify-between"><span>Privilegios Requeridos (PR):</span> <span class="text-red-400 font-bold">Altos (High)</span></li>
+                <li class="flex justify-between"><span>Interacción del Usuario (UI):</span> <span class="text-blue-400">Ninguna (None)</span></li>
+              </ul>
+            </div>
+
+            <div class="p-4 rounded-lg bg-gray-900/30 border border-gray-800">
+              <h4 class="text-sm font-bold text-gray-200 mb-3 underline decoration-purple-500/50">Métricas de Impacto (CIA)</h4>
+              <ul class="space-y-2 text-xs text-gray-400 list-none p-0">
+                <li class="flex justify-between"><span>Confidencialidad (C):</span> <span class="text-yellow-400">Baja (Low)</span></li>
+                <li class="flex justify-between"><span>Integridad (I):</span> <span class="text-yellow-400">Baja (Low)</span></li>
+                <li class="flex justify-between"><span>Disponibilidad (A):</span> <span class="text-yellow-400">Baja (Low)</span></li>
+                <li class="flex justify-between"><span>Alcance (Scope):</span> <span class="text-green-400">Sin cambios (Unchanged)</span></li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ── VECTOR STRING (TERMINAL STYLE) ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">Cadena de Definición del Vector</h3>
+          <p class="mb-4 text-sm text-gray-400">
+            La representación formal de la vulnerabilidad bajo la sintaxis técnica de CVSS v3.1 es la siguiente:
+          </p>
+
+          <div class="relative bg-[#0d1117] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#161b22] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">cvss_v31_calculator — output</span>
+            </div>
+            <div class="p-6 overflow-x-auto text-center">
+              <code class="text-lg md:text-2xl font-mono text-cyan-400 tracking-wider">
+                CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:L/I:L/A:L
+              </code>
+            </div>
+          </div>
+        </div>
+
+        {/* ── INTERPRETACIÓN DE RIESGO ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Security class="size-6 text-blue-400" />
+            Análisis de Impacto y Amenazas
+          </h3>
+          <div class="space-y-4">
+            <div class="p-4 border-l-4 border-yellow-500 bg-gray-900/30">
+              <h4 class="font-bold text-yellow-400 mb-1">Riesgo Latente</h4>
+              <p class="text-sm text-gray-300">A pesar de requerir privilegios elevados (PR:H), el riesgo es persistente debido a la baja complejidad técnica necesaria para explotar el fallo una vez que se posee el acceso. Un actor de amenaza podría encadenar este fallo con un compromiso previo de credenciales administrativas.</p>
+            </div>
+            <div class="p-4 border-l-4 border-blue-500 bg-gray-900/30">
+              <h4 class="font-bold text-blue-400 mb-1">Impacto en el Negocio</h4>
+              <p class="text-sm text-gray-300">El impacto se clasifica como <strong>Bajo</strong> dado que la filtración se limita a información no crítica, las alteraciones no afectan la lógica central de la aplicación y la disponibilidad solo sufre una degradación menor sin provocar caídas del servicio.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── RECOMENDACIÓN TÉCNICA ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Shield class="size-6 text-green-400" />
+            Conclusión y Plan de Remediación
+          </h3>
+          <div class="bg-gray-900/40 p-6 rounded-xl border border-gray-800">
+            <p class="text-sm text-gray-300 leading-relaxed mb-4">
+              La vulnerabilidad se clasifica formalmente con un <strong>Base Score de 4.7</strong>. Bajo el estándar FIRST, esto se traduce en un nivel de riesgo <strong>MEDIO</strong>.
+            </p>
+            <div class="flex gap-4 items-start text-sm">
+                <span class="text-green-400 font-mono font-bold whitespace-nowrap">[ACCIÓN RECOMENDADA]</span>
+                <p class="text-gray-400">Se sugiere la remediación mediante un plan programado dentro del ciclo normal de parches de seguridad de la infraestructura. No requiere respuesta de emergencia, pero debe monitorearse ante posibles intentos de escalada de privilegios lateral.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── EVIDENCIA VISUAL ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80">Cálculo de Severidad</h3>
+          <figure class="relative transition-all duration-300 hover:scale-[1.01]">
+            <img 
+              class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-800" 
+              src={INFO_TAREA.imagen1} 
+              alt="Cálculo de Score CVSS" 
+            />
+            <figcaption class="mt-2 text-center text-sm text-gray-500 italic">
+              Evidencia actividad 17
+            </figcaption>
+          </figure>
+        </div>
+
+        {/* ── REFERENCIAS ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Books class="size-6 text-gray-400" />
+            Referencias y Estándares
+          </h3>
+          <div class="space-y-2 text-xs font-mono text-gray-500">
+            <p class="pl-6 -indent-6">
+              FIRST.org. (2024). <em class="text-gray-400">Common Vulnerability Scoring System v3.1 Specification v1.1.</em> Recuperado de https://www.first.org/cvss/v3.1/specification-document
+            </p>
+            <p class="pl-6 -indent-6">
+              NIST. (2026). <em class="text-gray-400">NVD - CVSS v3.1 Severity Calculator.</em> National Institute of Standards and Technology.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      {/* --- ZONA DE DESCARGA Y RETORNO --- */}
+      <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        <a 
+          href={INFO_TAREA.pdf} 
+          download="182217-Act17.pdf" 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-yellow-600 rounded-full hover:bg-yellow-700 hover:shadow-lg hover:shadow-yellow-500/30"
+        >
+          <Link class="size-5" />
+          Descargar PDF de la Tarea
+        </a>
+        <a 
+          href="/#tareas" 
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>

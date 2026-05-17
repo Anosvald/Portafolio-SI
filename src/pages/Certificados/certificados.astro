@@ -1,0 +1,195 @@
+---
+// Importamos Layout y Componentes (Usando ../../ para evitar el error de rutas)
+import Layout from "../../layouts/Layout.astro"
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+
+const CERTIFICACIONES = [
+  {
+    title: "Introducción a la Ciberseguridad",
+    issuer: "Cisco Networking Academy · UPSLP",
+    date: "20 Abr 2026",
+    instructor: "Servando López Contreras",
+    tags: ["Ciberseguridad", "IoT Security", "Network Security", "Data Protection"],
+    credly: "https://www.credly.com/badges/bcb6fa43-73d0-4e8e-a13a-11cd37793b61",
+    pdf: "/certificaciones/Introduccion_a_la_Ciberseguridad.pdf",
+    image: "/projects/certificacion1.png",
+    reflection: "Este certificado marca el punto de partida de mi formación formal en ciberseguridad. El curso Introduction to Cybersecurity ofrecido por Cisco Networking Academy a través de la Universidad Politécnica de San Luis Potosí proporcionó una visión panorámica y estructurada del campo, cubriendo desde los fundamentos del cibercrimen y las motivaciones de los atacantes, hasta las implicaciones del Internet de las Cosas (IoT) en la seguridad organizacional. A lo largo del curso comprendí la importancia de la tríada CIA como marco de referencia para evaluar el impacto de incidentes. También exploré los tipos más comunes de ataques —phishing, ransomware, ingeniería social— y las mejores prácticas de higiene cibernética. Lo más valioso fue que transformó mi perspectiva: de ser simplemente un usuario a entenderme como un profesional responsable de proteger activos digitales. Actualmente aplico directamente los conceptos aprendidos aquí en cursos avanzados de análisis de vulnerabilidades, pentesting y threat intelligence. Esta certificación fue la confirmación de que este es el camino correcto."
+  },
+  {
+    title: "Conceptos Básicos de Redes",
+    issuer: "Cisco Networking Academy",
+    date: "20 Abr 2026",
+    instructor: "Servando López Contreras",
+    tags: ["IPv4/IPv6", "Ethernet", "DNS/DHCP", "Network Protocols", "Troubleshooting"],
+    credly: "https://www.credly.com/badges/004d855a-359f-4ea9-9402-58d1d2b63b41",
+    pdf: "/certificaciones/Conceptos_Basicos_de_Redes.pdf",
+    image: "/projects/certificacion2.png",
+    reflection: "El curso Networking Basics de Cisco consolidó mi comprensión de los fundamentos que subyacen a toda la ciberseguridad moderna: sin entender cómo fluye la información en una red, resulta imposible comprender cómo protegerla o atacarla éticamente. A lo largo del programa profundicé en los conceptos de comunicación, tipos de red, estándares y protocolos (TCP/IP, OSI). Trabajé con el direccionamiento IPv4 e IPv6, cálculo de subredes, y el funcionamiento de servicios críticos como DNS y DHCP. Uno de los aprendizajes más relevantes para mi perfil de seguridad fue comprender cómo los routers conectan redes entre sí y los vectores de ataque que esto implica. Igualmente, el uso de herramientas de diagnóstico me permitió desarrollar la habilidad práctica de identificar anomalías de conectividad que podrían indicar un incidente activo. Esta certificación refuerza directamente mi capacidad de análisis en reconocimiento de red (nmap) y comprensión del flujo C2 en el Modelo Diamante."
+  },
+  {
+    title: "Dispositivos de Red y Configuración Inicial",
+    issuer: "Cisco Networking Academy",
+    date: "20 Abr 2026",
+    instructor: "Servando López Contreras",
+    tags: ["Cisco IOS", "Subnetting IPv4", "ARP", "Switching", "Hierarchical Design"],
+    credly: "https://www.credly.com/badges/7734aa79-997a-4be4-a936-faf66d5dbfe6",
+    pdf: "/certificaciones/Dispositivos_de_Red_y_Configuracion_Inicial.pdf",
+    image: "/projects/certificacion3.png",
+    reflection: "La certificación en Networking Devices and Basic Configuration llevó mis conocimientos del plano teórico al práctico: aprendí a configurar dispositivos Cisco reales usando el IOS (Internetwork Operating System). Los temas más desafiantes fueron el diseño jerárquico de redes, el subnetting IPv4 para segmentar eficientemente, y la comprensión del protocolo ARP como mecanismo crítico — y potencial vector de ataques como man-in-the-middle. Especialmente significativa fue la configuración práctica de una red simple: switches y routers configurados desde cero. Esta experiencia hands-on me permitió entender por qué las configuraciones por defecto son inseguras y cómo los atacantes explotan dispositivos mal configurados. En el contexto de Seguridad Informática, estos conocimientos son directamente aplicables al análisis de infraestructura de red durante el pivoteo en ejercicios de pentesting avanzado."
+  },
+  {
+    title: "Seguridad en Terminales",
+    issuer: "Cisco Networking Academy",
+    date: "20 Abr 2026",
+    instructor: "Servando López Contreras",
+    tags: ["Endpoint Security", "Malware Analysis", "Threat Mitigation", "Packet Capture"],
+    credly: "https://www.credly.com/badges/0e5abb23-3e25-4ad9-b09e-35e8e4250be3",
+    pdf: "/certificaciones/Seguridad_en_Terminales.pdf",
+    image: "/projects/certificacion4.png",
+    reflection: "El curso Endpoint Security representa la certificación más directamente alineada con el trabajo práctico realizado en CNO V. Esta certificación me formó en la evaluación y mitigación de amenazas a nivel de endpoint — el punto más vulnerable de cualquier organización. Aprendí a documentar medidas de mitigación para amenazas de red emergentes, relevantes para un contexto organizacional. La parte más relevante fue el análisis de archivos de malware extraídos de capturas de paquetes (pcap). Esta habilidad me permitió entender cómo se ve el tráfico malicioso en la práctica: el balizamiento (beaconing) hacia servidores C2 y los patrones de comunicación de un RAT. Todo esto cobra vida en el análisis del Modelo Diamante de Intrusión donde trabajamos con evidencia de red de un actor APT. El dominio de la seguridad en endpoints respalda formalmente esa competencia en mi perfil profesional."
+  },
+  {
+    title: "Defensa de la red",
+    issuer: "Cisco Networking Academy",
+    date: "20 Abr 2026",
+    instructor: "Servando López Contreras",
+    tags: ["Network Defense", "Intrusion Prevention", "SOC Operations", "Threat Intel"],
+    credly: "https://www.credly.com/badges/0e5abb23-3e25-4ad9-b09e-35e8e4250be3",
+    pdf: "/certificaciones/Defensa_de_la_red.pdf",
+    image: "/projects/certificacion5.png",
+    reflection: "El curso de Network Defense (Administración de Amenazas) culminó mi formación defensiva, permitiéndome consolidar todo lo aprendido en un entorno simulado de operaciones de seguridad (SOC). La transición de entender vulnerabilidades aisladas a monitorear activamente una red completa fue reveladora. A través de este programa, comprendí la vital importancia de la Inteligencia de Amenazas y la respuesta a incidentes en tiempo real. Configurar y analizar alertas de sistemas de prevención de intrusiones (IPS) me ayudó a visualizar cómo los defensores interceptan ataques en vivo. Esta certificación se entrelaza perfectamente con la construcción de perfiles de atacantes en CNO V, ya que para defender una red con eficacia, primero se deben entender las tácticas del adversario. Validar esta competencia me brindó la base analítica necesaria para perfilarme profesionalmente hacia roles defensivos corporativos."
+  }
+]
+---
+
+<Layout
+  title="Portafolio - Certificaciones y Logros"
+  description="Credenciales oficiales, reflexiones técnicas y certificaciones en ciberseguridad y redes de Osvaldo Hernández."
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+    
+    .cisco-gradient {
+      background: linear-gradient(135deg, #005073 0%, #1ba0d7 100%);
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+
+      {/* --- ENCABEZADO --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        Certificaciones y Reflexiones
+      </TitleSection>
+
+      <p class="text-xs font-mono text-gray-500 mb-10 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        // LOG DE DESARROLLO PROFESIONAL · VALIDACIÓN DE COMPETENCIAS
+      </p>
+
+      {/* ── LISTA DE CERTIFICACIONES (DISEÑO EXPANDIDO) ── */}
+      <div class="flex flex-col gap-12">
+        {CERTIFICACIONES.map((cert, index) => (
+          <article class="flex flex-col md:flex-row gap-8 p-1 rounded-2xl border border-gray-200 dark:border-blue-900/30 bg-white dark:bg-[#0d1117] shadow-lg overflow-hidden group">
+            
+            {/* Columna Izquierda: Imagen y Metadatos */}
+            <div class="w-full md:w-1/3 flex flex-col gap-4 p-6 bg-gray-50 dark:bg-[#161b22] rounded-xl border border-gray-100 dark:border-gray-800">
+              
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-blue-500/60 font-bold text-lg">// 0{index + 1}</span>
+                <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 font-mono text-xs font-bold">
+                  <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  Verified
+                </span>
+              </div>
+
+              <div class="relative w-full aspect-square mt-2 overflow-hidden rounded-xl flex items-center justify-center p-2">
+                <img 
+                  src={cert.image} 
+                  alt={`Badge de ${cert.title}`}
+                  class="w-[85%] object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)] group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+              </div>
+
+              <div class="mt-auto text-center md:text-left space-y-1">
+                <p class="text-xs text-gray-500 font-mono uppercase tracking-widest">Instructor</p>
+                <p class="text-sm font-bold text-gray-800 dark:text-gray-300">{cert.instructor}</p>
+                <div class="flex items-center justify-center md:justify-start gap-2 mt-3 pt-3 border-t border-gray-200 dark:border-gray-800">
+                  <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Cisco Networking Academy</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Columna Derecha: Contenido y Reflexión */}
+            <div class="w-full md:w-2/3 p-6 md:p-8 md:pl-0 flex flex-col">
+              
+              <h3 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                {cert.title}
+              </h3>
+              <p class="text-sm font-mono text-blue-600 dark:text-blue-400 mb-6">
+                {cert.issuer} &nbsp;·&nbsp; {cert.date}
+              </p>
+
+              {/* Tags */}
+              <div class="flex flex-wrap gap-2 mb-8">
+                {cert.tags.map(tag => (
+                  <span class="px-3 py-1 text-xs font-mono font-medium rounded-md bg-gray-100 dark:bg-blue-950/30 text-gray-700 dark:text-blue-300 border border-gray-200 dark:border-blue-800/50">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              {/* Botones */}
+              <div class="flex flex-col sm:flex-row gap-4 mb-10">
+                <a 
+                  href={cert.pdf}
+                  download={`${cert.title.replace(/ /g, "_")}.pdf`}
+                  class="flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-bold text-white cisco-gradient rounded-lg hover:shadow-lg hover:shadow-blue-500/20 transition-all active:scale-95"
+                >
+                  <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                  DESCARGAR CERTIFICADO
+                </a>
+                <a 
+                  href={cert.credly}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-bold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-all active:scale-95"
+                >
+                  <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                  VER BADGE DIGITAL
+                </a>
+              </div>
+
+              {/* Reseña Técnica */}
+              <div class="mt-auto bg-gray-50 dark:bg-gray-900/40 p-5 rounded-xl border-l-4 border-blue-500">
+                <h4 class="text-xs font-mono font-bold text-blue-600 dark:text-blue-400 mb-3 uppercase tracking-wider">
+                  // Reseña Técnica
+                </h4>
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed text-justify">
+                  {cert.reflection}
+                </p>
+              </div>
+
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {/* ── BOTÓN DE RETORNO AL HOME ── */}
+      <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800 flex justify-center">
+        <a 
+          href="/#certificados" 
+          class="text-gray-500 hover:text-blue-400 hover:underline flex items-center gap-2 text-sm font-mono transition"
+        >
+          &lt;-- Regresar a la pagina principal
+        </a>
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>

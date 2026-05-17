@@ -1,0 +1,848 @@
+---
+// src/components/PanCarga.astro
+// Pantalla de carga ransomware con iconos SVG y colores azul/rojo
+---
+
+<div id="pantalla-ransomware" class="pantalla-carga">
+    <!-- === HEADER AMENAZA === -->
+    <div class="threat-header">
+        <div class="threat-indicator">
+            <div class="pulse-dot"></div>
+            <div class="threat-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+            </div>
+            <span class="threat-status">SISTEMA COMPROMETIDO</span>
+        </div>
+    </div>
+
+    <!-- === CONTENIDO PRINCIPAL === -->
+    <div class="main-container">
+        <!-- Lado izquierdo: Terminal -->
+        <div class="terminal-section">
+            <div class="terminal-header">
+                <div class="terminal-dots">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                </div>
+                <div class="terminal-icons">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3"></polyline>
+                    </svg>
+                </div>
+                <span class="terminal-title">CRYPTO_SCANNER.EXE</span>
+            </div>
+            
+            <div class="terminal-content">
+                <div class="terminal-line">
+                    <span class="prompt">➜</span>
+                    <span class="command">initialize_encryption_protocol</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="output">[████████░░░░░░░░░░] 25% Analyzing system structure...</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="prompt">➜</span>
+                    <span class="command">scan_critical_files --recursive</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="output">[████████████░░░░░░] 60% Processing database files...</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="prompt">➜</span>
+                    <span class="command">verify_integrity --all --force</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="output">[██████████████████░] 95% Finalizing verification...</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="prompt">➜</span>
+                    <span class="command blinking">waiting_for_completion...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lado derecho: Panel de Amenaza -->
+        <div class="threat-panel">
+            <!-- Warning Box -->
+            <div class="warning-box">
+                <div class="warning-icon-container">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="9" y1="9" x2="15" y2="9"></line>
+                        <line x1="9" y1="13" x2="15" y2="13"></line>
+                        <line x1="9" y1="17" x2="13" y2="17"></line>
+                    </svg>
+                </div>
+                <div class="warning-title">ALERTA CRÍTICA DE SEGURIDAD</div>
+                <div class="warning-description">
+                    Sus archivos han sido <span class="highlight-critical">encriptados</span> con algoritmo de nivel militar AES-256-GCM
+                </div>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="progress-section">
+                <div class="progress-header">
+                    <div class="progress-label">VERIFICACIÓN DE INTEGRIDAD</div>
+                    <div class="lock-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div id="progress-bar-container" class="progress-container">
+                    <div id="progress-bar-fill" class="progress-fill"></div>
+                    <div class="progress-glow"></div>
+                </div>
+
+                <div id="progress-counter" class="progress-percentage">0%</div>
+            </div>
+
+            <!-- Stats Box -->
+            <div class="stats-box">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <span class="stat-label">Archivos Detectados:</span>
+                    <span class="stat-value">4,782</span>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <path d="M12 6v6m0 6v.01"></path>
+                        </svg>
+                    </div>
+                    <span class="stat-label">Tiempo de Escaneo:</span>
+                    <span class="stat-value">Ilimitado</span>
+                </div>
+                <div class="stat-item critical">
+                    <div class="stat-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3.05h16.94a2 2 0 0 0 1.71-3.05L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </div>
+                    <span class="stat-label">Vulnerabilidades:</span>
+                    <span class="stat-value">47</span>
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="instructions">
+                <div class="instruction-header">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
+                    </svg>
+                    <span>NO INTENTE REALIZAR:</span>
+                </div>
+                <div class="instruction-list">
+                    <div class="instruction-item">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        Apagar el sistema
+                    </div>
+                    <div class="instruction-item">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        Cerrar esta ventana
+                    </div>
+                    <div class="instruction-item">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        Modo seguro o recuperación
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- === FOOTER === -->
+    <div class="footer-section">
+        <div class="footer-content">
+            <div class="footer-item">
+                <span class="footer-label">SESSION:</span>
+                <span>PORTFOLIO-USER-ID-V4.2</span>
+            </div>
+            <div class="footer-divider"></div>
+            <div class="footer-item">
+                <span class="footer-label">ENCRYPTION:</span>
+                <span>AES-256-GCM</span>
+            </div>
+            <div class="footer-divider"></div>
+            <div class="footer-item">
+                <span class="footer-label">THREAT LEVEL:</span>
+                <span class="threat-level">CRÍTICO</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- === EFECTOS DE FONDO === -->
+    <div class="background-grid"></div>
+    <div class="scan-lines"></div>
+</div>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .pantalla-carga {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(135deg, #0a1628 0%, #0f2847 50%, #0a1628 100%);
+        color: #60a5fa;
+        font-family: 'Courier New', 'Monaco', monospace;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 99999;
+        overflow: hidden;
+        user-select: none;
+    }
+
+    /* === EFECTOS DE FONDO === */
+    .background-grid {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-image:
+            linear-gradient(0deg, transparent 24%, rgba(59, 130, 246, 0.03) 25%, rgba(59, 130, 246, 0.03) 26%, transparent 27%, transparent 74%, rgba(59, 130, 246, 0.03) 75%, rgba(59, 130, 246, 0.03) 76%, transparent 77%, transparent),
+            linear-gradient(90deg, transparent 24%, rgba(59, 130, 246, 0.03) 25%, rgba(59, 130, 246, 0.03) 26%, transparent 27%, transparent 74%, rgba(59, 130, 246, 0.03) 75%, rgba(59, 130, 246, 0.03) 76%, transparent 77%, transparent);
+        background-size: 50px 50px;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .scan-lines {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+            0deg,
+            rgba(220, 38, 38, 0.02),
+            rgba(220, 38, 38, 0.02) 1px,
+            transparent 1px,
+            transparent 2px
+        );
+        pointer-events: none;
+        animation: flicker 0.15s infinite;
+        z-index: 2;
+    }
+
+    @keyframes flicker {
+        0% { opacity: 0.98; }
+        50% { opacity: 0.99; }
+        100% { opacity: 0.98; }
+    }
+
+    /* === HEADER === */
+    .threat-header {
+        position: relative;
+        width: 100%;
+        padding: 20px;
+        border-bottom: 2px solid rgba(220, 38, 38, 0.6);
+        background: linear-gradient(90deg, rgba(30, 58, 138, 0.4) 0%, transparent 100%);
+        z-index: 10;
+    }
+
+    .threat-indicator {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .pulse-dot {
+        width: 12px;
+        height: 12px;
+        background: #dc2626;
+        border-radius: 50%;
+        animation: pulse 1.5s infinite;
+        box-shadow: 0 0 15px #dc2626;
+    }
+
+    @keyframes pulse {
+        0%, 100% { box-shadow: 0 0 15px #dc2626; }
+        50% { box-shadow: 0 0 30px #dc2626; }
+    }
+
+    .threat-icon {
+        color: #dc2626;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .threat-status {
+        font-size: 16px;
+        font-weight: bold;
+        color: #dc2626;
+        text-shadow: 0 0 10px rgba(220, 38, 38, 0.8);
+        letter-spacing: 2px;
+    }
+
+    /* === CONTENEDOR PRINCIPAL === */
+    .main-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        padding: 40px;
+        width: 100%;
+        max-width: 1400px;
+        flex: 1;
+        position: relative;
+        z-index: 10;
+    }
+
+    /* === TERMINAL === */
+    .terminal-section {
+        background: rgba(3, 30, 66, 0.7);
+        border: 2px solid rgba(59, 130, 246, 0.4);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
+        backdrop-filter: blur(10px);
+    }
+
+    .terminal-header {
+        background: rgba(15, 23, 42, 0.9);
+        padding: 10px 15px;
+        border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .terminal-dots {
+        display: flex;
+        gap: 6px;
+    }
+
+    .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+    }
+
+    .dot.red { background: #dc2626; }
+    .dot.yellow { background: #eab308; }
+    .dot.green { background: #22c55e; }
+
+    .terminal-icons {
+        color: #60a5fa;
+        display: flex;
+        align-items: center;
+    }
+
+    .terminal-title {
+        font-size: 12px;
+        color: #60a5fa;
+        margin-left: 10px;
+        flex: 1;
+        text-align: left;
+    }
+
+    .terminal-content {
+        padding: 20px;
+        font-size: 13px;
+        line-height: 1.8;
+        overflow-y: auto;
+        height: 300px;
+    }
+
+    .terminal-line {
+        margin-bottom: 8px;
+        display: flex;
+        gap: 8px;
+    }
+
+    .prompt {
+        color: #06b6d4;
+        font-weight: bold;
+    }
+
+    .command {
+        color: #60a5fa;
+        animation: typing 2s steps(40, end) infinite;
+    }
+
+    .command.blinking::after {
+        content: '█';
+        animation: blink 1s infinite;
+        margin-left: 4px;
+    }
+
+    @keyframes typing {
+        from { width: 0; }
+        to { width: 100%; }
+    }
+
+    @keyframes blink {
+        0%, 50% { opacity: 1; }
+        51%, 100% { opacity: 0; }
+    }
+
+    .output {
+        color: #fbbf24;
+        opacity: 0.8;
+    }
+
+    /* === PANEL DE AMENAZA === */
+    .threat-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .warning-box {
+        background: linear-gradient(135deg, rgba(30, 58, 138, 0.3) 0%, rgba(15, 23, 42, 0.2) 100%);
+        border: 2px solid rgba(59, 130, 246, 0.5);
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+        backdrop-filter: blur(10px);
+    }
+
+    .warning-icon-container {
+        font-size: 48px;
+        margin-bottom: 12px;
+        color: #dc2626;
+        display: flex;
+        justify-content: center;
+        animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .warning-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: #60a5fa;
+        text-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+        margin-bottom: 8px;
+        letter-spacing: 1px;
+    }
+
+    .warning-description {
+        font-size: 13px;
+        color: #cbd5e1;
+        line-height: 1.4;
+    }
+
+    .highlight-critical {
+        color: #dc2626;
+        text-shadow: 0 0 5px #dc2626;
+        font-weight: bold;
+    }
+
+    /* === PROGRESS SECTION === */
+    .progress-section {
+        background: rgba(3, 30, 66, 0.6);
+        border: 2px solid rgba(59, 130, 246, 0.4);
+        border-radius: 8px;
+        padding: 20px;
+        backdrop-filter: blur(10px);
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .progress-label {
+        font-size: 11px;
+        color: #06b6d4;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-weight: bold;
+    }
+
+    .lock-icon {
+        color: #dc2626;
+        display: flex;
+        align-items: center;
+    }
+
+    #progress-bar-container {
+        position: relative;
+        width: 100%;
+        height: 30px;
+        background: rgba(15, 23, 42, 0.9);
+        border: 2px solid rgba(59, 130, 246, 0.6);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 15px;
+    }
+
+    #progress-bar-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #3b82f6, #0ea5e9);
+        transition: width 0.1s linear;
+        position: relative;
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+    }
+
+    #progress-bar-fill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    .progress-glow {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at var(--progress), rgba(59, 130, 246, 0.3), transparent);
+        pointer-events: none;
+    }
+
+    #progress-counter {
+        text-align: center;
+        font-size: 32px;
+        font-weight: bold;
+        color: #0ea5e9;
+        text-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+        letter-spacing: 2px;
+    }
+
+    /* === STATS BOX === */
+    .stats-box {
+        background: rgba(3, 30, 66, 0.6);
+        border: 2px solid rgba(59, 130, 246, 0.4);
+        border-radius: 8px;
+        padding: 16px;
+        backdrop-filter: blur(10px);
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        font-size: 12px;
+        border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .stat-item:last-child {
+        border-bottom: none;
+    }
+
+    .stat-item.critical {
+        color: #dc2626;
+    }
+
+    .stat-icon {
+        color: inherit;
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    .stat-label {
+        color: #06b6d4;
+        flex: 1;
+    }
+
+    .stat-value {
+        color: #60a5fa;
+        font-weight: bold;
+    }
+
+    .stat-item.critical .stat-label {
+        color: #dc2626;
+    }
+
+    .stat-item.critical .stat-value {
+        color: #ff4757;
+    }
+
+    /* === INSTRUCTIONS === */
+    .instructions {
+        background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(30, 58, 138, 0.1) 100%);
+        border: 2px dashed rgba(220, 38, 38, 0.4);
+        border-radius: 6px;
+        padding: 12px;
+    }
+
+    .instruction-header {
+        font-size: 11px;
+        color: #dc2626;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .instruction-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .instruction-item {
+        font-size: 11px;
+        color: #fca5a5;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .instruction-item svg {
+        color: #dc2626;
+        flex-shrink: 0;
+    }
+
+    /* === FOOTER === */
+    .footer-section {
+        width: 100%;
+        padding: 15px;
+        border-top: 2px solid rgba(59, 130, 246, 0.4);
+        background: rgba(3, 30, 66, 0.5);
+        z-index: 10;
+        position: relative;
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .footer-item {
+        display: flex;
+        gap: 6px;
+        font-size: 10px;
+        letter-spacing: 0.5px;
+    }
+
+    .footer-label {
+        color: #06b6d4;
+        font-weight: bold;
+    }
+
+    .footer-item span:not(.footer-label) {
+        color: #60a5fa;
+    }
+
+    .footer-divider {
+        width: 1px;
+        height: 14px;
+        background: rgba(59, 130, 246, 0.3);
+    }
+
+    .threat-level {
+        color: #dc2626;
+        text-shadow: 0 0 8px rgba(220, 38, 38, 0.8);
+        font-weight: bold;
+    }
+
+    /* === FADE OUT ANIMATION === */
+    .fade-out {
+        animation: fadeOut 1s forwards;
+    }
+
+    @keyframes fadeOut {
+        0% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.5;
+        }
+        100% {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.95);
+        }
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 1024px) {
+        .main-container {
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .terminal-content {
+            height: 200px;
+        }
+
+        .threat-status {
+            font-size: 14px;
+        }
+
+        #progress-counter {
+            font-size: 24px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .pantalla-carga {
+            padding: 10px;
+        }
+
+        .threat-header {
+            padding: 15px;
+        }
+
+        .main-container {
+            gap: 15px;
+            padding: 15px;
+        }
+
+        .terminal-section {
+            display: none;
+        }
+
+        .threat-panel {
+            width: 100%;
+        }
+
+        .warning-icon-container {
+            font-size: 36px;
+        }
+
+        .warning-title {
+            font-size: 16px;
+        }
+
+        .threat-status {
+            font-size: 12px;
+        }
+
+        #progress-counter {
+            font-size: 28px;
+        }
+
+        .stat-item {
+            font-size: 11px;
+        }
+
+        .progress-label {
+            font-size: 10px;
+        }
+
+        .instruction-item {
+            font-size: 10px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .main-container {
+            padding: 12px;
+            gap: 12px;
+        }
+
+        .threat-header {
+            padding: 12px;
+        }
+
+        .threat-status {
+            font-size: 11px;
+        }
+
+        .warning-title {
+            font-size: 14px;
+        }
+
+        #progress-counter {
+            font-size: 24px;
+        }
+
+        .footer-item {
+            font-size: 9px;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const progressFill = document.getElementById('progress-bar-fill');
+        const progressCounter = document.getElementById('progress-counter');
+        const loadingScreen = document.getElementById('pantalla-ransomware');
+        let progress = 0;
+
+        // Validación de elementos
+        if (!loadingScreen || !progressFill || !progressCounter) return;
+
+        const updateProgress = () => {
+            progressFill.style.width = `${progress}%`;
+            progressCounter.textContent = `${progress}%`;
+            // Actualizar variable CSS para el gradiente de glow
+            loadingScreen.style.setProperty('--progress', `${progress}%`);
+        };
+
+        const interval = setInterval(() => {
+            const increment = Math.floor(Math.random() * 8) + 2;
+            progress += increment;
+
+            if (progress >= 100) {
+                progress = 100;
+                updateProgress();
+                clearInterval(interval);
+
+                // Espera un poco y luego inicia la transición
+                setTimeout(() => {
+                    loadingScreen.classList.add('fade-out');
+
+                    // Borra el elemento del DOM después de la animación
+                    setTimeout(() => {
+                        loadingScreen.remove();
+                    }, 1000);
+
+                }, 800);
+
+            } else {
+                updateProgress();
+            }
+        }, 180);
+    });
+</script>

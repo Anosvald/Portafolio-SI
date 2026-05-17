@@ -1,0 +1,266 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// ── Íconos
+import Shield from "../../components/Icons/Shield.astro"
+import Bolt from "../../components/Icons/Bolt.astro"
+import Security from "../../components/Icons/Security.astro"
+import Spy from "../../components/Icons/Spy.astro"
+import Key from "../../components/Icons/Key.astro"
+import Bug from "../../components/Icons/Virus.astro" 
+import Settings from "../../components/Icons/Settings.astro"
+import Wifi from "../../components/Icons/Wifi.astro" 
+
+const INFO_TAREA = {
+  titulo: "Actividad 15: Ingeniería Social — Campaña de Phishing con SET",
+  fecha: "27 de Abril, 2026",
+  descripcion: "Diseño e implementación de una infraestructura SMTP ofensiva utilizando Postfix y el Social-Engineer Toolkit (SET) en Kali Linux para simular una campaña de Phishing corporativa dirigida y evadir filtros antispam.",
+  pdf: "/pdfs/act15-Equipo5.pdf",
+  imagen1: "/projects/Imagen1Tarea15.png",
+  imagen2: "/projects/Imagen2Tarea15.png"
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+
+      {/* --- ENCABEZADO --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* Banner THREAT LEVEL */}
+      <div class="mb-10 flex items-center gap-3 px-4 py-3 rounded-lg bg-orange-950/40 border border-orange-500/30">
+        <Spy class="size-5 text-orange-400 shrink-0 animate-pulse" />
+        <p class="text-orange-300 text-sm font-medium">
+          Módulo de Ingeniería Social: Explotación del factor humano mediante suplantación de identidad e infraestructura de correo no rastreable.
+        </p>
+        <span class="ml-auto text-xs font-mono text-orange-500/60 hidden sm:block">TYPE: SOCIAL ENGINEERING</span>
+      </div>
+
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-12">
+
+        {/* ── CONCEPTO CLAVE: EL PHISHING ── */}
+        <div>
+          <p class="text-xs font-mono text-gray-500 mb-1">// FUNDAMENTO TEÓRICO — EL FACTOR HUMANO</p>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">¿Qué es el Phishing?</h3>
+          <p>
+            El <strong>Phishing</strong> es una técnica de cibercrimen encuadrada dentro de la Ingeniería Social. Consiste en el envío de comunicaciones fraudulentas (generalmente correos electrónicos) que parecen provenir de una fuente legítima y confiable (bancos, universidades, entidades gubernamentales o empresas reconocidas).
+          </p>
+          <p class="mt-3">
+            A diferencia de los ataques técnicos que buscan explotar una falla en el software, el phishing ataca la <strong>psicología humana</strong>. Su objetivo es manipular a la víctima generando un sentido de urgencia, miedo o curiosidad para que revele información confidencial (credenciales, números de tarjetas de crédito) o para que ejecute un archivo adjunto que instale malware en su sistema.
+          </p>
+        </div>
+
+        {/* ── TIPOS DE PHISHING ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Security class="size-6 text-orange-400" />
+            Variantes y Tipologías del Ataque
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <div class="p-4 rounded-lg border border-gray-700 bg-gray-900/40 hover:border-orange-500/40 transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Wifi class="size-5 text-orange-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Bulk Phishing (Masivo)</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                El enfoque clásico. Se envían miles o millones de correos electrónicos genéricos esperando que un pequeño porcentaje de víctimas caiga en la trampa. Suele ser fácilmente detectable por filtros antispam modernos.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-gray-700 bg-gray-900/40 hover:border-red-500/40 transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Spy class="size-5 text-red-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Spear Phishing</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Ataque altamente dirigido y personalizado. El atacante investiga previamente a su víctima (OSINT) y adapta el correo con su nombre, cargo y contexto laboral, incrementando drásticamente la tasa de éxito.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-gray-700 bg-gray-900/40 hover:border-purple-500/40 transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Bolt class="size-5 text-purple-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Whaling (Caza de Ballenas)</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Una subcategoría del Spear Phishing que apunta exclusivamente a ejecutivos de alto perfil (CEOs, CFOs) con el fin de comprometer cuentas con acceso a transferencias financieras o secretos corporativos de alto valor.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-gray-700 bg-gray-900/40 hover:border-blue-500/40 transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Key class="size-5 text-blue-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Clone Phishing</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                El atacante intercepta un correo legítimo enviado anteriormente, lo clona exactamente igual, pero reemplaza los enlaces o archivos adjuntos por versiones maliciosas, reenviándolo como si fuera una "actualización".
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ── ARQUITECTURA DEL ATAQUE: SET + POSTFIX ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Settings class="size-6 text-gray-400" />
+            Arquitectura de la Campaña Simulada
+          </h3>
+          <p class="text-sm text-gray-400 mb-4">
+            Para la práctica, se implementó una cadena de envío en tres etapas diseñada específicamente para evadir los controles de seguridad y asegurar la entrega en la bandeja de entrada (Inbox) de las víctimas objetivo:
+          </p>
+          <div class="space-y-4">
+            <div class="p-4 bg-gray-900/30 border border-gray-800 rounded-lg">
+              <span class="font-mono text-xs text-blue-400 block mb-1">1. Social-Engineer Toolkit (SET) en Kali Linux</span>
+              <p class="text-xs text-gray-400 leading-relaxed">
+                Herramienta open-source escrita por Dave Kennedy (TrustedSec). Se utilizó el módulo de "Mass Mailer Attack" para estructurar el correo (Asunto, remitente falso y carga útil en HTML), actuando como la interfaz táctica del atacante.
+              </p>
+            </div>
+            <div class="p-4 bg-gray-900/30 border border-gray-800 rounded-lg">
+              <span class="font-mono text-xs text-purple-400 block mb-1">2. Agente de Transferencia de Correo (MTA - Postfix)</span>
+              <p class="text-xs text-gray-400 leading-relaxed">
+                Se endureció y configuró el servicio local <code>Postfix</code> dentro de Kali Linux para recibir los correos generados por SET y encargarse del enrutamiento hacia el exterior.
+              </p>
+            </div>
+            <div class="p-4 bg-gray-900/30 border border-gray-800 rounded-lg">
+              <span class="font-mono text-xs text-orange-400 block mb-1">3. Servicio de SMTP Relay (Evasión de Reputación IP)</span>
+              <p class="text-xs text-gray-400 leading-relaxed">
+                Enviar correos directamente desde una IP residencial/virtual hacia servidores corporativos resulta en bloqueos inmediatos por reputación. Para evadir esto, Postfix se configuró para retransmitir los correos a través de un servicio de <em>SMTP Relay</em> profesional autenticado, enmascarando el origen y permitiendo la entrega ("Delivered").
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── TERMINAL MOCKUP: LOGS Y TRAZABILIDAD ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">Laboratorio: Trazabilidad del Ataque</h3>
+          <p class="mb-4 text-sm text-gray-400">
+            A continuación se presenta el ciclo de vida del mensaje enviado durante la campaña controlada, extraído de los registros del Relay. Esto permite al auditor comprobar la eficacia de los filtros antispam del objetivo:
+          </p>
+
+          <div class="relative bg-[#0d1117] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#161b22] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">SMTP Relay — Delivery Logs Dashboard</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-sm leading-relaxed">
+<span class="text-gray-500"># [EVENT]          [RECIPIENT]                         [SUBJECT]</span>
+<span class="text-purple-400">7:45:43 PM</span>   <span class="text-red-500">[Hard Bounce]</span>  root@upslp-edu.xyz                  *** SECURITY information for kali ***
+<span class="text-gray-500">└─ Detalle: El dominio destino no existe o tiene bloqueos restrictivos.</span>
+
+<span class="text-purple-400">7:45:23 PM</span>   <span class="text-green-400">[Delivered]</span>    182217@upslp.edu.mx                 Have you seen this?
+<span class="text-gray-500">└─ Detalle: Servidor de la universidad aceptó la conexión. Evasión exitosa.</span>
+
+<span class="text-purple-400">7:17:15 PM</span>   <span class="text-green-400">[Delivered]</span>    182217@upslp.edu.mx                 Have you seen this?
+<span class="text-gray-500">└─ Detalle: Entrega de Spear Phishing confirmada en bandeja de entrada.</span>
+
+<span class="text-purple-400">10:11:14 PM</span>  <span class="text-yellow-400">[Rejected]</span>     osvaldo.hernandez1311@gmail.com     AVISO: Seguridad de cuenta UPSLP
+<span class="text-gray-500">└─ Detalle: Gmail rechazó el paquete por fallo en validación SPF/DKIM.</span>
+              </pre>
+            </div>
+          </div>
+        </div>
+
+        {/* ── DEFENSA Y PREVENCIÓN ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Shield class="size-6 text-green-400" />
+            Mitigación y Defensa Corporativa
+          </h3>
+          <p class="text-sm text-gray-400 mb-4">
+            Al tratarse de una vulnerabilidad humana, las soluciones puramente tecnológicas son insuficientes. Se requiere un enfoque híbrido:
+          </p>
+          <div class="space-y-3 bg-gray-900/40 p-5 rounded-xl border border-gray-800">
+            <div class="flex gap-4 items-start text-sm">
+              <span class="text-green-400 font-mono font-bold whitespace-nowrap">[INFRAESTRUCTURA]</span>
+              <p class="text-gray-300">Implementar estrictamente los registros DNS de seguridad <strong>SPF</strong> (Sender Policy Framework), <strong>DKIM</strong> (DomainKeys Identified Mail) y <strong>DMARC</strong>. Esto impide que herramientas como SET falsifiquen el dominio de la empresa (Spoofing) y provoca que los correos sean rechazados por los servidores de destino modernos.</p>
+            </div>
+            <div class="flex gap-4 items-start text-sm">
+              <span class="text-blue-400 font-mono font-bold whitespace-nowrap">[FACTOR HUMANO]</span>
+              <p class="text-gray-300">Desarrollar programas continuos de concientización en ciberseguridad (Security Awareness Training). Realizar campañas de phishing ético interno para entrenar a los empleados a detectar banderas rojas (urgencia, dominios mal escritos, enlaces extraños).</p>
+            </div>
+            <div class="flex gap-4 items-start text-sm">
+              <span class="text-yellow-400 font-mono font-bold whitespace-nowrap">[PROTECCIÓN MFA]</span>
+              <p class="text-gray-300">Implementar Autenticación Multifactor (MFA/2FA) en todos los portales críticos. De esta manera, aunque un empleado caiga en el phishing y entregue su contraseña, el atacante no podrá acceder al sistema sin el token físico o temporal.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── EVIDENCIA VISUAL ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80">Evidencia del Laboratorio</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <figure class="relative transition-all duration-300 hover:scale-[1.01]">
+              <img 
+                class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-800" 
+                src={INFO_TAREA.imagen1} 
+                alt="Consola de configuración de Postfix y Kali Linux" 
+              />
+              <figcaption class="mt-2 text-center text-sm text-gray-500 italic">
+                Figura 1: Preparación del Agente de Transferencia de Correo (MTA) en el nodo atacante.
+              </figcaption>
+            </figure>
+            
+            <figure class="relative transition-all duration-300 hover:scale-[1.01]">
+              <img 
+                class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-800" 
+                src={INFO_TAREA.imagen2} 
+                alt="Panel de SET y logs de envío SMTP" 
+              />
+              <figcaption class="mt-2 text-center text-sm text-gray-500 italic">
+                Figura 2: Generación del vector de ataque con Social-Engineer Toolkit (SET).
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+      </div>
+
+      {/* --- ZONA DE DESCARGA Y RETORNO --- */}
+      <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        
+        <a 
+          href={INFO_TAREA.pdf} 
+          download="act15-Equipo5.pdf" 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-orange-600 rounded-full hover:bg-orange-700 hover:shadow-lg hover:shadow-orange-500/30"
+        >
+          <Link class="size-5" />
+          Descargar PDF de la Tarea
+        </a>
+        
+        <a 
+          href="/#tareas" 
+          class="text-gray-500 hover:text-orange-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>

@@ -1,0 +1,255 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// ── Íconos Temáticos
+import Shield from "../../components/Icons/Shield.astro"
+import Bolt from "../../components/Icons/Bolt.astro"
+import Security from "../../components/Icons/Security.astro"
+import Books from "../../components/Icons/Books.astro"
+import ProfileCheck from "../../components/Icons/ProfileCheck.astro" // Para representar al profesional
+import Settings from "../../components/Icons/Settings.astro" // Para marcos éticos
+
+const INFO_TAREA = {
+  titulo: "Actividad 16: Dilemas Éticos en la Ciberseguridad",
+  fecha: "15 de Mayo, 2026",
+  descripcion: "Análisis crítico de escenarios de conflicto ético y legal en el ejercicio de la seguridad informática. Evaluación bajo marcos de ética utilitarista, enfoque de derechos y el bien común, fundamentado en el Código Penal Federal.",
+  pdf: "/pdfs/182217-Act16.pdf",
+  imagen1: "/projects/Imagen1Tarea16.png"
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+
+      {/* --- ENCABEZADO --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* Banner ÉTICA PROFESIONAL */}
+      <div class="mb-10 flex items-center gap-3 px-4 py-3 rounded-lg bg-blue-950/40 border border-blue-500/30">
+        <Shield class="size-5 text-blue-400 shrink-0" />
+        <p class="text-blue-300 text-sm font-medium">
+          Módulo de Ética y Legislación: "Un gran poder conlleva una gran responsabilidad". El fin no justifica los medios.
+        </p>
+        <span class="ml-auto text-xs font-mono text-blue-500/60 hidden sm:block">FRAMEWORK: IEEE/ACM ETHICS</span>
+      </div>
+
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-12">
+
+        {/* ── INTRODUCCIÓN ── */}
+        <div>
+          <p class="text-xs font-mono text-gray-500 mb-1">// FUNDAMENTO FILOSÓFICO</p>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">La Ética en la Era Digital</h3>
+          <p>
+            El profesional de ciberseguridad posee habilidades que pueden ser utilizadas tanto para la protección como para el perjuicio. Los <strong>dilemas éticos</strong> surgen cuando los objetivos técnicos (seguridad) entran en conflicto con valores fundamentales (privacidad, integridad, legalidad). 
+          </p>
+          <p class="mt-3">
+            En esta práctica, analizamos tres escenarios críticos donde la decisión del especialista define no solo su integridad profesional, sino también su responsabilidad legal ante marcos como el <strong>Código Penal Federal (CPF)</strong> y la <strong>LFPDPPP</strong>.
+          </p>
+        </div>
+
+        {/* ── ANÁLISIS DE ESCENARIOS (TARJETAS DINÁMICAS) ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Security class="size-6 text-blue-400" />
+            Análisis de Casos Críticos
+          </h3>
+          <div class="grid grid-cols-1 gap-6">
+
+            {/* Escenario 1 */}
+            <div class="p-6 rounded-xl border border-gray-800 bg-gray-900/30">
+              <div class="flex items-center justify-between mb-4">
+                <h4 class="text-lg font-bold text-blue-400">Escenario 01: Acceso Interno No Autorizado</h4>
+                <span class="px-2 py-1 text-xs font-mono bg-red-900/30 text-red-400 border border-red-500/20 rounded">PRIVACY_VIOLATION</span>
+              </div>
+              <p class="text-sm text-gray-400 mb-4">Un compañero accede a los correos del Director General sin permiso argumentando "fugas de información".</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div class="space-y-2">
+                  <p class="font-bold text-gray-200 underline">Decisión Ética:</p>
+                  <p>Documentar logs, notificar a Compliance/Legal y proponer canales de auditoría formales. El espionaje mutuo erosiona el <strong>Bien Común</strong>.</p>
+                </div>
+                <div class="space-y-2">
+                  <p class="font-bold text-gray-200 underline">Clasificación Legal (México):</p>
+                  <p><strong>Delito Informático (Art. 211bis2 CPF)</strong>: Acceso ilícito a sistemas. Penas de 6 meses a 2 años de prisión.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Escenario 2 */}
+            <div class="p-6 rounded-xl border border-gray-800 bg-gray-900/30">
+              <div class="flex items-center justify-between mb-4">
+                <h4 class="text-lg font-bold text-yellow-400">Escenario 02: Vulnerabilidad Financiera Crítica</h4>
+                <span class="px-2 py-1 text-xs font-mono bg-yellow-900/30 text-yellow-400 border border-yellow-500/20 rounded">RESPONSIBLE_DISCLOSURE</span>
+              </div>
+              <p class="text-sm text-gray-400 mb-4">Se halla un bug bancario antes de firmar contrato. La tentación de explotarlo es inminente.</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div class="space-y-2">
+                  <p class="font-bold text-gray-200 underline">Decisión Ética:</p>
+                  <p>Aplicar <strong>Ética Utilitarista</strong>: El daño masivo a usuarios supera cualquier beneficio personal. Notificar responsablemente.</p>
+                </div>
+                <div class="space-y-2">
+                  <p class="font-bold text-gray-200 underline">Clasificación Legal (México):</p>
+                  <p>Potencial <strong>Fraude Informático (Art. 386 CPF)</strong>. La ética del hacker es independiente del estado contractual.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Escenario 3 */}
+            <div class="p-6 rounded-xl border border-gray-800 bg-gray-900/30">
+              <div class="flex items-center justify-between mb-4">
+                <h4 class="text-lg font-bold text-purple-400">Escenario 03: OSINT para Coerción Psicológica</h4>
+                <span class="px-2 py-1 text-xs font-mono bg-purple-900/30 text-purple-400 border border-purple-500/20 rounded">COERCION_ATTEMPT</span>
+              </div>
+              <p class="text-sm text-gray-400 mb-4">Un superior ordena usar datos familiares (fuentes abiertas) para presionar a un sospechoso de fraude.</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div class="space-y-2">
+                  <p class="font-bold text-gray-200 underline">Decisión Ética:</p>
+                  <p>Negativa formal documentada. La obediencia jerárquica no exime de la responsabilidad moral de no dañar la integridad humana.</p>
+                </div>
+                <div class="space-y-2">
+                  <p class="font-bold text-gray-200 underline">Clasificación Legal (México):</p>
+                  <p><strong>Delito Asistido por Computadora (Art. 288 CPF)</strong>: Coacción, acoso y violación a la LFPDPPP.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ── MONITOR DE CUMPLIMIENTO (ESTILO TERMINAL) ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">Monitor de Auditoría Ética</h3>
+          <p class="mb-4 text-sm text-gray-400">
+            Resumen de los Mandamientos de la Ética Informática (CEI) vulnerados en las malas prácticas analizadas:
+          </p>
+
+          <div class="relative bg-[#0d1117] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#161b22] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">ethics_audit — analysis --verbose</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-xs leading-relaxed">
+<span class="text-gray-500">[SCANNING COMPLIANCE...]</span>
+<span class="text-red-400">[VULN] Command 01: Use computers to harm others ........... FAIL (Scenario 01 & 03)</span>
+<span class="text-red-400">[VULN] Command 03: Snoop in other's private files ........ FAIL (Scenario 01)</span>
+<span class="text-red-400">[VULN] Command 04: Use computers to steal ................ FAIL (Scenario 02 Potential)</span>
+<span class="text-red-400">[VULN] Command 09: Ignore social consequences ............ FAIL (All Scenarios)</span>
+<span class="text-green-400">[PASS] Command 10: Use PC with respect and consideration . OK (Followed by Specialist)</span>
+
+<span class="text-blue-400">Audit Conclusion:</span> Un profesional de TI debe actuar bajo el principio del 
+<strong>Responsible Disclosure</strong> y el respeto irrestricto a la privacidad 
+constitucional (Art. 16).
+<span class="animate-pulse">_</span>
+              </pre>
+            </div>
+          </div>
+        </div>
+
+        {/* ── MARCOS ÉTICOS APLICADOS ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Settings class="size-6 text-blue-400" />
+            Metodología de Evaluación Ética
+          </h3>
+          <div class="space-y-4">
+            <div class="p-4 border-l-4 border-blue-500 bg-gray-900/20 rounded-r-lg">
+              <h4 class="font-bold text-blue-400 text-base mb-1">Ética Utilitarista</h4>
+              <p class="text-sm text-gray-300">
+                Se basa en el balance costo-beneficio. Se elige la acción que genere el mayor bienestar para el mayor número de personas. En ciberseguridad, esto significa priorizar la estabilidad de los fondos de miles de ahorradores sobre el beneficio económico de un hacker.
+              </p>
+            </div>
+            <div class="p-4 border-l-4 border-purple-500 bg-gray-900/20 rounded-r-lg">
+              <h4 class="font-bold text-purple-400 text-base mb-1">Enfoque de Derechos</h4>
+              <p class="text-sm text-gray-300">
+                Considera que los seres humanos tienen una dignidad inherente y derechos inalienables (como la privacidad). Bajo este enfoque, no se puede violar la correspondencia de un colega aunque se sospeche de una falla, ya que la privacidad es un derecho que no cede ante sospechas unilaterales.
+              </p>
+            </div>
+            <div class="p-4 border-l-4 border-green-500 bg-gray-900/20 rounded-r-lg">
+              <h4 class="font-bold text-green-400 text-base mb-1">Enfoque del Bien Común</h4>
+              <p class="text-sm text-gray-300">
+                Visualiza a la sociedad (u organización) como una comunidad cuyos miembros comparten objetivos. Un entorno laboral donde el espionaje es la norma destruye la confianza institucional y la productividad, dañando el tejido social del equipo.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── EVIDENCIA VISUAL ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80">Infografía Ética</h3>
+          <figure class="relative transition-all duration-300 hover:scale-[1.01]">
+            <img 
+              class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-800" 
+              src={INFO_TAREA.imagen1} 
+              alt="Balanza de la Ética y la Ciberseguridad" 
+            />
+            <figcaption class="mt-2 text-center text-sm text-gray-500 italic">
+              Evidencia de la actividad 16
+            </figcaption>
+          </figure>
+        </div>
+
+        {/* ── REFERENCIAS ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Books class="size-6 text-gray-400" />
+            Marco Normativo y Referencias
+          </h3>
+          <div class="space-y-2 text-xs font-mono text-gray-500">
+            <p class="pl-6 -indent-6">
+              Congreso de la Unión. (2024). <em class="text-gray-400">Código Penal Federal: Título Noveno - Revelación de secretos y acceso ilícito a sistemas.</em> Ciudad de México.
+            </p>
+            <p class="pl-6 -indent-6">
+              Computer Ethics Institute (CEI). (1992). <em class="text-gray-400">The Ten Commandments of Computer Ethics.</em> Brookings Institution.
+            </p>
+            <p class="pl-6 -indent-6">
+              Santa Clara University. (2023). <em class="text-gray-400">A Framework for Ethical Decision Making.</em> Markkula Center for Applied Ethics.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      {/* --- ZONA DE DESCARGA Y RETORNO --- */}
+      <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        <a 
+          href={INFO_TAREA.pdf} 
+          download="182217-Act16.pdf" 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30"
+        >
+          <Link class="size-5" />
+          Descargar PDF de la Tarea
+        </a>
+        <a 
+          href="/#tareas" 
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>

@@ -1,0 +1,264 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// ── Íconos
+import Shield from "../../components/Icons/Shield.astro"
+import Bolt from "../../components/Icons/Bolt.astro"
+import Security from "../../components/Icons/Security.astro"
+import Spy from "../../components/Icons/Spy.astro"
+import Key from "../../components/Icons/Key.astro"
+import Settings from "../../components/Icons/Settings.astro"
+import Wifi from "../../components/Icons/Wifi.astro"
+import Books from "../../components/Icons/Books.astro"
+
+const INFO_TAREA = {
+  titulo: "Actividad 18: Inteligencia de Amenazas — El Modelo Diamante",
+  fecha: "15 de Mayo, 2026",
+  description: "Análisis y modelado de intrusiones cibernéticas avanzadas mediante la metodología del Modelo Diamante. Mapeo de hilos de actividad, técnicas de evasión perimetral por Proxy y pivoteo en redes internas confiables.",
+  pdf: "/pdfs/act18-Equipo5.pdf",
+  imagen1: "/projects/Imagen1Tarea18.png"
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.description}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+
+      {/* --- ENCABEZADO --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* Banner THREAT INTELLIGENCE */}
+      <div class="mb-10 flex items-center gap-3 px-4 py-3 rounded-lg bg-cyan-950/40 border border-cyan-500/30">
+        <Security class="size-5 text-cyan-400 shrink-0" />
+        <p class="text-cyan-300 text-sm font-medium">
+          Módulo de Cyber Threat Intelligence: Correlación analítica de eventos adversarios mediante modelado matemático de intrusiones.
+        </p>
+        <span class="ml-auto text-xs font-mono text-cyan-500/60 hidden sm:block">FRAMEWORK: DIAMOND_MODEL</span>
+      </div>
+
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-12">
+
+        {/* ── CONCEPTO CLAVE: MODELO DIAMANTE ── */}
+        <div>
+          <p class="text-xs font-mono text-gray-500 mb-1">// INTELIGENCIA DEFENSIVA</p>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">Comprensión del Modelo Diamante</h3>
+          <p>
+            El <strong>Modelo Diamante para el Análisis de Intrusiones</strong> es un marco metodológico diseñado para autenticar, rastrear y mapear las actividades de un actor de amenazas de forma estructurada. Establece que cualquier evento de intrusión informática se compone fundamentalmente de cuatro nodos interconectados: <strong>Adversario</strong>, <strong>Capacidad</strong>, <strong>Infraestructura</strong> y <strong>Víctima</strong>.
+          </p>
+          <p class="mt-3">
+            A diferencia de los enfoques lineales, este modelo analiza las relaciones axiales entre los componentes. Al identificar un vértice, los analistas de SOC e investigadores de incidentes pueden inferir las características de los nodos restantes, permitiendo trazar <em>Hilos de Actividad</em> que revelan las campañas completas de un adversario a lo largo del tiempo.
+          </p>
+        </div>
+
+        {/* ── NÚCLEO DEL DIAMANTE: DESGLOSE DE VÉRTICES ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Settings class="size-6 text-gray-400" />
+            Vértices de la Matriz de Correlación
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+            <div class="p-4 rounded-lg border border-gray-700 bg-gray-900/40 hover:border-cyan-500/40 transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Spy class="size-5 text-cyan-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Adversario (Actor)</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                El motor detrás del compromiso. Representa al individuo o colectivo organizado (como un grupo de tipo APT o un equipo de Red Team) responsable de dirigir la operación maliciosa bajo motivaciones financieras, de espionaje o sabotaje institucional.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-gray-700 bg-gray-900/40 hover:border-red-500/40 transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Bolt class="size-5 text-red-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Capacidad (Herramientas)</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                El arsenal táctico del atacante. Comprende el software malicioso, los exploits, scripts personalizados y el conjunto de Tácticas, Técnicas y Procedimientos (TTPs) desarrollados para penetrar perímetros y manipular sistemas (ej. túneles Proxy y escaneos de red).
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-gray-700 bg-gray-900/40 hover:border-purple-500/40 transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Wifi class="size-5 text-purple-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Infraestructura (Canal)</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                La estructura lógica y física de comunicación. Engloba los activos de red utilizados por el adversario para desplegar sus capacidades y mantener persistencia, tales como direcciones IP, servidores de Comando y Control (C2) o <em>hosts</em> legítimos comprometidos y reutilizados.
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-gray-700 bg-gray-900/40 hover:border-blue-500/40 transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Key class="size-5 text-blue-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Víctima (Objetivo)</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                El objetivo final del ataque. Representa la organización, usuario o activo informático específico que sufre el impacto. Puede subdividirse en hilos condicionales dependiendo de si actúan como objetivos primarios de intrusión o escaladas secundarias.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ── ANÁLISIS DE INCIDENTE: HILOS DE ACTIVIDAD ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Link class="size-6 text-gray-400" />
+            Análisis Forense de Hilos de Actividad
+          </h3>
+          <p class="text-sm text-gray-400 mb-5">
+            Con base en las operaciones ofensivas documentadas, el ataque mutó de un compromiso simple perimetral a una fase destructiva de pivoteo interno estructurada en dos fases analíticas:
+          </p>
+
+          <div class="space-y-4">
+            {/* Hilo 1 */}
+            <div class="p-5 rounded-xl border border-gray-800 bg-gray-900/20">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="font-bold text-orange-400 text-base">Hilo 1: Compromiso de Host y Configuración de Proxy</h4>
+                <span class="px-2 py-0.5 text-xs font-mono bg-orange-950 text-orange-400 border border-orange-500/20 rounded">PERIMETER_BREACH</span>
+              </div>
+              <p class="text-xs text-gray-300 leading-relaxed">
+                El adversario vulneró inicialmente la estación de trabajo perteneciente al administrador del sistema (Víctima 1). En lugar de limitarse a la exfiltración local, el atacante reconfiguró de forma maliciosa el host comprometido para operar como un <strong>nodo proxy interno</strong>. Esta técnica táctica permitió enrutar todo el tráfico malicioso subsecuente a través de una máquina interna legítima de alta confianza, logrando anular y evadir por completo los sistemas de prevención de intrusiones (IPS) perimetrales y ocultando la verdadera IP de origen del atacante.
+              </p>
+            </div>
+
+            {/* Hilo 2 */}
+            <div class="p-5 rounded-xl border border-gray-800 bg-gray-900/20">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="font-bold text-red-400 text-base">Hilo 2: Reconocimiento Interno y Compromiso Secundario (Pivoteo)</h4>
+                <span class="px-2 py-0.5 text-xs font-mono bg-red-950 text-red-400 border border-red-500/20 rounded">INTERNAL_PIVOT</span>
+              </div>
+              <p class="text-xs text-gray-300 leading-relaxed">
+                Utilizando la estación del administrador como punto de lanzamiento estratégico (Pivot), el atacante de amenazas ejecutó tareas de reconocimiento y escaneo de red en los segmentos internos. Esta posición privilegiada anuló las restricciones de confianza habituales, permitiendo localizar e identificar activos críticos de alto valor (Víctima 2 - Servidores de bases de datos y controladores de dominio). Al simular tráfico legítimo proveniente de la IP interna del administrador, el adversario vulneró los controles internos sin levantar alertas en el firewall de segmentación, consumando el compromiso total del activo de mayor valor de la empresa.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── LOGS INTERACTIVOS DE AUDITORÍA DE RED ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">Registros de Tráfico: Detección de Pivoteo</h3>
+          <p class="mb-4 text-sm text-gray-400">
+            Simulación de logs de red de un switch interno que muestran la anomalía donde la estación del administrador actúa de forma inusual como un retransmisor de paquetes maliciosos (Proxy):
+          </p>
+
+          <div class="relative bg-[#0d1117] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#161b22] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">SIEM — Netflow Event Analyzer</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-xs leading-relaxed">
+<span class="text-gray-500">[MONITORING INTERNAL TRAFFIC...]</span>
+<span class="text-purple-400">14:22:10</span>  <span class="text-green-400">SRC: 192.168.10.45 (Admin)</span>  -&gt;  DST: 192.168.10.100 (DB_Server)  -&gt;  PORT: 3306 [ESTABLISHED]
+<span class="text-purple-400">14:22:15</span>  <span class="text-yellow-400">WARN: High volume of outbound requests from Admin Workstation via unusual proxy tunnel</span>
+<span class="text-purple-400">14:23:01</span>  <span class="text-red-500 font-bold">[ALERT] RCE attempt identified originating from internal trusted IP segment (192.168.10.45)</span>
+<span class="text-purple-400">14:23:05</span>  <span class="text-red-400">[MITRE T1090] Proxy usage detected on Host: Admin-PC. Pivoting in progress.</span>
+<span class="text-gray-500">[CORRELATION MATCH] Diamond Model Edge connected: Infrastructure (Admin-PC) <span class="animate-pulse">↔</span> Victim 2 (DB_Server)</span>
+              </pre>
+            </div>
+          </div>
+        </div>
+
+        {/* ── ARQUITECTURA DE DEFENSAS (REMEDIACIÓN) ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Shield class="size-6 text-green-400" />
+            Estrategias de Mitigación frente al Pivoteo
+          </h3>
+          <p class="text-sm text-gray-400 mb-4">
+            Para deponer ataques que explotan las relaciones de confianza e infraestructura interna mediante modelos de pivoteo, se deben implementar controles avanzados de segmentación:
+          </p>
+          <div class="space-y-3 bg-gray-900/40 p-5 rounded-xl border border-gray-800">
+            <div class="flex gap-4 items-start text-sm">
+              <span class="text-green-400 font-mono font-bold whitespace-nowrap">[ZERO TRUST]</span>
+              <p class="text-gray-300">Eliminar la confianza implícita basada únicamente en la ubicación de la red interna. Exigir autenticación y verificación estricta para cada solicitud de acceso, sin importar si proviene de la estación del administrador o de una VPN corporativa.</p>
+            </div>
+            <div class="flex gap-4 items-start text-sm">
+              <span class="text-blue-400 font-mono font-bold whitespace-nowrap">[MICROSEGMENTACIÓN]</span>
+              <p class="text-gray-300">Dividir la red interna en zonas de seguridad granulares aisladas entre sí. Aislar estrictamente los servidores de bases de datos críticos y restringir las comunicaciones SSH o RDP desde estaciones comunes mediante listas de control de acceso (ACLs) estrictas.</p>
+            </div>
+            <div class="flex gap-4 items-start text-sm">
+              <span class="text-yellow-400 font-mono font-bold whitespace-nowrap">[PROXY DETECTION]</span>
+              <p class="text-gray-300">Implementar auditorías heurísticas en los endpoints para bloquear la apertura o reconfiguración anómala de puertos de escucha orientados a actuar como túneles SSH, proxies SOCKS o retransmisores HTTP no autorizados.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── EVIDENCIA VISUAL ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80">Estructura del Modelo Diamante</h3>
+          <figure class="relative transition-all duration-300 hover:scale-[1.01]">
+            <img 
+              class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-800" 
+              src={INFO_TAREA.imagen1} 
+              alt="Mapeo de Incidente mediante Modelo Diamante" 
+            />
+            <figcaption class="mt-2 text-center text-sm text-gray-500 italic">
+              Evidencia de la actividad 18
+            </figcaption>
+          </figure>
+        </div>
+
+        {/* ── REFERENCIAS ACADÉMICAS ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Books class="size-6 text-gray-400" />
+            Referencias y Literatura Científica
+          </h3>
+          <div class="space-y-2 text-xs font-mono text-gray-500">
+            <p class="pl-6 -indent-6">
+              Caltagirone, S., Pendergast, J., &amp; Betz, C. (2013). <em class="text-gray-400">The Diamond Model of Intrusion Analysis.</em> Center for Cyber Threat Intelligence and Innovation. Technical Report.
+            </p>
+            <p class="pl-6 -indent-6">
+              MITRE Corporation. (2024). <em class="text-gray-400">ATT&amp;CK Technique T1090: Proxy Solutions for Internal Pivoting.</em> Recuperado de https://attack.mitre.org/techniques/T1090/
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      {/* --- ZONA DE DESCARGA Y RETORNO --- */}
+      <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        <a 
+          href={INFO_TAREA.pdf} 
+          download="act18-Equipo5.pdf" 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-cyan-600 rounded-full hover:bg-cyan-700 hover:shadow-lg hover:shadow-cyan-500/30"
+        >
+          <Link class="size-5" />
+          Descargar PDF de la Tarea
+        </a>
+        <a 
+          href="/#tareas" 
+          class="text-gray-500 hover:text-cyan-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>

