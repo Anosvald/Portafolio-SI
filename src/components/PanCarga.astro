@@ -4,7 +4,6 @@
 ---
 
 <div id="pantalla-ransomware" class="pantalla-carga">
-    <!-- === HEADER AMENAZA === -->
     <div class="threat-header">
         <div class="threat-indicator">
             <div class="pulse-dot"></div>
@@ -19,9 +18,7 @@
         </div>
     </div>
 
-    <!-- === CONTENIDO PRINCIPAL === -->
     <div class="main-container">
-        <!-- Lado izquierdo: Terminal -->
         <div class="terminal-section">
             <div class="terminal-header">
                 <div class="terminal-dots">
@@ -66,9 +63,7 @@
             </div>
         </div>
 
-        <!-- Lado derecho: Panel de Amenaza -->
         <div class="threat-panel">
-            <!-- Warning Box -->
             <div class="warning-box">
                 <div class="warning-icon-container">
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -84,7 +79,6 @@
                 </div>
             </div>
 
-            <!-- Progress Section -->
             <div class="progress-section">
                 <div class="progress-header">
                     <div class="progress-label">VERIFICACIÓN DE INTEGRIDAD</div>
@@ -104,7 +98,6 @@
                 <div id="progress-counter" class="progress-percentage">0%</div>
             </div>
 
-            <!-- Stats Box -->
             <div class="stats-box">
                 <div class="stat-item">
                     <div class="stat-icon">
@@ -138,7 +131,6 @@
                 </div>
             </div>
 
-            <!-- Instructions -->
             <div class="instructions">
                 <div class="instruction-header">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -173,7 +165,6 @@
         </div>
     </div>
 
-    <!-- === FOOTER === -->
     <div class="footer-section">
         <div class="footer-content">
             <div class="footer-item">
@@ -193,7 +184,6 @@
         </div>
     </div>
 
-    <!-- === EFECTOS DE FONDO === -->
     <div class="background-grid"></div>
     <div class="scan-lines"></div>
 </div>
@@ -280,11 +270,13 @@
         height: 12px;
         background: #dc2626;
         border-radius: 50%;
-        animation: pulse 1.5s infinite;
+        /* AQUI SE CAMBIÓ EL NOMBRE A THREAT-PULSE */
+        animation: threat-pulse 1.5s infinite; 
         box-shadow: 0 0 15px #dc2626;
     }
 
-    @keyframes pulse {
+    /* AQUI SE CAMBIÓ EL NOMBRE A THREAT-PULSE PARA EVITAR COLISIONES CON TAILWIND */
+    @keyframes threat-pulse {
         0%, 100% { box-shadow: 0 0 15px #dc2626; }
         50% { box-shadow: 0 0 30px #dc2626; }
     }
@@ -433,10 +425,12 @@
         color: #dc2626;
         display: flex;
         justify-content: center;
-        animation: bounce 2s infinite;
+        /* AQUI SE CAMBIÓ EL NOMBRE A THREAT-BOUNCE */
+        animation: threat-bounce 2s infinite;
     }
 
-    @keyframes bounce {
+    /* AQUI SE CAMBIÓ EL NOMBRE A THREAT-BOUNCE */
+    @keyframes threat-bounce {
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(-10px); }
     }
@@ -804,45 +798,46 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const progressFill = document.getElementById('progress-bar-fill');
-        const progressCounter = document.getElementById('progress-counter');
-        const loadingScreen = document.getElementById('pantalla-ransomware');
-        let progress = 0;
+  // Cambiamos DOMContentLoaded por astro:page-load para que funcione con la navegación de Astro
+  document.addEventListener('astro:page-load', () => {
+      const progressFill = document.getElementById('progress-bar-fill');
+      const progressCounter = document.getElementById('progress-counter');
+      const loadingScreen = document.getElementById('pantalla-ransomware');
+      let progress = 0;
 
-        // Validación de elementos
-        if (!loadingScreen || !progressFill || !progressCounter) return;
+      // Validación de elementos (si ya no existen en la página, no hacemos nada)
+      if (!loadingScreen || !progressFill || !progressCounter) return;
 
-        const updateProgress = () => {
-            progressFill.style.width = `${progress}%`;
-            progressCounter.textContent = `${progress}%`;
-            // Actualizar variable CSS para el gradiente de glow
-            loadingScreen.style.setProperty('--progress', `${progress}%`);
-        };
+      const updateProgress = () => {
+          progressFill.style.width = `${progress}%`;
+          progressCounter.textContent = `${progress}%`;
+          // Actualizar variable CSS para el gradiente de glow
+          loadingScreen.style.setProperty('--progress', `${progress}%`);
+      };
 
-        const interval = setInterval(() => {
-            const increment = Math.floor(Math.random() * 8) + 2;
-            progress += increment;
+      const interval = setInterval(() => {
+          const increment = Math.floor(Math.random() * 8) + 2;
+          progress += increment;
 
-            if (progress >= 100) {
-                progress = 100;
-                updateProgress();
-                clearInterval(interval);
+          if (progress >= 100) {
+              progress = 100;
+              updateProgress();
+              clearInterval(interval);
 
-                // Espera un poco y luego inicia la transición
-                setTimeout(() => {
-                    loadingScreen.classList.add('fade-out');
+              // Espera un poco y luego inicia la transición
+              setTimeout(() => {
+                  loadingScreen.classList.add('fade-out');
 
-                    // Borra el elemento del DOM después de la animación
-                    setTimeout(() => {
-                        loadingScreen.remove();
-                    }, 1000);
+                  // Borra el elemento del DOM después de la animación
+                  setTimeout(() => {
+                      loadingScreen.remove();
+                  }, 1000);
 
-                }, 800);
+              }, 800);
 
-            } else {
-                updateProgress();
-            }
-        }, 180);
-    });
+          } else {
+              updateProgress();
+          }
+      }, 180);
+  });
 </script>
