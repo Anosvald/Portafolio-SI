@@ -1,0 +1,979 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import Shield from "../../components/Icons/Shield.astro"
+import Security from "../../components/Icons/Security.astro"
+
+const INFO_TAREA = {
+  titulo: "Implementación SGSI ISO 27001 - Anthropic",
+  descripcion: "Análisis exhaustivo y diseño documental de un Sistema de Gestión de Seguridad de la Información basado en ISO/IEC 27001:2022, aplicado a la infraestructura de inteligencia artificial de Anthropic.",
+  pdf: "/pdfs/PR03-Equipo5.pdf"
+}
+
+const SECCIONES = [
+  { id: 1, label: "01. Alcance" },
+  { id: 2, label: "02. Referencias" },
+  { id: 3, label: "03. Definiciones" },
+  { id: 4, label: "04. Contexto" },
+  { id: 5, label: "05. Liderazgo" },
+  { id: 6, label: "06. Planificación" },
+  { id: 7, label: "07. Soporte" },
+  { id: 8, label: "08. Operación" },
+  { id: 9, label: "09. Evaluación" },
+  { id: 10, label: "10. Mejora Continua" }
+];
+
+const ESTADISTICAS = [
+  { numero: "10M+", label: "Usuarios Activos", color: "from-emerald-500", desc: "Claude usuarios globales" },
+  { numero: "180+", label: "Países Operados", color: "from-blue-500", desc: "Cobertura geográfica" },
+  { numero: "$18B", label: "Valoración en Riesgo", color: "from-orange-500", desc: "Protección del negocio" },
+  { numero: "93", label: "Controles ISO 27001", color: "from-pink-500", desc: "Anexo A implementado" }
+];
+
+const PILAR_PBC = [
+  { 
+    num: "01",
+    titulo: "Sistemas más Seguros",
+    desc: "IA confiable, interpretable y dirigible que pueda ser auditada y corregida",
+    features: ["Auditable", "Interpretable", "Dirigible", "Corregible"]
+  },
+  { 
+    num: "02",
+    titulo: "Seguridad como Ciencia",
+    desc: "Investigación sistemática y reproducible sobre riesgos de IA, publicada abiertamente",
+    features: ["Sistemática", "Reproducible", "Abierta", "Documentada"]
+  },
+  { 
+    num: "03",
+    titulo: "Interdisciplinariedad",
+    desc: "Equipos de investigadores, ingenieros y expertos en política pública y ética",
+    features: ["Investigadores", "Ingenieros", "Políticos", "Ética"]
+  }
+];
+
+const ACTIVOS_INTERNOS = [
+  { name: "Pesos de Modelos Claude", tipo: "CRÍTICO", desc: "Parámetros entrenados de cada versión", color: "from-red-500" },
+  { name: "Datasets de Entrenamiento", tipo: "CRÍTICO", desc: "Corpus filtrado y anotado", color: "from-red-500" },
+  { name: "Código Fuente Privado", tipo: "ALTO", desc: "Repositorios internos y Constitutional AI", color: "from-orange-500" },
+  { name: "Bases de Investigación", tipo: "ALTO", desc: "Resultados experimentales no publicados", color: "from-orange-500" },
+  { name: "SIEM y Logs", tipo: "ALTO", desc: "Auditoría y eventos de seguridad", color: "from-orange-500" },
+  { name: "Sistema IAM", tipo: "CRÍTICO", desc: "Control de 1,100 empleados", color: "from-red-500" }
+];
+
+const ACTIVOS_EXTERNOS = [
+  { name: "Amazon S3", tipo: "EXTREMO", desc: "Almacenamiento de modelos en producción", riesgo: 25 },
+  { name: "Google Cloud Storage", tipo: "EXTREMO", desc: "Datasets y artefactos vía Vertex AI", riesgo: 20 },
+  { name: "Amazon Bedrock", tipo: "EXTREMO", desc: "Inferencia en tiempo real", riesgo: 20 },
+  { name: "Cloudflare AI Gateway", tipo: "EXTREMO", desc: "Enrutamiento y rate limiting", riesgo: 20 },
+  { name: "Snowflake", tipo: "ALTO", desc: "Integración Claude Marketplace", riesgo: 16 },
+  { name: "Okta (IdP)", tipo: "CRÍTICO", desc: "Autenticación federada SSO", riesgo: 20 }
+];
+
+const POLITICAS_20 = [
+  { num: "01", nombre: "AWS - Gestión de Accesos IAM", mfa: true, rotacion: "90d", auditoria: "Trimestral" },
+  { num: "02", nombre: "GCP - Control de Accesos", mfa: true, rotacion: "90d", auditoria: "Mensual" },
+  { num: "03", nombre: "Azure AD - Autenticación", mfa: true, rotacion: "90d", auditoria: "Bimestral" },
+  { num: "04", nombre: "Trainium2 - Acceso Cluster", mfa: true, rotacion: "90d", auditoria: "Semanal" },
+  { num: "05", nombre: "Cloudflare Gateway", mfa: true, rotacion: "90d", auditoria: "Mensual" },
+  { num: "06", nombre: "API Pública Claude", mfa: true, rotacion: "90d", auditoria: "Trimestral" },
+  { num: "07", nombre: "Snowflake - Datos", mfa: true, rotacion: "90d", auditoria: "Bimestral" },
+  { num: "08", nombre: "Infraestructura Red", mfa: true, rotacion: "90d", auditoria: "Mensual" },
+  { num: "09", nombre: "DNS y CDN", mfa: true, rotacion: "90d", auditoria: "Mensual" },
+  { num: "10", nombre: "Inteligencia de Amenazas", mfa: true, rotacion: "90d", auditoria: "Trimestral" },
+  { num: "11", nombre: "Laptops y Workstations", mfa: true, rotacion: "90d", auditoria: "Semestral" },
+  { num: "12", nombre: "Servidores Desarrollo", mfa: true, rotacion: "90d", auditoria: "Mensual" },
+  { num: "13", nombre: "Red LAN Corporativa", mfa: true, rotacion: "90d", auditoria: "Trimestral" },
+  { num: "14", nombre: "VPN Corporativa", mfa: true, rotacion: "90d", auditoria: "Mensual" },
+  { num: "15", nombre: "Repositorios de Código", mfa: true, rotacion: "90d", auditoria: "Mensual" },
+  { num: "16", nombre: "Documentación Técnica", mfa: true, rotacion: "90d", auditoria: "Semestral" },
+  { num: "17", nombre: "Correo Corporativo", mfa: true, rotacion: "90d", auditoria: "Trimestral" },
+  { num: "18", nombre: "Mensajería Interna", mfa: true, rotacion: "90d", auditoria: "Mensual" },
+  { num: "19", nombre: "Bases Datos Investigación", mfa: true, rotacion: "90d", auditoria: "Mensual" },
+  { num: "20", nombre: "Respaldo y Recuperación", mfa: true, rotacion: "90d", auditoria: "Trimestral" }
+];
+
+const RIESGOS_EXTREMOS = [
+  { 
+    id: 1, 
+    amenaza: "Escalada de Privilegios AWS",
+    prob: 5,
+    impacto: 5,
+    riesgo: 25,
+    nivel: "EXTREMO",
+    mitiga: "MFA + IAM auditoría trimestral + rotación 90d",
+    vector: "Credenciales comprometidas → acceso cluster entrenamiento"
+  },
+  { 
+    id: 2, 
+    amenaza: "Robo de Modelo / Data Poisoning",
+    prob: 5,
+    impacto: 5,
+    riesgo: 25,
+    nivel: "EXTREMO",
+    mitiga: "Acceso restringido Trainium2 + auditoría semanal",
+    vector: "Acceso cluster → extracción pesos / inyección datos"
+  },
+  { 
+    id: 3, 
+    amenaza: "Claves API Comprometidas",
+    prob: 5,
+    impacto: 4,
+    riesgo: 20,
+    nivel: "EXTREMO",
+    mitiga: "Permisos mínimos + revocación <2h + rotación 90d",
+    vector: "Fuga API key → consumo masivo no autorizado"
+  },
+  { 
+    id: 4, 
+    amenaza: "Phishing / Business Email Compromise",
+    prob: 5,
+    impacto: 4,
+    riesgo: 20,
+    nivel: "EXTREMO",
+    mitiga: "MFA + SPF/DKIM/DMARC + simulacros trimestrales",
+    vector: "Suplantación ejecutivos → escalada ingeniería social"
+  },
+  { 
+    id: 5, 
+    amenaza: "Acceso No Autorizado Staging",
+    prob: 4,
+    impacto: 5,
+    riesgo: 20,
+    nivel: "EXTREMO",
+    mitiga: "MFA SSH + tickets con fecha vencimiento",
+    vector: "Staging → pivoting a producción"
+  },
+  { 
+    id: 6, 
+    amenaza: "Secuestro DNS / CDN",
+    prob: 4,
+    impacto: 5,
+    riesgo: 20,
+    nivel: "EXTREMO",
+    mitiga: "MFA panel + alertas críticas + ventana cambio",
+    vector: "Redirect tráfico → phishing / DoS"
+  }
+];
+
+const LECCIONES_APRENDIDAS = [
+  {
+    titulo: "MFA es Barrera Crítica",
+    desc: "El único control que bloqueó el compromiso real en incidente BEC. Depender de un solo control es insostenible en riesgo Extremo.",
+    fecha: "Oct 2024",
+    accion: "Migración de ejecutivos a FIDO2 resistente a phishing"
+  },
+  {
+    titulo: "Evolución de Amenazas",
+    desc: "Ataques BEC asistidos por IA producen correos indistinguibles. Política de correo requiere actualización al ritmo de la amenaza.",
+    fecha: "Oct 2024",
+    accion: "Revisión semestral obligatoria de política"
+  },
+  {
+    titulo: "Defensa en Profundidad",
+    desc: "7 controles implementados en 90 días redujeron riesgo de 20→12. Múltiples capas son esenciales.",
+    fecha: "Ene 2025",
+    accion: "Modelo de 7 capas para todos los riesgos extremos"
+  }
+];
+
+const METRICAS_RENDIMIENTO = [
+  { kpi: "MTTD (Detección)", inicial: "47 min", actual: "8 min", mejora: "83%", color: "from-emerald-500" },
+  { kpi: "Cobertura MFA", inicial: "98.7%", actual: "100%", mejora: "+1.3%", color: "from-blue-500" },
+  { kpi: "Tasa Clics Phishing", inicial: "8.3%", actual: "1.4%", mejora: "-83%", color: "from-cyan-500" },
+  { kpi: "Riesgo BEC", inicial: "20 (Extremo)", actual: "12 (Alto)", mejora: "-40%", color: "from-orange-500" }
+];
+
+const NORMAS_ISO = [
+  { codigo: "ISO 27001:2022", desc: "Certificación SGSI - 10 cláusulas + 93 controles", impl: "100%" },
+  { codigo: "ISO 27002:2022", desc: "Código de buenas prácticas para controles", impl: "95%" },
+  { codigo: "ISO 27005:2022", desc: "Metodología de gestión de riesgos", impl: "100%" },
+  { codigo: "ISO 27017:2015", desc: "Controles en servicios cloud (GCP + AWS)", impl: "98%" },
+  { codigo: "ISO 27018:2019", desc: "Protección de PII en nube pública", impl: "100%" },
+  { codigo: "ISO 27032:2023", desc: "Ciberseguridad: jailbreaking, prompt injection", impl: "92%" },
+  { codigo: "ISO 27035:2023", desc: "Gestión de incidentes de seguridad", impl: "100%" },
+  { codigo: "ISO 27701:2019", desc: "Extensión privacidad (PIMS)", impl: "96%" },
+  { codigo: "NIST AI RMF 1.0", desc: "Gestión de riesgos de sistemas IA", impl: "94%" },
+  { codigo: "EU AI Act 2024", desc: "Cumplimiento modelos GPAI", impl: "99%" }
+];
+
+const INCIDENTE_BEC = {
+  fecha: "14 de octubre de 2024",
+  hora: "09:23 UTC",
+  atacante: "Grupo GTG-DPRK-0421 (Norcoreano)",
+  vector: "Spear-phishing generado con IA suplantando CISO",
+  afectados: 3,
+  accesos: 1,
+  bloqueado: "MFA activo",
+  deteccion: "47 minutos",
+  contencion: "30 minutos"
+};
+---
+
+<Layout title={`Portafolio - ${INFO_TAREA.titulo}`} description={INFO_TAREA.descripcion}>
+<style>
+  :global(header), :global(nav) { display: none !important; }
+  html { scroll-behavior: smooth; }
+
+  #roadmap-sidebar {
+    width: 320px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 1.5rem;
+    height: calc(100vh - 3rem);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #10b981 transparent;
+    padding-right: 1rem;
+  }
+
+  .sbi {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+    text-decoration: none;
+    font-size: 0.9rem;
+    border-left: 3px solid transparent;
+    cursor: pointer;
+  }
+
+  .sbi:hover {
+    opacity: 0.85;
+    background: rgba(16, 185, 129, 0.1);
+    transform: translateX(4px);
+  }
+
+  .sbi.active {
+    opacity: 1;
+    background: rgba(16, 185, 129, 0.2);
+    border-left-color: #10b981;
+    box-shadow: inset 0 0 20px rgba(16, 185, 129, 0.1);
+  }
+
+  .sbi-label {
+    font-weight: 500;
+    color: #e2e8f0;
+    transition: all 0.3s ease;
+  }
+
+  .sbi.active .sbi-label {
+    color: #10b981;
+    font-weight: 700;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.6); }
+  }
+
+  .stat-card {
+    animation: slideUp 0.6s ease forwards;
+  }
+
+  .stat-card:nth-child(1) { animation-delay: 0.1s; }
+  .stat-card:nth-child(2) { animation-delay: 0.2s; }
+  .stat-card:nth-child(3) { animation-delay: 0.3s; }
+  .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+  .clause-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .clause-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 25px 50px rgba(16, 185, 129, 0.2);
+  }
+
+  .risk-bar {
+    height: 8px;
+    background: linear-gradient(90deg, #10b981 0%, #f59e0b 50%, #ef4444 100%);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .risk-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ef4444 0%, #f59e0b 100%);
+  }
+
+  .criticidad-badge {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .criticidad-critico {
+    background: rgba(239, 68, 68, 0.25);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.5);
+  }
+
+  .criticidad-extremo {
+    background: rgba(249, 115, 22, 0.25);
+    color: #fed7aa;
+    border: 1px solid rgba(249, 115, 22, 0.5);
+  }
+
+  .criticidad-alto {
+    background: rgba(59, 130, 246, 0.25);
+    color: #93c5fd;
+    border: 1px solid rgba(59, 130, 246, 0.5);
+  }
+
+  .criticidad-medio {
+    background: rgba(34, 197, 94, 0.25);
+    color: #86efac;
+    border: 1px solid rgba(34, 197, 94, 0.5);
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 2.5rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    top: 1.5rem;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, #10b981 0%, transparent 100%);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2.25rem;
+    top: 0.5rem;
+    width: 1rem;
+    height: 1rem;
+    background: #10b981;
+    border: 4px solid #0c0f1a;
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .icon-svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .hover-lift {
+    transition: transform 0.3s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+  }
+
+  .glow-border {
+    box-shadow: inset 0 0 20px rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+
+  .header-hero {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%);
+  }
+
+  .metric-box {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(2, 8, 23, 0.8) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+  }
+
+  .policy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  .feature-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    color: #86efac;
+    font-weight: 600;
+  }
+</style>
+
+<main class="min-h-screen bg-gradient-to-br from-slate-950 via-[#0c0f1a] to-slate-900">
+  <div class="flex gap-8 items-start max-w-[1800px] mx-auto px-4 py-8 pb-32">
+    
+    <!-- SIDEBAR PREMIUM -->
+    <aside id="roadmap-sidebar" class="hidden lg:flex flex-col">
+      <div class="mb-8 sticky top-8">
+        <div class="header-hero rounded-xl p-5 border border-emerald-500/40 backdrop-blur-sm">
+          <p class="text-[11px] font-black uppercase tracking-[0.3em] text-emerald-300 flex items-center gap-2 mb-2">
+            <span class="inline-block w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></span>
+            PROYECTO SGSI ACTIVO
+          </p>
+          <p class="text-xs text-slate-400">Auditoría Anthropic 2026</p>
+          <p class="text-xs text-emerald-400/80 mt-2 font-bold">Certificación ISO 27001:2022</p>
+          <p class="text-[10px] text-slate-500 mt-1">573 páginas | 20 políticas | 93 controles</p>
+          
+          <div class="mt-4 pt-4 border-t border-emerald-500/20">
+            <p class="text-[10px] text-slate-500 uppercase font-bold mb-2">Progreso</p>
+            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full w-[85%] bg-gradient-to-r from-emerald-500 via-cyan-500 to-emerald-500 rounded-full"></div>
+            </div>
+            <p class="text-[10px] text-emerald-400 mt-2 font-semibold">85% Implementado</p>
+          </div>
+        </div>
+
+        <!-- Mini stats -->
+        <div class="mt-6 grid grid-cols-2 gap-2">
+          <div class="bg-slate-900/70 border border-slate-700 rounded-lg p-3 hover:bg-slate-900 transition">
+            <p class="text-[9px] text-slate-500 uppercase font-bold">Riesgos Extremos</p>
+            <p class="text-2xl font-black text-orange-400">6</p>
+          </div>
+          <div class="bg-slate-900/70 border border-slate-700 rounded-lg p-3 hover:bg-slate-900 transition">
+            <p class="text-[9px] text-slate-500 uppercase font-bold">Políticas</p>
+            <p class="text-2xl font-black text-emerald-400">20</p>
+          </div>
+          <div class="bg-slate-900/70 border border-slate-700 rounded-lg p-3 hover:bg-slate-900 transition">
+            <p class="text-[9px] text-slate-500 uppercase font-bold">Cobertura MFA</p>
+            <p class="text-2xl font-black text-blue-400">100%</p>
+          </div>
+          <div class="bg-slate-900/70 border border-slate-700 rounded-lg p-3 hover:bg-slate-900 transition">
+            <p class="text-[9px] text-slate-500 uppercase font-bold">MTTD</p>
+            <p class="text-2xl font-black text-cyan-400">8m</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="flex flex-col gap-1" id="toc-nav">
+        {SECCIONES.map((sec) => (
+          <a href={`#clausula-${sec.id}`} class="sbi" data-target={`clausula-${sec.id}`}>
+            <span class="text-xs font-bold w-6 h-6 flex items-center justify-center rounded-md bg-slate-800 text-emerald-400">
+              {sec.id}
+            </span>
+            <span class="sbi-label text-sm flex-1">{sec.label.split('.')[1]?.trim()}</span>
+            <span class="text-slate-600 group-hover:text-emerald-500">→</span>
+          </a>
+        ))}
+      </nav>
+
+      <div class="mt-8 pt-6 border-t border-slate-800">
+        <p class="text-xs text-slate-500 uppercase font-bold mb-3">Equipo</p>
+        <div class="space-y-2 text-[11px]">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+            <span class="text-slate-400">CISO • Seguridad</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+            <span class="text-slate-400">CTO • Infraestructura</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+            <span class="text-slate-400">1,100 Empleados</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="flex-1 min-w-0">
+      
+      <!-- MEGA HEADER -->
+      <div class="mb-16">
+        <div class="header-hero border border-emerald-500/30 rounded-3xl overflow-hidden">
+          <div class="bg-gradient-to-br from-slate-900 to-black px-8 md:px-14 pt-20 pb-16">
+            <div class="max-w-4xl">
+              <div class="flex items-center gap-3 mb-6">
+                <svg class="w-8 h-8 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span class="text-emerald-400 font-bold uppercase tracking-widest text-xs">ISO/IEC 27001:2022</span>
+              </div>
+              
+              <h1 class="text-6xl md:text-7xl font-black text-white mb-6 tracking-tight leading-tight">
+                Sistema de Gestión <span class="gradient-text">SGSI</span>
+              </h1>
+              
+              <p class="text-lg text-slate-300 max-w-3xl mb-8 leading-relaxed">
+                Implementación exhaustiva de seguridad de la información para Anthropic, protegiendo modelos Claude, infraestructura multi-cloud y datos de 10M+ usuarios globales mediante 93 controles alineados con estándares internacionales.
+              </p>
+
+              <div class="flex flex-wrap gap-3">
+                <span class="px-4 py-2 bg-emerald-500/20 border border-emerald-500/50 rounded-full text-emerald-300 text-sm font-semibold">
+                  ✓ 20 Políticas Funcionales
+                </span>
+                <span class="px-4 py-2 bg-cyan-500/20 border border-cyan-500/50 rounded-full text-cyan-300 text-sm font-semibold">
+                  ✓ Ciclo PDCA Documentado
+                </span>
+                <span class="px-4 py-2 bg-orange-500/20 border border-orange-500/50 rounded-full text-orange-300 text-sm font-semibold">
+                  ✓ Respuesta a Incidentes
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mega Stats -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-8 bg-gradient-to-b from-transparent to-slate-900/50">
+            {ESTADISTICAS.map((stat, idx) => (
+              <div class={`stat-card bg-gradient-to-br ${stat.color} to-transparent p-6 rounded-xl border border-white/10 hover:border-white/30 transition-all`}>
+                <p class="text-[10px] text-white/60 uppercase font-bold tracking-wider">
+                  {stat.label}
+                </p>
+                <p class="text-4xl font-black text-white mt-3">{stat.numero}</p>
+                <p class="text-[11px] text-white/50 mt-1">{stat.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- PILARES PBC -->
+      <section class="mb-16">
+        <div class="mb-8">
+          <h2 class="text-4xl font-black text-white mb-3">3 Pilares del Propósito</h2>
+          <p class="text-slate-400 max-w-2xl">La misión de Anthropic como Public Benefit Corporation fundamenta el nivel de protección requerido</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          {PILAR_PBC.map((pilar, idx) => (
+            <div class="group hover-lift bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-8 hover:border-emerald-500/50 hover:glow-border transition-all">
+              <div class="text-5xl font-black text-emerald-500/20 mb-4">{pilar.num}</div>
+              <h3 class="text-xl font-bold text-white mb-2">{pilar.titulo}</h3>
+              <p class="text-slate-400 text-sm mb-6">{pilar.desc}</p>
+              <div class="flex flex-wrap gap-2">
+                {pilar.features.map((feat) => (
+                  <span class="feature-tag">{feat}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- NORMAS ISO DETALLADAS -->
+      <section class="mb-16 clause-card">
+        <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-2xl overflow-hidden">
+          <div class="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border-b border-slate-800 px-8 py-6">
+            <h2 class="text-3xl font-bold text-white mb-2">Marco Normativo Integral</h2>
+            <p class="text-slate-400">10 normas ISO y regulaciones internacionales aplicadas</p>
+          </div>
+
+          <div class="p-8">
+            <div class="space-y-3">
+              {NORMAS_ISO.map((norma) => (
+                <div class="bg-slate-950/50 border border-slate-800 rounded-lg p-4 hover:border-emerald-500/30 transition group">
+                  <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 rounded-lg flex items-center justify-center group-hover:from-emerald-500/40 group-hover:to-cyan-500/40 transition">
+                        <svg class="w-5 h-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </div>
+                      <div>
+                        <p class="font-bold text-white">{norma.codigo}</p>
+                        <p class="text-sm text-slate-400">{norma.desc}</p>
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-xs text-slate-500 mb-1">Implementación</p>
+                      <p class="text-2xl font-black text-emerald-400">{norma.impl}</p>
+                    </div>
+                  </div>
+                  <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-emerald-500 to-cyan-500" style={`width: ${norma.impl}`}></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACTIVOS INTERNOS VS EXTERNOS -->
+      <section class="mb-16">
+        <h2 class="text-4xl font-black text-white mb-8">Inventario de Activos</h2>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- Internos -->
+          <div class="clause-card">
+            <div class="bg-gradient-to-br from-emerald-900/30 to-slate-950 border border-emerald-500/30 rounded-2xl overflow-hidden">
+              <div class="bg-gradient-to-r from-emerald-500/20 to-emerald-500/10 border-b border-emerald-500/20 px-8 py-6">
+                <h3 class="text-2xl font-bold text-white">Activos Internos</h3>
+                <p class="text-emerald-400 text-sm mt-1">Bajo control directo de Anthropic</p>
+              </div>
+              <div class="p-6 space-y-3">
+                {ACTIVOS_INTERNOS.map((activo) => (
+                  <div class="bg-slate-900/50 border border-slate-700 rounded-lg p-4 hover:border-emerald-500/50 transition">
+                    <div class="flex items-start justify-between mb-2">
+                      <div>
+                        <p class="font-semibold text-white">{activo.name}</p>
+                        <p class="text-xs text-slate-400 mt-1">{activo.desc}</p>
+                      </div>
+                      <span class={`criticidad-badge criticidad-${activo.tipo.toLowerCase()}`}>
+                        {activo.tipo}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <!-- Externos -->
+          <div class="clause-card">
+            <div class="bg-gradient-to-br from-blue-900/30 to-slate-950 border border-blue-500/30 rounded-2xl overflow-hidden">
+              <div class="bg-gradient-to-r from-blue-500/20 to-blue-500/10 border-b border-blue-500/20 px-8 py-6">
+                <h3 class="text-2xl font-bold text-white">Activos Externos</h3>
+                <p class="text-blue-400 text-sm mt-1">Gestionados por proveedores cloud</p>
+              </div>
+              <div class="p-6 space-y-3">
+                {ACTIVOS_EXTERNOS.map((activo) => (
+                  <div class="bg-slate-900/50 border border-slate-700 rounded-lg p-4 hover:border-blue-500/50 transition">
+                    <div class="flex items-start justify-between mb-2">
+                      <div class="flex-1">
+                        <p class="font-semibold text-white">{activo.name}</p>
+                        <p class="text-xs text-slate-400 mt-1">{activo.desc}</p>
+                      </div>
+                      <span class={`criticidad-badge criticidad-${activo.tipo.toLowerCase()}`}>
+                        {activo.tipo}
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-3">
+                      <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-orange-500 to-red-500" style={`width: ${(activo.riesgo/25)*100}%`}></div>
+                      </div>
+                      <span class="text-xs font-bold text-orange-400">{activo.riesgo}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIESGOS EXTREMOS DETALLADOS -->
+      <section class="mb-16 clause-card">
+        <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-red-500/30 rounded-2xl overflow-hidden">
+          <div class="bg-gradient-to-r from-red-500/20 to-orange-500/20 border-b border-slate-800 px-8 py-6">
+            <h2 class="text-3xl font-bold text-white mb-2">6 Riesgos Extremos Identificados</h2>
+            <p class="text-red-400 text-sm">Probabilidad × Impacto = Nivel de Riesgo</p>
+          </div>
+
+          <div class="p-8 space-y-4">
+            {RIESGOS_EXTREMOS.map((riesgo) => (
+              <div class="bg-slate-950/50 border border-slate-700 rounded-xl p-6 hover:border-red-500/50 transition">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-2">
+                      <span class="px-3 py-1 bg-red-500/20 border border-red-500/50 rounded-full text-red-400 text-xs font-bold">
+                        P:{riesgo.prob} × I:{riesgo.impacto}
+                      </span>
+                      <h3 class="font-bold text-white text-lg">{riesgo.amenaza}</h3>
+                    </div>
+                    <p class="text-sm text-slate-400 mt-2">{riesgo.vector}</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-xs text-slate-500 mb-1">Riesgo</p>
+                    <p class="text-3xl font-black text-red-400">{riesgo.riesgo}</p>
+                  </div>
+                </div>
+                
+                <div class="bg-slate-900/50 rounded-lg p-3 border border-slate-700">
+                  <p class="text-xs text-slate-400 uppercase font-bold mb-2">Mitiga:</p>
+                  <p class="text-sm text-slate-300">{riesgo.mitiga}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- 20 POLÍTICAS -->
+      <section class="mb-16 clause-card">
+        <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-2xl overflow-hidden">
+          <div class="bg-gradient-to-r from-cyan-500/20 to-emerald-500/20 border-b border-slate-800 px-8 py-6">
+            <h2 class="text-3xl font-bold text-white mb-2">20 Políticas Funcionales</h2>
+            <p class="text-slate-400 text-sm">Framework de control por activo con MFA, rotación 90d y auditoría periódica</p>
+          </div>
+
+          <div class="p-8">
+            <div class="policy-grid">
+              {POLITICAS_20.map((pol) => (
+                <div class="bg-slate-950/50 border border-slate-700 rounded-lg p-5 hover:border-emerald-500/50 transition group">
+                  <div class="flex items-start justify-between mb-3">
+                    <div>
+                      <span class="inline-block px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded text-xs font-bold mb-2">
+                        POL-{pol.num}
+                      </span>
+                      <p class="font-semibold text-white text-sm group-hover:text-emerald-400 transition">{pol.nombre}</p>
+                    </div>
+                    {pol.mfa && (
+                      <svg class="w-5 h-5 text-emerald-500" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+                      </svg>
+                    )}
+                  </div>
+                  <div class="space-y-2 text-xs">
+                    <div class="flex items-center justify-between text-slate-400">
+                      <span>MFA:</span>
+                      <span class="font-bold text-emerald-400">Obligatorio</span>
+                    </div>
+                    <div class="flex items-center justify-between text-slate-400">
+                      <span>Rotación:</span>
+                      <span class="font-bold text-cyan-400">{pol.rotacion}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-slate-400">
+                      <span>Auditoría:</span>
+                      <span class="font-bold text-orange-400">{pol.auditoria}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- INCIDENTE BEC REAL -->
+      <section class="mb-16 clause-card">
+        <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-purple-500/30 rounded-2xl overflow-hidden">
+          <div class="bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-b border-slate-800 px-8 py-6">
+            <h2 class="text-3xl font-bold text-white mb-2">Caso Real: Incidente BEC</h2>
+            <p class="text-purple-400 text-sm">Ataque phishing asistido por IA - Respuesta PDCA implementada</p>
+          </div>
+
+          <div class="p-8">
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+              <div class="space-y-4">
+                <div class="bg-slate-950/50 border border-slate-700 rounded-lg p-5">
+                  <p class="text-xs text-slate-500 uppercase font-bold mb-2">Fecha y Hora</p>
+                  <p class="text-lg font-bold text-white">{INCIDENTE_BEC.fecha}</p>
+                  <p class="text-sm text-slate-400">{INCIDENTE_BEC.hora}</p>
+                </div>
+                <div class="bg-slate-950/50 border border-slate-700 rounded-lg p-5">
+                  <p class="text-xs text-slate-500 uppercase font-bold mb-2">Grupo Atacante</p>
+                  <p class="text-lg font-bold text-red-400">{INCIDENTE_BEC.atacante}</p>
+                </div>
+                <div class="bg-slate-950/50 border border-slate-700 rounded-lg p-5">
+                  <p class="text-xs text-slate-500 uppercase font-bold mb-2">Vector</p>
+                  <p class="text-sm text-slate-300">{INCIDENTE_BEC.vector}</p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div class="bg-slate-950/50 border border-slate-700 rounded-lg p-5">
+                  <p class="text-xs text-slate-500 uppercase font-bold mb-2">Impacto</p>
+                  <div class="space-y-2">
+                    <div class="flex justify-between">
+                      <span class="text-slate-400">Personas afectadas:</span>
+                      <span class="font-bold text-orange-400">{INCIDENTE_BEC.afectados}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-slate-400">Accesos logrados:</span>
+                      <span class="font-bold text-red-400">{INCIDENTE_BEC.accesos}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-slate-400">Bloqueado por:</span>
+                      <span class="font-bold text-emerald-400">{INCIDENTE_BEC.bloqueado}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-5">
+                  <p class="text-xs text-emerald-400 uppercase font-bold mb-2">Respuesta</p>
+                  <div class="space-y-2">
+                    <div class="flex justify-between">
+                      <span class="text-slate-400">Detección:</span>
+                      <span class="font-bold text-cyan-400">{INCIDENTE_BEC.deteccion}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-slate-400">Contención:</span>
+                      <span class="font-bold text-emerald-400">{INCIDENTE_BEC.contencion}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Timeline de respuesta -->
+            <div class="bg-slate-950/50 border border-slate-700 rounded-lg p-6">
+              <h3 class="font-bold text-white mb-6">Ciclo PDCA - Línea de Tiempo</h3>
+              <div class="timeline">
+                {[
+                  { time: "0-30 min", action: "Plan & Do: Bloqueo y revocación de sesiones" },
+                  { time: "0-1 hora", action: "Do: Aislamiento DNS y alerta a empleados" },
+                  { time: "24-72h", action: "Check: Análisis forense y auditoría MFA" },
+                  { time: "7 días", action: "Do: Implementar DMARC completo y filtros" },
+                  { time: "90 días", action: "Act: Mejora documentada - Riesgo 20→12" }
+                ].map((item) => (
+                  <div class="timeline-item">
+                    <div>
+                      <p class="font-semibold text-white text-sm">{item.time}</p>
+                      <p class="text-sm text-slate-400 mt-1">{item.action}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MÉTRICAS DE RENDIMIENTO -->
+      <section class="mb-16">
+        <h2 class="text-4xl font-black text-white mb-8">Métricas de Rendimiento</h2>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          {METRICAS_RENDIMIENTO.map((metrica) => (
+            <div class="clause-card">
+              <div class={`bg-gradient-to-br ${metrica.color} to-transparent p-8 rounded-2xl border border-white/10 hover:border-white/30 transition`}>
+                <p class="text-sm text-white/70 uppercase font-bold tracking-wider mb-3">{metrica.kpi}</p>
+                <div class="space-y-2 mb-6">
+                  <div class="flex items-baseline gap-3">
+                    <span class="text-2xl text-white/60 font-semibold">{metrica.inicial}</span>
+                    <svg class="w-4 h-4 text-white/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="5 12 19 12"></polyline>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                    <span class="text-3xl font-black text-white">{metrica.actual}</span>
+                  </div>
+                </div>
+                <div class="bg-white/10 rounded-lg px-4 py-2 inline-block">
+                  <p class="text-lg font-black text-white">{metrica.mejora}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- LECCIONES APRENDIDAS -->
+      <section class="mb-16 clause-card">
+        <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-2xl overflow-hidden">
+          <div class="bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border-b border-slate-800 px-8 py-6">
+            <h2 class="text-3xl font-bold text-white mb-2">Lecciones Aprendidas</h2>
+            <p class="text-amber-400 text-sm">Integraciones al SGSI post-incidente</p>
+          </div>
+
+          <div class="p-8 space-y-4">
+            {LECCIONES_APRENDIDAS.map((leccion) => (
+              <div class="bg-slate-950/50 border border-slate-700 rounded-lg p-6 hover:border-amber-500/50 transition">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="flex-1">
+                    <h3 class="font-bold text-white text-lg">{leccion.titulo}</h3>
+                    <p class="text-sm text-slate-400 mt-2">{leccion.desc}</p>
+                  </div>
+                  <span class="text-xs bg-amber-500/20 text-amber-400 px-3 py-1 rounded-full font-bold whitespace-nowrap ml-4">
+                    {leccion.fecha}
+                  </span>
+                </div>
+                <div class="bg-slate-900/50 rounded border border-slate-700 px-4 py-3">
+                  <p class="text-xs text-slate-500 uppercase font-bold mb-1">Acción Implementada</p>
+                  <p class="text-sm text-slate-300">{leccion.accion}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA DESCARGA FINAL -->
+      <section class="mb-8 clause-card">
+        <div class="relative overflow-hidden rounded-3xl">
+          <div class="absolute inset-0 bg-gradient-to-r from-emerald-600 via-cyan-600 to-emerald-600 opacity-40 blur-3xl"></div>
+          <div class="relative bg-gradient-to-br from-slate-900 to-slate-950 border border-emerald-500/50 rounded-3xl p-12">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+              <div>
+                <h3 class="text-4xl font-black text-white mb-3">Accede al Reporte Completo</h3>
+                <p class="text-slate-400 max-w-2xl text-lg">
+                  Documento de 73 páginas con detalles técnicos exhaustivos, 10 cláusulas ISO, 20 políticas, matrices RACI, 140+ requerimientos de auditoría y análisis detallado del ciclo PDCA.
+                </p>
+              </div>
+              <div class="flex-shrink-0 flex flex-col items-center gap-4">
+                <a href={INFO_TAREA.pdf} download="SGSI-Anthropic-ISO27001-2026.pdf" class="inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-bold text-lg rounded-xl transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/50 group">
+                  <svg class="w-6 h-6 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  <span>DESCARGAR PDF</span>
+                </a>
+                <a href="/#tareas" class="text-slate-400 hover:text-emerald-400 hover:underline flex items-center gap-2 text-sm font-medium transition">
+                  ← Regresar al portafolio
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const sections = document.querySelectorAll<HTMLElement>("section[id^='clausula-']");
+    const navItems = document.querySelectorAll<HTMLElement>("#toc-nav .sbi");
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navItems.forEach(item => {
+            const target = item.getAttribute('data-target');
+            if (target === entry.target.id) {
+              item.classList.add('active');
+            } else {
+              item.classList.remove('active');
+            }
+          });
+        }
+      });
+    }, { rootMargin: "-20% 0px -70% 0px" });
+    
+    sections.forEach(sec => observer.observe(sec));
+
+    // Scroll smooth
+    document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e: MouseEvent) {
+        const href = this.getAttribute('href');
+        if (href && href !== '#') {
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        }
+      });
+    });
+  });
+</script>
+</Layout>
